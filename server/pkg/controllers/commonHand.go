@@ -5,10 +5,7 @@ import (
 )
 
 func Login(c *gin.Context) {
-}
-
-func Signup(c *gin.Context) {
-}
-
-func SearchUsers(c *gin.Context) {
+	c. JSON(200, gin.H{
+		"message": "pong",
+	})
 }
