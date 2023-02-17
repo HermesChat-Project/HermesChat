@@ -1,0 +1,151 @@
+.chat {
+  border-bottom: 1px solid #ccc;
+  padding-top: 6%;
+  height: 14.29%;
+  padding-left: 10px;
+}
+
+.container {
+  height: 95%;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+.bi-search {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.form-floating {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.form-floating input {
+  height: 20px;
+  padding: 0 !important;
+  padding-right: 2.5rem;
+}
+/*SEARCH BAR*/
+#searchInput {
+  padding-top: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  margin-left: 0 !important;
+  height: 7%;
+}
+
+#txtSearch {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px !important;
+  width: 100%;
+}
+
+#div_chatlist {
+  height: 93%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/*Chat image*/
+
+.img {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.img img:before {
+  content: " ";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-image: url("../../../assets/img/user.jpg");
+  background-size: cover;
+}
+
+/*Graphic Last message in the chat selector*/
+.lastMessage span:last-of-type {
+  font-size: 12px;
+  color: #ccc;
+  padding-right: 5px;
+}
+
+.lastMessage {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: small;
+}
+
+/*SCOLL BAR*/
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  opacity: 0.5;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+  opacity: 0.5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  opacity: 0.5;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/*SELECTION*/
+.selection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 5%;
+}
+.selection > div {
+  display: inline-block;
+  width: 25%;
+  text-align: center;
+}
+
+.calendar {
+  position: relative;
+}
+
+.day {
+  position: absolute;
+  top: 8px;
+  left: 41%;
+  color: white;
+  font-size: x-small;
+}
+
+i {
+  font-size: large;
+}
+
+.selection {
+  background-color: #eee;
+}
+.selected {
+  border-top: 1px solid #039503;
+}

@@ -1,0 +1,12 @@
+app-header-chat-selector {
+  width: 100%;
+  display: inline-block;
+  height: 7%;
+}
+app-choose-chat {
+  width: 100%;
+  display: inline-block;
+  height: 93%;
+}
+
+

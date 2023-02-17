@@ -1,0 +1,19 @@
+.options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.row>*{
+  padding: 0px !important;
+}
+
+.row{
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  margin: 0px !important;
+}
+
+
