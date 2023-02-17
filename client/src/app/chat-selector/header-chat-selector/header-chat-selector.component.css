@@ -15,5 +15,8 @@
   border-bottom: 1px solid #ccc;
   margin: 0px !important;
 }
+i{
+  cursor: pointer;
+}
 
 

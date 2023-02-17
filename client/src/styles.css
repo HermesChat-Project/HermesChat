@@ -5,3 +5,7 @@ html, body {
   padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+i{
+  font-size: large;
+  color: #0b2f5e;
+}

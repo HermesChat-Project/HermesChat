@@ -21,6 +21,7 @@ export class ChooseChatComponent {
     new chatList('Gruppo 9', 'MongoDB', new Date(), 'img')]),
     //new userModel(1, 'name', 'email', 'password', [new chatList('Gruppo 2', 'Non so cosa scrivere', new Date(), 'img')]),
   ]
+  selected_function = 0;//0 = chat, 1 = friend, 2 = calls, 3 = calendar
   day = new Date().getDate();
   DateAdjustment(date: Date) {
     let today = date.getDate();
@@ -34,6 +35,44 @@ export class ChooseChatComponent {
       if (minute.length < 2)
         minute = '0' + minute;
       return hour + ':' + minute;
+    }
+  }
+
+  changeSelection(type: string, $event: any) {
+
+    let hr = document.getElementById('selected');
+    let hrPosition = document.getElementById(type);
+    let selected = document.getElementsByClassName('selected');
+    if (hr && hrPosition && selected) {
+      let keyFrames: Keyframe[] = [
+        { left: hr.offsetLeft + 'px' },
+        { left: hrPosition.offsetLeft + 'px' }
+      ];
+      console.log(hrPosition.offsetLeft);
+      console.log(hr)
+      let options: object = {
+        duration: 250,
+        iterations: 1,
+        fill: 'forwards',
+        easing: 'ease-in-out'
+      };
+      hr.animate(keyFrames, options);
+    }
+
+    switch (type) {
+      case 'chat':
+        this.selected_function = 0;
+        break;
+      case 'friends':
+        this.selected_function = 1;
+        break;
+      case 'calls':
+        this.selected_function = 2;
+        break;
+      case 'calendar':
+        this.selected_function = 3;
+        break;
+
     }
   }
 }

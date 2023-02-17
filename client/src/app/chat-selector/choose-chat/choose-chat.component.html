@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="selected_function == 0">
   <div class="row" id="searchInput">
     <div class="col-md-12">
       <!-- SEARCH BOX -->
@@ -27,21 +27,22 @@
       </div>
     </div>
   </div>
-  <div class="selection">
-    <div class="all selected">
-      <i class="bi bi-people-fill"></i>
-    </div>
-    <div class="friends">
-      <i class="bi bi-person-heart"></i>
-    </div>
-    <div class="phone">
-      <i class="bi bi-telephone-fill"></i>
-    </div>
-    <div class="calendar">
-      <i class="bi bi-calendar-fill">
-        <span class="day">{{day}}</span>
-      </i>
-    </div>
-  </div>
 
+</div>
+<div class="selection">
+  <div id="selected"></div>
+  <div class="all selected" id="chat" (click)="changeSelection('chat', $event)" title="Tutte le chat">
+    <i class="bi bi-people-fill"></i>
+  </div>
+  <div class="friends" id="friends"(click)="changeSelection('friends', $event)" title="Amici">
+    <i class="bi bi-person-heart"></i>
+  </div>
+  <div class="phone" id="call" (click)="changeSelection('call', $event)" title="chiamate">
+    <i class="bi bi-telephone-fill"></i>
+  </div>
+  <div class="calendar" id="calendar" (click)="changeSelection('calendar', $event)" title="calendario">
+    <i class="bi bi-calendar-fill">
+    </i>
+    <span class="day">{{day}}</span>
+  </div>
 </div>

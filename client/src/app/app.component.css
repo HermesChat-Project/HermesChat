@@ -5,16 +5,5 @@ app-chat-selector {
   display: inline-block;
   position: relative;
   height: 100%;
-}
-.vr {
   border-right: 1px solid #ccc;
-  display: inline-block;
-  cursor: col-resize;
-  height: 100%;
-  width: 2px;
-  margin: 0;
-  padding: 0;
-  vertical-align: top;
 }
-
-

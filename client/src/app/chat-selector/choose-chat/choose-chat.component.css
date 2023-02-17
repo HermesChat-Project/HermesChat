@@ -103,21 +103,18 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #084595;
   border-radius: 10px;
   opacity: 0.5;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #0b2f5e;
 }
 
 /*SELECTION*/
 .selection {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
   height: 5%;
 }
@@ -134,18 +131,41 @@
 .day {
   position: absolute;
   top: 8px;
-  left: 41%;
+  left: 0;
+  width: 100%;
   color: white;
   font-size: x-small;
 }
-
-i {
-  font-size: large;
-}
-
 .selection {
   background-color: #eee;
+  position: relative;
 }
-.selected {
-  border-top: 1px solid #039503;
+.selection div{
+  cursor: pointer;
+  height: 100%;
 }
+.selection div:hover {
+  background-color: #ccc;
+}
+#selected {
+  opacity: 1;
+  border: none;
+  width: 25%;
+  display: block;
+  margin: 0px;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #ccc;
+  border-top: 3px solid #0b2f5e;
+  z-index: 2;
+}
+i{
+  position: relative;
+  z-index: 3;
+}
+.day{
+  z-index: 3;
+}
+
+
