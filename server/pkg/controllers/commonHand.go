@@ -12,7 +12,7 @@ func Login(c *gin.Context) {
 	password := c.Request.Form.Get("password")
 	fmt.Println("username:", username, "password:", password)
 
-	utils.CreateToken(username, c)
+	utils.LoginMongoDB(username, password, c)
 
 }
 

@@ -7,14 +7,15 @@ import (
 
 	"chat/pkg/routes"
 	"chat/pkg/config"
-
 )
+
 
 func main() {
 	config.LoadConfig()
 	fmt.Println("Starting server...")
 	router := gin.Default()
+	config.ConnectToDBMongoDB()
 	//set routers
 	routes.SetupRoutes(router)
-	router.Run(":" + strconv.Itoa(config.PORT))
+	router.RunTLS(":" + strconv.Itoa(config.PORT), "cert.crt", "key.pem")
 }
