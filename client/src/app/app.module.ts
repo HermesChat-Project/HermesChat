@@ -6,8 +6,10 @@ import { AppComponent } from './app.component';
 import { ChatSelectorComponent } from './chat-selector/chat-selector.component';
 import { HeaderChatSelectorComponent } from './chat-selector/header-chat-selector/header-chat-selector.component';
 import { ChooseChatComponent } from './chat-selector/choose-chat/choose-chat.component';
-import { FooterChatSelectorComponent } from './chat-selector/footer-chat-selector/footer-chat-selector.component';
-import { VerticalBarComponent } from './vertical-bar/vertical-bar.component';
+import { AllChatsComponent } from './chat-selector/choose-chat/all-chats/all-chats.component';
+import { FriendsListComponent } from './chat-selector/choose-chat/friends-list/friends-list.component';
+import { CallsListComponent } from './chat-selector/choose-chat/calls-list/calls-list.component';
+import { CalendarComponent } from './chat-selector/choose-chat/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -15,8 +17,10 @@ import { VerticalBarComponent } from './vertical-bar/vertical-bar.component';
     ChatSelectorComponent,
     HeaderChatSelectorComponent,
     ChooseChatComponent,
-    FooterChatSelectorComponent,
-    VerticalBarComponent
+    AllChatsComponent,
+    FriendsListComponent,
+    CallsListComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,

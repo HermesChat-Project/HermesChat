@@ -1,0 +1,28 @@
+<div class="row" id="searchInput">
+  <div class="col-md-12">
+    <!-- SEARCH BOX -->
+    <div class="form-floating">
+      <input type="search" placeholder="Search" class="" id="txtSearch">
+
+    </div>
+    <i class="bi bi-search"></i>
+  </div>
+</div>
+<div id="div_chatlist">
+  <div class="row chat" *ngFor="let chat of chatList.chatList">
+    <div class="col-sm-3">
+      <div class="img img-fluid">
+        <img [src]="chat.img" class="avatar">
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="chatName">
+        <h5 class="chat-name">{{chat.name}}</h5>
+      </div>
+      <div class="lastMessage">
+        <span class="text-truncate last-message">{{chat.Lastmessage}}</span>
+        <span>{{DateAdjustment(chat.LastmessageTime)}}</span>
+      </div>
+    </div>
+  </div>
+</div>

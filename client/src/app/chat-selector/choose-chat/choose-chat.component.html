@@ -1,46 +1,26 @@
-<div class="container" *ngIf="selected_function == 0">
-  <div class="row" id="searchInput">
-    <div class="col-md-12">
-      <!-- SEARCH BOX -->
-      <div class="form-floating">
-        <input type="search" placeholder="Search" class="" id="txtSearch">
-
-      </div>
-      <i class="bi bi-search"></i>
-    </div>
-  </div>
-  <div id="div_chatlist">
-    <div class="row chat" *ngFor="let chat of chatList[0].chatList">
-      <div class="col-sm-3">
-        <div class="img img-fluid">
-          <img [src]="chat.img" class="avatar">
-        </div>
-      </div>
-      <div class="col-sm-9">
-        <div class="chatName">
-          <h5 class="chat-name">{{chat.name}}</h5>
-        </div>
-        <div class="lastMessage">
-          <span class="text-truncate last-message">{{chat.Lastmessage}}</span>
-          <span>{{DateAdjustment(chat.LastmessageTime)}}</span>
-        </div>
-      </div>
+<div class="container">
+  <div id="sections">
+    <div id="type_section" #sections>
+      <app-all-chats [chatList]="chatList" class="section" [ngStyle]="{'left' : 0 * width_section +'px' }" #chat></app-all-chats>
+      <app-friends-list  class="section" [ngStyle]="{'left' : 1 * width_section  +'px' }" #friends></app-friends-list>
+      <app-calls-list  class="section" [ngStyle]="{'left' : 2 * width_section  +'px'}" #calls></app-calls-list>
+      <app-calendar class="section" [ngStyle]="{ 'left' : 3 * width_section  +'px'}" #calendar></app-calendar>
     </div>
   </div>
 
 </div>
 <div class="selection">
-  <div id="selected"></div>
-  <div class="all selected" id="chat" (click)="changeSelection('chat', $event)" title="Tutte le chat">
+  <div id="selected" #selected></div>
+  <div class="all selected" (click)="changeSelection(0, $event)" title="Tutte le chat">
     <i class="bi bi-people-fill"></i>
   </div>
-  <div class="friends" id="friends"(click)="changeSelection('friends', $event)" title="Amici">
+  <div class="friends" (click)="changeSelection(1, $event)" title="Amici">
     <i class="bi bi-person-heart"></i>
   </div>
-  <div class="phone" id="call" (click)="changeSelection('call', $event)" title="chiamate">
+  <div class="phone" (click)="changeSelection(2, $event)" title="chiamate">
     <i class="bi bi-telephone-fill"></i>
   </div>
-  <div class="calendar" id="calendar" (click)="changeSelection('calendar', $event)" title="calendario">
+  <div class="calendar" (click)="changeSelection(3, $event)" title="calendario">
     <i class="bi bi-calendar-fill">
     </i>
     <span class="day">{{day}}</span>
