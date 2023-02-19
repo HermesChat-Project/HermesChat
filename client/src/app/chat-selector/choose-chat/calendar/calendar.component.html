@@ -1,1 +1,14 @@
-<p>calendar works!</p>
+<div id="div_date">
+  <input type="date" id="date" #date (change)="changeDate()" [value]="selected_day">
+</div>
+<div id="navbar">
+  <div class="selector" #selector></div>
+  <div class="event_selector" (click)="changeEvent(0, $event)" [ngClass]="{'selected' : isPersonal}">Personale</div>
+  <div class="event_selector" (click)="changeEvent(1, $event)" [ngClass]="{'selected' : !isPersonal}">Gruppi</div>
+</div>
+<div id="calendar_event">
+  <div class="events" #events>
+    <app-personal [ngStyle]="{'left' : 0*width_section + 'px'}" [personal]="PersonalEvents()"></app-personal>
+    <app-group [ngStyle]="{'left' : 1 * width_section + 'px'}" [group]="GroupEvents()"></app-group>
+  </div>
+</div>

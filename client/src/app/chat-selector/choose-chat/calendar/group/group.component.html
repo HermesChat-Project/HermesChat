@@ -1,0 +1,14 @@
+<div *ngFor="let event of group" class="event" [ngStyle]="{'height': expand == true ? 'fit-content' : '20%'}">
+  <div class="info">
+    <p>{{event.title}}</p>
+    <p>{{getHoursAndMinutes(event.date)}}</p>
+  </div>
+  <div class="desc">
+    <p class="text text-truncate">{{event.description}}</p>
+    <p class="show-more" *ngIf="longText(event.description)" (click)="showMore(event.description)">{{show}}</p>
+  </div>
+</div>
+<div id="no_events" *ngIf="group.length == 0">
+  Nessun evento per questo giorno. Creane uno!
+</div>
+

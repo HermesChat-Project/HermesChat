@@ -10,6 +10,8 @@ import { AllChatsComponent } from './chat-selector/choose-chat/all-chats/all-cha
 import { FriendsListComponent } from './chat-selector/choose-chat/friends-list/friends-list.component';
 import { CallsListComponent } from './chat-selector/choose-chat/calls-list/calls-list.component';
 import { CalendarComponent } from './chat-selector/choose-chat/calendar/calendar.component';
+import { PersonalComponent } from './chat-selector/choose-chat/calendar/personal/personal.component';
+import { GroupComponent } from './chat-selector/choose-chat/calendar/group/group.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { CalendarComponent } from './chat-selector/choose-chat/calendar/calendar
     AllChatsComponent,
     FriendsListComponent,
     CallsListComponent,
-    CalendarComponent
+    CalendarComponent,
+    PersonalComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,

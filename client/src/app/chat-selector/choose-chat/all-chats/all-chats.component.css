@@ -83,28 +83,4 @@
   font-size: small;
 }
 
-/*SCOLL BAR*/
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-  opacity: 0.5;
-}
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-  opacity: 0.5;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #084595;
-  border-radius: 10px;
-  opacity: 0.5;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #0b2f5e;
-}

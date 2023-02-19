@@ -25,7 +25,6 @@ export class ChooseChatComponent {
     new chatList('Gruppo 8', 'Node', new Date(), 'img'),
     new chatList('Gruppo 9', 'MongoDB', new Date(), 'img')
   ])
-  selected_function = 0;//0 = chat, 1 = friend, 2 = calls, 3 = calendar
   day = new Date().getDate();
   width_section = 300;
 
@@ -33,7 +32,6 @@ export class ChooseChatComponent {
   changeSelection(type: number, event: Event) {
 
     let target = event.currentTarget as HTMLElement;
-    console.log(target)
     let keyFrames: Keyframe[] = [
       { left: this.div_selected.nativeElement.offsetLeft + 'px' },
       { left: target.offsetLeft + 'px' }
