@@ -8,8 +8,8 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 	router.POST("/login", controllers.Login)
+	router.POST("/signup", controllers.SignUp)
 	/*
-	router.POST("/signup", controllers.commondHand.Signup)
 	router.GET("/getUsers", controllers.commondHand.SearchUsers)
 	router.POST("/addFriend", controllers.AddFriend)
 	router.POST("/removeFriend", controllers.RemoveFriend)
