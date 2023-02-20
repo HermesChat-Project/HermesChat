@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'HermesChat';
+
+  userLang = navigator.language;
+
+  ngOnInit() {
+    console.log(this.userLang);
+  }
 }

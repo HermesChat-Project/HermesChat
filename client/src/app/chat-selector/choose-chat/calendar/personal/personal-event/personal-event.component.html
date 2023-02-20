@@ -1,0 +1,12 @@
+<div class="event">
+  <div class="info">
+    <p>{{type_of_event.title}}</p>
+    <p>{{getHoursAndMinutes(type_of_event.date)}}</p>
+  </div>
+  <div class="desc" id="desc" >
+    <p class="text" #desc [ngClass]="{'text-truncate' : !expand}">{{type_of_event.description}}</p>
+    <p class="show-more" *ngIf="longText()" (click)="showMore()">{{message}}</p>
+  </div>
+</div>
+
+

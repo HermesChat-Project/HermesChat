@@ -1,0 +1,43 @@
+.info {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+
+}
+.info p{
+  margin: 0px;
+}
+
+.event{
+  padding: 0px 20px;
+  padding-top: 20px;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+
+.desc {
+  width: 100%;
+  height: 60%;
+}
+
+.text {
+  width: 100%;
+  height: auto;
+  font-size: 10pt;
+  margin: 0px;
+  overflow-wrap: break-word;
+}
+.show-more {
+  width: 100%;
+  text-align: end;
+  font-size: 8pt;
+  color: #0b2f5e;
+  text-decoration: underline;
+  cursor: pointer;
+}
