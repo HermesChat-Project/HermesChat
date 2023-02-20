@@ -1,1 +1,24 @@
-<p>friends-list works!</p>
+<div class="row" id="searchInput">
+  <div class="col-sm-12" id="div_search">
+    <!-- SEARCH BOX -->
+    <div class="form-floating">
+      <input type="search" placeholder="Search" class="" id="txtSearch">
+      <i class="bi bi-search"></i>
+    </div>
+    <i class="bi bi-arrow-down-up"></i>
+  </div>
+</div>
+<div id="div_chatlist">
+  <div class="row friends" *ngFor="let friend of list">
+    <div class="col-sm-3">
+      <div class="img">
+        <img [src]="friend.img" class="img-fluid">
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="friendName">
+        <h5 class="friend-name">{{friend.name}}</h5>
+      </div>
+    </div>
+  </div>
+</div>

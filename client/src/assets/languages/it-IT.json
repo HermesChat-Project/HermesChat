@@ -1,0 +1,20 @@
+{
+  "all-chats": "Tutte le chat",
+  "friends": "Amici",
+  "calls": "Chiamate",
+  "calendar" : "Calendario",
+  "minutes-ago": "minuti fa",
+  "hours-ago": "ore fa",
+  "days-ago": "giorni fa",
+  "weeks-ago": "settimane fa",
+  "months-ago": "mesi fa",
+  "years-ago": "anni fa",
+  "minute-ago": "minuto fa",
+  "hour-ago": "ora fa",
+  "day-ago": "giorno fa",
+  "week-ago": "settimana fa",
+  "month-ago": "mese fa",
+  "year-ago": "anno fa",
+  "now": "ora",
+  "search": "Cerca"
+}

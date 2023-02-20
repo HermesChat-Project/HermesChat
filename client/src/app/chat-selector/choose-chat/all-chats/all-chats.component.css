@@ -5,14 +5,17 @@
 }
 
 .form-floating {
-  display: inline-block;
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .form-floating input {
   height: 20px;
   padding: 0 !important;
   padding-right: 2.5rem;
+
 }
 /*SEARCH BAR*/
 #searchInput {
@@ -30,7 +33,7 @@
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 5px !important;
-  width: 100%;
+  width: 80%;
 }
 
 #div_chatlist {
@@ -63,7 +66,7 @@
 
 .chat {
   border-bottom: 1px solid #ccc;
-  padding-top: 6%;
+  padding: 3% 0px;
   height: 14.29%;
   padding-left: 10px;
 }
