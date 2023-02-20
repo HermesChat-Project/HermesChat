@@ -12,6 +12,8 @@ import { CallsListComponent } from './chat-selector/choose-chat/calls-list/calls
 import { CalendarComponent } from './chat-selector/choose-chat/calendar/calendar.component';
 import { PersonalComponent } from './chat-selector/choose-chat/calendar/personal/personal.component';
 import { GroupComponent } from './chat-selector/choose-chat/calendar/group/group.component';
+import { PersonalEventComponent } from './chat-selector/choose-chat/calendar/personal/personal-event/personal-event.component';
+import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/group-event/group-event.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { GroupComponent } from './chat-selector/choose-chat/calendar/group/group
     CallsListComponent,
     CalendarComponent,
     PersonalComponent,
-    GroupComponent
+    GroupComponent,
+    PersonalEventComponent,
+    GroupEventComponent
   ],
   imports: [
     BrowserModule,

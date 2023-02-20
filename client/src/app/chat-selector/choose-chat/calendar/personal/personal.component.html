@@ -1,13 +1,7 @@
-<div *ngFor="let event of personal" class="event" [ngStyle]="{'height': expand == true ? 'fit-content' : '20%'}">
-  <div class="info">
-    <p>{{event.title}}</p>
-    <p>{{getHoursAndMinutes(event.date)}}</p>
-  </div>
-  <div class="desc">
-    <p class="text" [ngClass]="{'text-truncate' : !expand}">{{event.description}}</p>
-    <p class="show-more" *ngIf="longText(event.description)" (click)="showMore(event.description)">{{show}}</p>
-  </div>
+<div *ngFor="let event of personal" class="event" [ngStyle]="{'height': expand == true ? 'fit-content' : '20%'}" >
+  <app-personal-event [type_of_event]="event" (expandEvent)="OnExpandEvent($event)"></app-personal-event>
 </div>
 <div id="no_events" *ngIf="personal.length == 0">
   Nessun evento per questo giorno. Creane uno!
 </div>
+
