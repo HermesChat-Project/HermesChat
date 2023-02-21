@@ -71,6 +71,7 @@
   padding: 3% 0;
   height: 14.29%;
   padding-left: 10px;
+  align-items: center;
 }
 
 .friendName{

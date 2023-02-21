@@ -11,7 +11,6 @@ export class FriendsListComponent {
   list: any[] = [];
   ngOnInit(): void {
     this.getFriendListOf(0);
-    console.log(this.list);
   }
 
   getFriendListOf(id: number) {

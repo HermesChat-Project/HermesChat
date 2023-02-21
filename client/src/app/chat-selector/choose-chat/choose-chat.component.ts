@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { callsModel } from 'model/calls.model';
 import { chatList } from 'model/chat-list.model';
 import { userModel } from 'model/user.model';
 
@@ -15,17 +16,27 @@ export class ChooseChatComponent {
 
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
-      new chatList('Prova', 'Lorem ipsum', new Date("2023/02/16 1:2:23"), 'img'),
-      new chatList('Gruppo 1', 'Boh', new Date(), 'img'),
-      new chatList('Gruppo 2', 'Ciao ', new Date(), 'img'),
-      new chatList('Gruppo 3', 'Non so cosa scrivere', new Date(), 'img'),
-      new chatList('Gruppo 4', 'DOTNET CORE', new Date(), 'img'),
-      new chatList('Gruppo 5', 'Angular', new Date(), 'img'),
-      new chatList('Gruppo 6', 'React', new Date(), 'img'),
-      new chatList('Gruppo 7', 'Vue', new Date(), 'img'),
-      new chatList('Gruppo 8', 'Node', new Date(), 'img'),
-      new chatList('Gruppo 9', 'MongoDB', new Date(), 'img')
-    ], [1, 2, 3]),
+      new chatList(0, 'Prova', 'Lorem ipsum', new Date("2023/02/16 1:2:23"), 'img'),
+      new chatList(1, 'Gruppo 1', 'Boh', new Date(), 'img'),
+      new chatList(2, 'Gruppo 2', 'Ciao ', new Date(), 'img'),
+      new chatList(3, 'Gruppo 3', 'Non so cosa scrivere', new Date(), 'img'),
+      new chatList(4, 'Gruppo 4', 'DOTNET CORE', new Date(), 'img'),
+      new chatList(5, 'Gruppo 5', 'Angular', new Date(), 'img'),
+      new chatList(6, 'Gruppo 6', 'React', new Date(), 'img'),
+      new chatList(7, 'Gruppo 7', 'Vue', new Date(), 'img'),
+      new chatList(6, 'Gruppo 8', 'Node', new Date(), 'img'),
+      new chatList(9, 'Gruppo 9', 'MongoDB', new Date(), 'img')
+    ], [1, 2, 3], [
+      new callsModel(0, 0, 0, new Date(), 0),
+      new callsModel(1, 0, 2, new Date(), 1),
+      new callsModel(2, 0, 3, new Date(), 2),
+      new callsModel(3, 0, 4, new Date(), 0),
+      new callsModel(4, 0, 5, new Date(), 2),
+      new callsModel(5, 0, 6, new Date(), 2),
+      new callsModel(6, 0, 7, new Date(), 1),
+      new callsModel(7, 0, 8, new Date(), 1),
+      new callsModel(8, 0, 9, new Date(), 0),
+      new callsModel(9, 0, 9, new Date(), 0)]),
     new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], [0, 2, 3]),
     new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [0, 1, 3]),
     new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], [0, 1, 2]),

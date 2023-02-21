@@ -1,0 +1,132 @@
+.col-sm-9 {
+  height: 100%;
+  padding-left: 0px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.col-sm-3 {
+  height: 100%;
+  padding-right: 0px !important;
+  display: flex;
+  align-items: center;
+}
+
+#calls-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+h6 {
+  margin: 0;
+  padding: 0;
+}
+/*IMG*/
+.img {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.img img:before {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-image: url("../../../../assets/img/user.jpg");
+  background-size: cover;
+}
+
+.call {
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0;
+  height: 14.29%;
+  margin: 0px !important;
+  display: flex;
+  align-items: center;
+}
+/*div of the name of the receiver*/
+.calls-receiver {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.name-receiver {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.calls-receiver > div {
+  width: 100%;
+  height: 50%;
+}
+
+
+/*div info*/
+.calls-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+/*DIV_CALLS-TYPE ------- 0:missed, 1:incoming, 2:outgoing*/
+.calls-type {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.missed {
+  color: #ff0000;
+  transform: rotate(135deg);
+  position: relative;
+}
+
+.incoming {
+  color: #00ff00;
+  transform: rotate(45deg);
+  position: relative;
+  bottom: 6px;
+  right: 13px;
+}
+.call-incoming {
+  position: relative;
+}
+
+/*DATE TEXT*/
+.date p {
+  margin: 0;
+  padding: 0;
+  opacity: 0.5;
+  font-size: 10pt;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+}
+/*DIV_CALLBACK*/
+.callback i {
+  font-size: 11pt;
+  cursor: pointer;
+}
+
+.callback {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}

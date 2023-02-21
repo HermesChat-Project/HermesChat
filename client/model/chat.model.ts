@@ -7,7 +7,7 @@ export class chatModel {
 
 
   constructor(id_chat:number, mes:messageModel[], mebers: number[], id:number ) {
-    this.id = id;
+    this.id = id_chat;
     this.message = mes;
     this.members = mebers;
   }

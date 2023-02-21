@@ -1,1 +1,35 @@
-<p>calls-list works!</p>
+<div id="calls-list">
+  <div class="row call" *ngFor="let calls of callsList">
+    <div class="col-sm-3">
+      <div class="img">
+        <img [src]="calls.img_receiver" class="img-fluid">
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="calls-receiver">
+        <div class="name-receiver">
+          <h6>{{calls.name_receiver}}</h6>
+        </div>
+        <div class="calls-info">
+          <div class="calls-type"  *ngIf="calls.type == 0">
+            <i class="bi bi-telephone-fill missed"></i>
+          </div>
+          <div *ngIf="calls.type == 1" class="call-incoming calls-type">
+            <i class="bi bi-telephone-fill"></i>
+            <i class="bi bi-arrow-up-short incoming"></i>
+          </div>
+          <div *ngIf="calls.type == 2" class="calls-type">
+            <i class="bi bi-telephone-inbound-fill"></i>
+          </div>
+          <div class="date">
+            <p>{{getDate(calls.date)}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="callback">
+        <i class="bi bi-telephone-fill" title="Chiama"></i>
+        <i class="bi bi-camera-video-fill" title="Videochiama"></i>
+      </div>
+    </div>
+  </div>
+</div>
