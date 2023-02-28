@@ -59,6 +59,11 @@
 .selection div:hover {
   background-color: #ccc;
 }
+
+.selection > div > i{
+  width: 100%;
+  height: 100%;
+}
 #selected {
   opacity: 1;
   border: none;
@@ -77,6 +82,8 @@ i{
   z-index: 3;
   top: 4px;
 }
+
+
 
 
 

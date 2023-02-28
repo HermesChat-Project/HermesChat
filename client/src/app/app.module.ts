@@ -14,6 +14,7 @@ import { PersonalComponent } from './chat-selector/choose-chat/calendar/personal
 import { GroupComponent } from './chat-selector/choose-chat/calendar/group/group.component';
 import { PersonalEventComponent } from './chat-selector/choose-chat/calendar/personal/personal-event/personal-event.component';
 import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/group-event/group-event.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

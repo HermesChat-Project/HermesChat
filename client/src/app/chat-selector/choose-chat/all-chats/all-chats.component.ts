@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { chatList } from 'model/chat-list.model';
 import { userModel } from 'model/user.model';
 
 @Component({
@@ -8,6 +9,11 @@ import { userModel } from 'model/user.model';
 })
 export class AllChatsComponent {
   @Input() chatList!: userModel;
+  txtSearchChat: string = '';
+
+  filteredList: chatList[] = [];
+
+
   DateAdjustment(date: Date) {
     let today = date.getDate();
     let hour: string = date.getHours().toString();
@@ -20,6 +26,15 @@ export class AllChatsComponent {
       if (minute.length < 2)
         minute = '0' + minute;
       return hour + ':' + minute;
+    }
+  }
+
+  showChats(){
+    if(this.txtSearchChat == '')
+      this.filteredList = this.chatList.chatList;
+    else
+    {
+      this.filteredList = this.chatList.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()));
     }
   }
 }
