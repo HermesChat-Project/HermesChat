@@ -8,14 +8,14 @@
   </div>
 </div>
 <div id="div_chatlist" *ngIf="txtSearchChat == ''">
-  <div class="list_result"  *ngIf="chatList.chatList.length == 0 || !chatList.chatList">
+  <div class="list_result"  *ngIf="chatListUser.chatList.length == 0 || !chatListUser.chatList">
     <div class="no_chat_user">
       <h5>Non hai nessuna chat</h5>
       <h5>Creane o cercane una!</h5>
     </div>
   </div>
-  <div class="list_result" *ngIf="chatList.chatList.length != 0 && chatList.chatList">
-    <div class="row chat" *ngFor="let chat of chatList.chatList">
+  <div class="list_result" *ngIf="chatListUser.chatList.length != 0 && chatListUser.chatList">
+    <div class="row chat" *ngFor="let chat of chatListUser.chatList">
       <div class="col-sm-3">
         <div class="img img-fluid">
           <img [src]="chat.img" class="avatar">
@@ -34,20 +34,20 @@
   </div>
 </div>
 <div id="div_resultSearch" *ngIf="txtSearchChat != ''">
-  <span *ngIf="txtSearchChat!= ''" class="chatFound">Chat personali</span>
-  <div class="row chat" *ngFor="let chat of filteredList">
+  <span *ngIf="PersonalListSearch.length != 0"class="chatFound">Chat personali</span>
+  <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch">
     <div class="col-sm-3">
       <div class="img img-fluid">
-        <img [src]="chat.img" class="avatar">
+        <img [src]="personalChatSearch.img" class="avatar">
       </div>
     </div>
     <div class="col-sm-9">
       <div class="chatName">
-        <h5 class="chat-name">{{chat.name}}</h5>
+        <h5 class="chat-name">{{personalChatSearch.name}}</h5>
       </div>
       <div class="lastMessage">
-        <span class="text-truncate last-message">{{chat.Lastmessage}}</span>
-        <span>{{DateAdjustment(chat.LastmessageTime)}}</span>
+        <span class="text-truncate last-message">{{personalChatSearch.Lastmessage}}</span>
+        <span>{{DateAdjustment(personalChatSearch.LastmessageTime)}}</span>
       </div>
     </div>
   </div>

@@ -32,12 +32,11 @@
 }
 
 #txtSearch {
-  border-radius: 5px;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  padding: 5px !important;
+  padding: 7px !important;
   width: 80%;
-  height: 70%;
-
+  height: 25px;
 }
 #txtSearch:focus {
   outline: none;

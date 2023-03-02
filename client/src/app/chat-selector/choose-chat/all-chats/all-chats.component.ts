@@ -8,18 +8,37 @@ import { userModel } from 'model/user.model';
   styleUrls: ['./all-chats.component.css']
 })
 export class AllChatsComponent {
-  @Input() chatList!: userModel;
+  @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
-  filteredList: chatList[] = [];
-
+  PersonalListSearch: chatList[] = [];
+  ngOnInit() {
+    this.chatListUser.chatList.sort((a, b) => b.LastmessageTime.getTime() - a.LastmessageTime.getTime());
+    this.PersonalListSearch = this.chatListUser.chatList;
+  }
 
   DateAdjustment(date: Date) {
-    let today = date.getDate();
+    let dateMessage = this.GetDateWithoutTime(date);
+    let today = new Date();
+    let dateNow = this.GetDateWithoutTime(today);
+
     let hour: string = date.getHours().toString();
     let minute: string = date.getMinutes().toString();
-    if (today + 1 == new Date().getDate())
-      return 'ieri';
+    if (dateMessage != dateNow) {
+      let diff = Math.abs(today.getTime() - date.getTime());
+      // console.log(diff)
+      let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      diffDays--;
+      if (diffDays > 7) {
+        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+      }
+      else {
+        if (diffDays == 1)
+          return 'Ieri'
+        else
+          return diffDays + " giorni fa";
+      }
+    }
     else {
       if (hour.length < 2)
         hour = '0' + hour;
@@ -29,12 +48,14 @@ export class AllChatsComponent {
     }
   }
 
-  showChats(){
-    if(this.txtSearchChat == '')
-      this.filteredList = this.chatList.chatList;
-    else
-    {
-      this.filteredList = this.chatList.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()));
+  showChats() {
+    if (this.txtSearchChat == '')
+      this.PersonalListSearch = this.chatListUser.chatList;
+    else {
+      this.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => a.LastmessageTime.getTime() - b.LastmessageTime.getTime());
     }
+  }
+  GetDateWithoutTime(date: Date) {
+    return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
 }
