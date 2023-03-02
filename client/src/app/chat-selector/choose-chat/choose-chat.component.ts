@@ -27,7 +27,7 @@ export class ChooseChatComponent {
       new chatList(6, 'Gruppo 8', 'Node', new Date(2023, 2, 2), 'img'),
       new chatList(9, 'Gruppo 9', 'MongoDB', new Date(2023, 2, 1), 'img'),
       new chatList(10, 'PC', 'SQL', new Date(2023, 1, 12, 23, 15), 'img'),
-    ], [1, 2, 3], [
+    ], [1, 2, 3, 4, 5], [
       new callsModel(0, 0, 0, new Date(), 0),
       new callsModel(1, 0, 2, new Date(), 1),
       new callsModel(2, 0, 3, new Date(), 2),
@@ -39,10 +39,10 @@ export class ChooseChatComponent {
       new callsModel(8, 0, 9, new Date(), 0),
       new callsModel(9, 0, 9, new Date(), 0)]),
     new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], [0, 2, 3]),
-    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [0, 1, 3]),
+    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [0, 1, 3, 5]),
     new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], [0, 1, 2]),
-    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], [5, 6]),
-    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], [4, 6]),
+    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], [5, 6, 1, 2]),
+    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], [4, 6, 1]),
     new userModel(6, 'Paperina', 'paperina@gmail.com', 'paperina', [], [4, 5]),
     new userModel(7, 'Qui', 'qui@gmail.com', 'qui', [], [8, 9]),
     new userModel(8, 'Quo', 'quo@gmail.com', 'quo', [], [7, 9]),

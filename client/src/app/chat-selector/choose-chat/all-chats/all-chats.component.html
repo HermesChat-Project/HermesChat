@@ -8,12 +8,7 @@
   </div>
 </div>
 <div id="div_chatlist" *ngIf="txtSearchChat == ''">
-  <div class="list_result"  *ngIf="chatListUser.chatList.length == 0 || !chatListUser.chatList">
-    <div class="no_chat_user">
-      <h5>Non hai nessuna chat</h5>
-      <h5>Creane o cercane una!</h5>
-    </div>
-  </div>
+
   <div class="list_result" *ngIf="chatListUser.chatList.length != 0 && chatListUser.chatList">
     <div class="row chat" *ngFor="let chat of chatListUser.chatList">
       <div class="col-sm-3">
@@ -34,7 +29,13 @@
   </div>
 </div>
 <div id="div_resultSearch" *ngIf="txtSearchChat != ''">
-  <span *ngIf="PersonalListSearch.length != 0"class="chatFound">Chat personali</span>
+  <div class="list_result" *ngIf="PersonalListSearch.length == 0 || !PersonalListSearch">
+    <div class="no_chat_user">
+      <h5>Non hai nessuna chat</h5>
+      <h5>Creane o cercane una!</h5>
+    </div>
+  </div>
+  <span *ngIf="PersonalListSearch.length != 0" class="chatFound">Chat personali</span>
   <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch">
     <div class="col-sm-3">
       <div class="img img-fluid">
