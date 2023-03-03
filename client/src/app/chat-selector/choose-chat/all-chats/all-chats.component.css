@@ -15,7 +15,6 @@
   height: 20px;
   padding: 0 !important;
   padding-right: 2.5rem;
-
 }
 /*SEARCH BAR*/
 #searchInput {
@@ -27,7 +26,7 @@
   margin-left: 0 !important;
   height: 7%;
 }
-#searchInput div{
+#searchInput div {
   height: 100%;
 }
 
@@ -42,7 +41,8 @@
   outline: none;
 }
 
-#div_chatlist, #div_resultSearch {
+#div_chatlist,
+#div_resultSearch {
   height: 93%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -78,7 +78,6 @@
   align-items: center;
 }
 
-
 /*Graphic Last message in the chat selector*/
 .lastMessage span:last-of-type {
   font-size: 12px;
@@ -94,24 +93,30 @@
 }
 
 /*Graphic for the span when I search a chat*/
-.chatFound{
+.chatFound {
   display: inline-block;
   height: fit-content;
   width: 100%;
   padding: 5px;
   border-bottom: 1px solid #ccc;
+}
+
+.chatFound button {
   color: #084595;
+  background-color: white;
+  padding: 0;
+  box-shadow: none;
   font-size: 9pt;
   font-weight: bold;
 }
 
 /*chat_result*/
-.list_result{
+.list_result {
   width: 100%;
   height: 100%;
 }
 
-.no_chat_user{
+.no_chat_user {
   width: 100%;
   height: 100%;
   display: grid;
@@ -120,10 +125,12 @@
   align-content: center;
 }
 
-.no_chat_user h5{
+.no_chat_user h5 {
   font-size: 11pt;
   font-weight: bold;
   color: #084595;
 }
 
-
+.accordion-body {
+  padding: 0px;
+}

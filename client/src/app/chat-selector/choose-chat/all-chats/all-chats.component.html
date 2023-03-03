@@ -7,7 +7,7 @@
     </div>
   </div>
 </div>
-<div id="div_chatlist" *ngIf="txtSearchChat == ''">
+<div id="div_chatlist" *ngIf="txtSearchChat.length<3">
 
   <div class="list_result" *ngIf="chatListUser.chatList.length != 0 && chatListUser.chatList">
     <div class="row chat" *ngFor="let chat of chatListUser.chatList">
@@ -28,28 +28,66 @@
     </div>
   </div>
 </div>
-<div id="div_resultSearch" *ngIf="txtSearchChat != ''">
-  <div class="list_result" *ngIf="PersonalListSearch.length == 0 || !PersonalListSearch">
+<div id="div_resultSearch" *ngIf="txtSearchChat.length >= 3">
+  <div class="list_result" *ngIf="PersonalListSearch.length == 0 && OtherListSerach.length == 0">
     <div class="no_chat_user">
       <h5>Non hai nessuna chat</h5>
       <h5>Creane o cercane una!</h5>
     </div>
   </div>
-  <span *ngIf="PersonalListSearch.length != 0" class="chatFound">Chat personali</span>
-  <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch">
-    <div class="col-sm-3">
-      <div class="img img-fluid">
-        <img [src]="personalChatSearch.img" class="avatar">
+  <div class="accordion" *ngIf="PersonalListSearch.length != 0 || OtherListSerach.length != 0">
+    <div class="accordion-item" *ngIf="PersonalListSearch.length != 0">
+      <span class="chatFound accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
+          data-bs-target="#personal" aria-expanded="true" aria-controls="collapseOne">
+          Chat personali
+        </button></span>
+      <div id="personal" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch">
+            <div class="col-sm-3">
+              <div class="img img-fluid">
+                <img [src]="personalChatSearch.img" class="avatar">
+              </div>
+            </div>
+            <div class="col-sm-9">
+              <div class="chatName">
+                <h5 class="chat-name">{{personalChatSearch.name}}</h5>
+              </div>
+              <div class="lastMessage">
+                <span class="text-truncate last-message">{{personalChatSearch.Lastmessage}}</span>
+                <span>{{DateAdjustment(personalChatSearch.LastmessageTime)}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-sm-9">
-      <div class="chatName">
-        <h5 class="chat-name">{{personalChatSearch.name}}</h5>
-      </div>
-      <div class="lastMessage">
-        <span class="text-truncate last-message">{{personalChatSearch.Lastmessage}}</span>
-        <span>{{DateAdjustment(personalChatSearch.LastmessageTime)}}</span>
+    <div class="accordion-item" *ngIf="OtherListSerach.length != 0">
+      <span class="chatFound accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
+          data-bs-target="#others" aria-expanded="true" aria-controls="collapseOne">
+          Chat trovate
+        </button></span>
+      <div id="others" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="row chat" *ngFor="let OthersChats of OtherListSerach">
+            <div class="col-sm-3">
+              <div class="img img-fluid">
+                <img [src]="OthersChats.img" class="avatar">
+              </div>
+            </div>
+            <div class="col-sm-9">
+              <div class="chatName">
+                <h5 class="chat-name">{{OthersChats.name}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+
   </div>
+
 </div>
