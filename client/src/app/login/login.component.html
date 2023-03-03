@@ -1,0 +1,41 @@
+<div class="row d-flex justify-content-center wrapper">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="title">HermesChat</p>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center sign-in" >
+    <!-- textbox email -->
+    <div class="col-md-12 center">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="txtEmail" placeholder="Email" [(ngModel)]="email" name="email">
+      </div>
+    </div>
+    <!-- textbox password -->
+    <div class="col-md-12 center">
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
+      </div>
+    </div>
+    <!-- button login -->
+    <div class="col-md-12 d-flex center" style="width: 80%;">
+      <div class="form-group d-flex center" style="width: 100%; margin: 0 auto;">
+        <button type="button" class="btn btn-primary btn-block login-button" (click)="login()">Login</button>
+      </div>
+    </div>
+    <!-- forgot password -->
+    <div class="col-md-12">
+      <div class="form-group">
+        <a href="#" style="float: right; margin-right: 5%;">Forgot Password?</a>
+      </div>
+    </div>
+    <!-- button register -->
+    <div class="col-md-12">
+      <div class="form-group">
+        <button type="button" class="btn btn-primary btn-block" (click)="register()">Register</button>
+      </div>
+    </div>
+  </div>
+</div>
