@@ -30,7 +30,18 @@ export class CallsListComponent {
   }
 
   getDate(date: Date){
-    return (date.toLocaleString().split(',')[1]).trim()
+    let today = date.getDate();
+    let hour: string = date.getHours().toString();
+    let minute: string = date.getMinutes().toString();
+    if (today + 1 == new Date().getDate())
+      return 'ieri';
+    else {
+      if (hour.length < 2)
+        hour = '0' + hour;
+      if (minute.length < 2)
+        minute = '0' + minute;
+      return hour + ':' + minute;
+    }
   }
 
 }
