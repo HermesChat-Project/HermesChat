@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatSelectorComponent } from './chat-selector/chat-selector.component';
@@ -14,6 +13,8 @@ import { PersonalComponent } from './chat-selector/choose-chat/calendar/personal
 import { GroupComponent } from './chat-selector/choose-chat/calendar/group/group.component';
 import { PersonalEventComponent } from './chat-selector/choose-chat/calendar/personal/personal-event/personal-event.component';
 import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/group-event/group-event.component';
+import { LoginComponent } from './login/login.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,11 +29,13 @@ import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/
     PersonalComponent,
     GroupComponent,
     PersonalEventComponent,
-    GroupEventComponent
+    GroupEventComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

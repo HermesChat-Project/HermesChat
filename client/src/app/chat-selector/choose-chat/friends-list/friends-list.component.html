@@ -1,1 +1,28 @@
-<p>friends-list works!</p>
+<div class="row" id="searchInput">
+  <div class="col-sm-12" id="div_search">
+    <!-- SEARCH BOX -->
+    <div class="form-floating">
+      <input type="search" placeholder="Search" class="" id="txtSearch" [(ngModel)]="txtSearchFriends" [ngModelOptions]="{standalone: true}" (input)="showFriends()">
+    </div>
+    <i class="bi bi-arrow-down-up reverse-list" (click)="reverseList()" title="cambia l'ordine" [ngClass]="{'not_visible' : friendList.length == 0}"></i>
+  </div>
+</div>
+<div id="div_friendList">
+  <div class="listFound" *ngIf="friendList.length > 0">
+    <div class="row friends" *ngFor="let friend of friendList">
+      <div class="col-sm-3">
+        <div class="img">
+          <img [src]="friend.img" class="img-fluid">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="friendName">
+          <h5 class="friend-name">{{friend.name}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="listNotFound" *ngIf="friendList.length == 0">
+    <h5>Nessun risultato</h5>
+  </div>
+</div>

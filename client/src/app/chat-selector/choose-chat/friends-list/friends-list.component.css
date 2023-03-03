@@ -1,0 +1,112 @@
+.bi-search {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.form-floating {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+#div_search{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form-floating input {
+  height: 20px;
+  padding: 0 !important;
+  padding-right: 2.5rem;
+}
+/*SEARCH BAR*/
+#searchInput {
+  padding-top: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  margin-left: 0 !important;
+  height: 7%;
+}
+
+#txtSearch {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 7px !important;
+  width: 80%;
+  height: 25px;
+}
+
+#txtSearch:focus {
+  outline: none;
+}
+
+.reverse-list{
+  cursor: pointer;
+}
+
+#div_friendList {
+  height: 93%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/*Chat image*/
+
+.img {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.img img:before {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-image: url("../../../../assets/img/user.jpg");
+  background-size: cover;
+}
+
+.friends {
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0;
+  height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+}
+
+.friendName{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+/*Graphics when tere are no results during the search*/
+.listNotFound{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  align-content: center;
+}
+
+
+
+.listNotFound h5{
+  font-size: 11pt;
+  font-weight: bold;
+  color: #084595;
+}
+
+.not_visible{
+  visibility: hidden;
+}
