@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { chatList } from 'model/chat-list.model';
+import { SearchModel } from 'model/search.model';
 import { userModel } from 'model/user.model';
 
 @Component({
@@ -12,6 +13,39 @@ export class AllChatsComponent {
   txtSearchChat: string = '';
 
   PersonalListSearch: chatList[] = [];
+  OtherListSerach: SearchModel[] = [];
+
+  totalUser: SearchModel[] = [
+    new SearchModel(0, 'Prova', 'Ciao come stai?', 'img'),
+    new SearchModel(1, 'Mario', 'Ciao come stai?', 'img'),
+    new SearchModel(2, 'Luigi', 'Ciao come stai?', 'img'),
+    new SearchModel(3, 'Pippo', 'Ciao come stai?', 'img'),
+    new SearchModel(4, 'Pluto', 'Ciao come stai?', 'img'),
+    new SearchModel(5, 'Paperino', 'Ciao come stai?', 'img'),
+    new SearchModel(6, 'Paperone', 'Ciao come stai?', 'img'),
+    new SearchModel(7, 'Topolino', 'Ciao come stai?', 'img'),
+    new SearchModel(8, 'Minnie', 'Ciao come stai?', 'img'),
+    new SearchModel(9, 'Paperoga', 'Ciao come stai?', 'img'),
+    new SearchModel(10, 'Paperina', 'Ciao come stai?', 'img'),
+    new SearchModel(11, 'Paperon de Paperoni', 'Ciao come stai?', 'img'),
+    new SearchModel(12, "Qui", 'Ciao come stai?', 'img'),
+    new SearchModel(13, "Quo", 'Ciao come stai?', 'img'),
+    new SearchModel(14, "Qua", 'Ciao come stai?', 'img'),
+    new SearchModel(15, "Gruppo 1", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi']),
+    new SearchModel(16, "Gruppo 2", 'Gruppo di prova', 'img', true, ['Mario', 'Pippo']),
+    new SearchModel(17, "Gruppo 3", 'Gruppo di prova', 'img', true, ['Mario', 'Paperino', 'Pluto']),
+    new SearchModel(18, "Gruppo 4", 'Gruppo di prova', 'img', true, ['Mario', 'Qui', 'Quo', 'Qua']),
+    new SearchModel(19, "Gruppo 5", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Pippo']),
+    new SearchModel(20, "Gruppo 6", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperino']),
+    new SearchModel(21, "Gruppo 7", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Pluto']),
+    new SearchModel(22, "Gruppo 8", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperone']),
+    new SearchModel(23, "Gruppo 9", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Topolino']),
+    new SearchModel(24, "Gruppo 10", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Minnie', 'Paperoga']),
+    new SearchModel(25, "Gruppo 11", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperina']),
+    new SearchModel(26, "Gruppo 12", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperon de Paperoni']),
+    new SearchModel(27, "Gruppo 13", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Qui']),
+    new SearchModel(28, "Gruppo 14", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Quo', 'Qua', 'Paperone'])
+  ]
   ngOnInit() {
     this.chatListUser.chatList.sort((a, b) => b.LastmessageTime.getTime() - a.LastmessageTime.getTime());
     this.PersonalListSearch = this.chatListUser.chatList;
@@ -27,8 +61,8 @@ export class AllChatsComponent {
     if (dateMessage != dateNow) {
       let diff = Math.abs(today.getTime() - date.getTime());
       // console.log(diff)
-      let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-      diffDays--;
+      let diffDays = Math.floor(diff / (1000 * 3600 * 24));
+
       if (diffDays > 7) {
         return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
       }
@@ -49,10 +83,15 @@ export class AllChatsComponent {
   }
 
   showChats() {
-    if (this.txtSearchChat == '')
+    if (this.txtSearchChat.length < 3) {
       this.PersonalListSearch = this.chatListUser.chatList;
+      this.OtherListSerach = [];
+    }
     else {
       this.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => a.LastmessageTime.getTime() - b.LastmessageTime.getTime());
+      this.PersonalListSearch.sort((a, b) => b.LastmessageTime.getTime() - a.LastmessageTime.getTime());
+      this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
+      this.OtherListSerach = this.OtherListSerach.filter((chat) => !this.PersonalListSearch.some((chat2) => chat2.global_id_chat == chat._id)).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
     }
   }
   GetDateWithoutTime(date: Date) {

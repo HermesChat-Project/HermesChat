@@ -7,3 +7,14 @@ app-chat-selector {
   height: 100%;
   border-right: 1px solid #ccc;
 }
+
+app-login{
+  height: 100%;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+
+}

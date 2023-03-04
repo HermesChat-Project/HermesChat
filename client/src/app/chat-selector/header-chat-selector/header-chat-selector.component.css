@@ -20,3 +20,69 @@
 i {
   cursor: pointer;
 }
+#newChat{
+  position: relative;
+}
+
+#selectNewChat{
+  overflow: hidden;
+  margin: 0px !important;
+  padding: 0px !important;
+  max-height: 0px;
+  width: max-content;
+  background-color: whitesmoke;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1;
+  right: -100%;
+}
+
+#selectNewChat.animate{
+  box-shadow: 0px 0px 10px 0px #ccc;
+  max-height: 100px !important;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  transition: all 500ms ease-out;
+
+}
+
+#selectNewChat > div {
+  height: fit-content;
+  text-align: center;
+  font-size: 9pt;
+  margin: 0px !important;
+  width: 100%;
+  padding: 5px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+
+#selectNewChat > div:hover{
+  background-color: rgba(0,0,0,0.1);
+}
+
+#newChatOptions{
+  border: none;
+  background-color: transparent;
+}
+
+app-user-profile{
+  width: 300px;
+  display: inline-block;
+  height: 93%;
+  position: absolute;
+  bottom: 0;
+  left: -300px;
+  z-index: 10;
+}
+
+.showUser{
+  left: 0px;
+  transition: all 200ms ease-out;
+}
+
+.hideUser{
+  left: -300px;
+  transition: all 200ms ease-out;
+}

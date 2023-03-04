@@ -16,17 +16,17 @@ export class ChooseChatComponent {
 
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
-      new chatList(0, 'Prova', 'Lorem ipsum', new Date("2023/02/16 1:2:23"), 'img'),
-      new chatList(1, 'Gruppo 1', 'Auguri', new Date(2022, 10, 23), 'img'),
-      new chatList(2, 'Gruppo 2', 'Ciao ', new Date(), 'img'),
-      new chatList(3, 'Gruppo 3', 'Non so cosa scrivere', new Date(), 'img'),
-      new chatList(4, 'Gruppo 4', 'DOTNET CORE', new Date(), 'img'),
-      new chatList(5, 'Gruppo 5', 'Angular', new Date(), 'img'),
-      new chatList(6, 'Gruppo 6', 'React', new Date(), 'img'),
-      new chatList(7, 'Gruppo 7', 'Vue', new Date(), 'img'),
-      new chatList(6, 'Gruppo 8', 'Node', new Date(2023, 2, 2), 'img'),
-      new chatList(9, 'Gruppo 9', 'MongoDB', new Date(2023, 2, 1), 'img'),
-      new chatList(10, 'PC', 'SQL', new Date(2023, 1, 12, 23, 15), 'img'),
+      new chatList(0, 0, 'Prova', "ok", "img", false, ["Username", "Prova"], "Lorem ipsum", new Date("2023/02/16 1:2:23")),
+      new chatList(1, 15, 'Gruppo 1',"ok", "img", true, [""], 'Auguri', new Date(2022, 10, 23)),
+      new chatList(2, 16, 'Gruppo 2',"ok", "img", true, [""], 'Ciao ', new Date()),
+      new chatList(3, 17, 'Gruppo 3',"ok", "img", true, [""], 'Non so cosa scrivere', new Date()),
+      new chatList(4, 18, 'Gruppo 4',"ok", "img", true, [""], 'DOTNET CORE', new Date()),
+      new chatList(5, 19, 'Gruppo 5',"ok", "img", true, [""], 'Angular', new Date()),
+      new chatList(6, 20, 'Gruppo 6',"ok", "img", true, [""], 'React', new Date()),
+      new chatList(7, 21, 'Gruppo 7',"ok", "img", true, [""], 'Vue', new Date()),
+      new chatList(6, 22, 'Gruppo 8',"ok", "img", true, [""], 'Node', new Date(2023, 2, 2)),
+      new chatList(9, 23, 'Gruppo 9',"ok", "img", true, [""], 'MongoDB', new Date(2023, 2, 1)),
+      new chatList(10, 24, 'PC',"ok", "img", true, [""], 'SQL', new Date(2023, 1, 12, 23, 15)),
     ], [1, 2, 3, 4, 5], [
       new callsModel(0, 0, 0, new Date(), 0),
       new callsModel(1, 0, 2, new Date(), 1),

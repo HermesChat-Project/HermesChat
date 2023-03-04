@@ -2,16 +2,18 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	//add folder local called controllers 
+	//add folder local called controllers
 	"chat/pkg/controllers"
+	"chat/pkg/utils"
 )
 
 func SetupRoutes(router *gin.Engine) {
+	router.Use(AuthMiddleware())
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
+	router.POST("/addFriend", controllers.AddFriend)
 	/*
 	router.GET("/getUsers", controllers.commondHand.SearchUsers)
-	router.POST("/addFriend", controllers.AddFriend)
 	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/acceptFriend", controllers.AcceptFriend)
 	router.POST("/declineFriend", controllers.DeclineFriend)
@@ -28,3 +30,10 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getGroupUsers", controllers.GetGroupUsers)
 	*/
 }
+
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		utils.VerifyToken(c);
+	}
+}
+
