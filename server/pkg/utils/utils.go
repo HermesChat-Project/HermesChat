@@ -1,16 +1,18 @@
-package utils 
+package utils
 
 import (
-	"github.com/golang-jwt/jwt/v4"
-	"time"
-	"fmt"
-	"github.com/gin-gonic/gin"
-	"net/http"
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
-	"unicode"
+	"fmt"
+	"net/http"
 	"strings"
+	"time"
+	"unicode"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 
 	"chat/pkg/config"
 )
@@ -28,7 +30,7 @@ func CreateToken (username string, c *gin.Context) {
 
 	if err != nil {
 		errr := fmt.Errorf("error while connecting to database")
-		sendError(c, errr)
+		SendError(c, errr)
 		go config.WriteFileLog(err)
 		return
 	}
@@ -63,7 +65,7 @@ func VerifyToken (c *gin.Context){
 	})
 	if err != nil {
 		errr := fmt.Errorf("error while connecting to database")
-		sendError(c, errr)
+		SendError(c, errr)
 		go config.WriteFileLog(err)
 		return
 	}
@@ -74,7 +76,7 @@ func VerifyToken (c *gin.Context){
 		return
 	} else {
 		errr := fmt.Errorf("error while connecting to database")
-		sendError(c, errr)
+		SendError(c, errr)
 		go config.WriteFileLog(err)
 		return
 	}
@@ -83,13 +85,13 @@ func VerifyToken (c *gin.Context){
 func LoginMongoDB (username string, password string, c *gin.Context) {
 	if config.ClientMongoDB == nil {
 		errr := fmt.Errorf("error while connecting to database")
-		sendError(c, errr)
+		SendError(c, errr)
 		return
 	}
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
 		errr := fmt.Errorf("error while connecting to database")
-		sendError(c, errr)
+		SendError(c, errr)
 		return
 	}
 	ris := collection.FindOne(context.Background(), bson.M{"nickname": username})
@@ -97,13 +99,13 @@ func LoginMongoDB (username string, password string, c *gin.Context) {
 	ris.Decode(&result)
 	if result == nil {
 		errr := fmt.Errorf("username not found")
-		sendError(c, errr)
+		SendError(c, errr)
 		return
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(result["password"].(string)), []byte(password))
 	if err != nil {
 		errr := fmt.Errorf("wrong password")
-		sendError(c, errr)
+		SendError(c, errr)
 		return
 	}
 	CreateToken(username, c)
@@ -138,25 +140,25 @@ func VerifyPassword(s string, u string, e string,c *gin.Context){
 			checkEmail(e, u, s, c)
 		} else {
 			err := fmt.Errorf("password not valid")
-			sendError(c, err)
+			SendError(c, err)
 		}
 }
 func checkEmail(email string, username string, password string, c *gin.Context) {
 	//check that email is an email
 	if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
 		err := fmt.Errorf("email not valid")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	if config.ClientMongoDB == nil {
 		err := fmt.Errorf("error while connecting to database")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
 		err := fmt.Errorf("error while connecting to database")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	ris := collection.FindOne(context.Background(), bson.M{"email": email})
@@ -164,7 +166,7 @@ func checkEmail(email string, username string, password string, c *gin.Context) 
 	ris.Decode(&result)
 	if result != nil {
 		err := fmt.Errorf("email already exists")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	checkUsername(username, password, email, c)
@@ -172,31 +174,31 @@ func checkEmail(email string, username string, password string, c *gin.Context) 
 func checkUsername (username string, password string, email string, c *gin.Context) {
 	if len(username) < 3 || len(username) > 20 {
 		err := fmt.Errorf("username not found")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}	
 	if config.ClientMongoDB == nil {
 		err := fmt.Errorf("error while connecting to database")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	found := searchUser(username)
 	if found {
 		err := fmt.Errorf("username already exists")
-		sendError(c, err)
+		SendError(c, err)
 		return
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
 		err := fmt.Errorf("error while generating hash")
-		sendError(c, err)
+		SendError(c, err)
 		go config.WriteFileLog(err)
 		return
 	}
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
 		err := fmt.Errorf("error while connecting to database")
-		sendError(c, err)
+		SendError(c, err)
 		errConn();
 		return
 	}
@@ -230,8 +232,24 @@ func errConn() {
 	go config.WriteFileLog(err)
 }
 
-func sendError(c *gin.Context, err error) {
+func SendError(c *gin.Context, err error) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"message": err.Error(),
 	})
+}
+
+func GetId (u string) string{
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		return ""
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"nickname": u})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		return ""
+	}
+	return result["_id"].(primitive.ObjectID).Hex()
 }
