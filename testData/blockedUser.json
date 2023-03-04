@@ -1,0 +1,49 @@
+[
+    {
+        "idUser": "6401c65c01c6e9458e62ec0b",
+        "blocked": [
+            {
+                "idUser": "6401c65c01c6e9458e62ec10",
+                "nickname": "Minnie44"
+            },
+            {
+                "idUser":"6401c65c01c6e9458e62ec0f",
+                "nickname": "Paperone38"
+            },
+            {
+                "idUser": "6401c65c01c6e9458e62ec0e",
+                "nickname": "Paperino24"
+            }
+        ]
+    },
+    {
+        "idUser": "6401c65c01c6e9458e62ec0d",
+        "blocked": [
+            {
+                "idUser": "6401c65c01c6e9458e62ec10",
+                "nickname": "Minnie44"
+            },
+            {
+                "idUser":"6401c65c01c6e9458e62ec0f",
+                "nickname": "Paperone38"
+            },
+            {
+                "idUser": "6401c65c01c6e9458e62ec0b",
+                "nickname": "TheRealGabbo27"
+            }
+        ]
+    },
+    {
+        "idUser": "6401c65c01c6e9458e62ec10",
+        "blocked":[
+            {
+                "idUser":"6401c65c01c6e9458e62ec0f",
+                "nickname": "Paperone38"
+            },
+            {
+                "idUser": "6401c65c01c6e9458e62ec0b",
+                "nickname": "TheRealGabbo27"
+            }
+        ]
+    }
+]
