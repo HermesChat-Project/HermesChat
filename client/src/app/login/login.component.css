@@ -2,14 +2,12 @@ center{
   text-align: center;
 }
 .title {
-  font-style: normal;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 10px;
   font-weight: 400;
   font-size: 48px;
-  line-height: 56px;
-
   color: #084595;
-
-  text-shadow: 0px 4px 4px #084595;
+  text-shadow: 0px 2px 4px #084595;
   text-align: center;
 }
 
@@ -21,17 +19,31 @@ center{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   max-width: 400px;
   margin: 0 auto;
+  padding: 0 20px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+  border-radius: 10px;
+  background-color: #FFFFFF;
+}
+
+.form-floating input{
+  user-select: none;
 }
 
 #pwd_forgotten{
+  margin-top: 2px;
   text-align: center;
   color: #084595;
   font-size: 9pt;
   text-decoration: none;
   float: right;
+}
+
+#pwd_forgotten:hover{
+  color: #1154aa;
+  text-decoration: underline;
 }
 
 #showPwd{
@@ -98,6 +110,7 @@ center{
 
 /*Registration*/
 #register{
+  margin-top: 20px;
   text-align: center;
   color: #084595;
   font-size: 9pt;
