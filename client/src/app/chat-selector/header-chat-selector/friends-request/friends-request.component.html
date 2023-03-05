@@ -1,0 +1,19 @@
+<div class="header">
+  <div class="title">
+    <div class="text">
+      Richieste di amicizia
+    </div>
+  </div>
+  <div class="close" (click)="close()">
+    <i class="bi bi-x"></i>
+  </div>
+</div>
+<div class="friendRequestType">
+  <div id="movingDiv" [ngClass]="{'receivedSelected' : receivedRequest, 'sentSelected' : !receivedRequest}"></div>
+  <div class="received" [ngClass]="{'selected' : receivedRequest}" (click)="changeSelection(true)">
+    Ricevuto
+  </div>
+  <div class="sent" [ngClass]="{'selected' : !receivedRequest}" (click)="changeSelection(false)">
+    Inviato
+  </div>
+</div>

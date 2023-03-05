@@ -16,5 +16,8 @@
   "month-ago": "mese fa",
   "year-ago": "anno fa",
   "now": "ora",
-  "search": "Cerca"
+  "yesterday": "ieri",
+  "search": "Cerca",
+  "sent": "Inviato",
+  "received": "Ricevuto"
 }

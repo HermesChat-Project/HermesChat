@@ -1,0 +1,77 @@
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid #0b2f5e;
+}
+
+.title{
+  font-size: 13pt;
+  font-weight: bold;
+  margin: 0px;
+  padding: 0px;
+  margin-left: 10px;
+}
+
+.close{
+  cursor: pointer;
+}
+.close i{
+  font-size: 1.5em;
+    color: #0b2f5e;
+    margin: 0 0.2em;
+    cursor: pointer;
+    text-align: end;
+}
+
+.friendRequestType {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  position: relative;
+  height: 40px;
+}
+.friendRequestType div {
+  display: grid;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+}
+
+#movingDiv {
+  opacity: 1;
+  border: none;
+  width: 50%;
+  display: block;
+  margin: 0px;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-bottom: 2px solid #0b2f5e;
+  z-index: 2;
+}
+
+.selected {
+  font-weight: bold;
+}
+
+.receivedSelected{
+  left: 0%;
+  transition: left 200ms ease-in-out;
+}
+
+.sentSelected{
+  left: 50%;
+  transition: left 200ms ease-in-out;
+}
+
+

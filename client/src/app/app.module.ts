@@ -16,6 +16,8 @@ import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './chat-selector/header-chat-selector/settings/settings.component';
+import { CreateChatComponent } from './chat-selector/header-chat-selector/create-chat/create-chat.component';
+import { FriendsRequestComponent } from './chat-selector/header-chat-selector/friends-request/friends-request.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { SettingsComponent } from './chat-selector/header-chat-selector/settings
     PersonalEventComponent,
     GroupEventComponent,
     LoginComponent,
-    SettingsComponent
+    SettingsComponent,
+    CreateChatComponent,
+    FriendsRequestComponent
   ],
   imports: [
     BrowserModule,

@@ -33,11 +33,11 @@ i {
   background-color: whitesmoke;
   border-radius: 5px;
   position: absolute;
-  z-index: 5;
+  z-index: 6; /*It has to be always visible when clicked, so it has to have the highest z-index*/
   right: -100%;
 }
 
-#selectNewChat.animate{
+#selectNewChat.animateChatCreationOption{
   box-shadow: 0px 0px 10px 0px #ccc;
   max-height: 100px !important;
   border: 1px solid #ccc;
@@ -67,23 +67,26 @@ i {
   background-color: transparent;
 }
 
-app-settings{
+.header-section{
   width: 300px;
   display: inline-block;
   height: 93%;
   position: absolute;
   bottom: 0;
-  left: -300px;
+  right: 100%;
   z-index: 4;
   background-color: #f5f5f5;
 }
 
-.showUser{
+
+
+.showHeaderSection{
+  z-index: 5;
   left: 0px;
-  transition: all 200ms ease-out;
+  transition: left 200ms ease-out;
 }
 
-.hideUser{
+.hideHeaderSection{
   left: -300px;
   transition: all 200ms ease-out;
 }

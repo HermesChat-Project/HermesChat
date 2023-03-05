@@ -6,22 +6,35 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./header-chat-selector.component.css']
 })
 export class HeaderChatSelectorComponent {
-  @ViewChild('newChatOptions') newChatOptions!: ElementRef;
   showOptions:boolean = false;
-  showUserProfile:boolean = false;
-
+  typeSection:number = 0;//0: none, 1: settings, 2: new chat, 3 friends requests
+  /*chat creation options events*/
   ToggleNewChatOptions(){
     this.showOptions = !this.showOptions;
-    console.log(document.activeElement);
   }
   HideNewChatOptions(){
     this.showOptions = false;
   }
+
   /*Settings events*/
   showProfile(){
-    this.showUserProfile = !this.showUserProfile;
+    this.typeSection = this.typeSection == 1 ? 0 : 1;
   }
   onCloseProfileEvent(){
-    this.showUserProfile = false;
+    this.typeSection = 0;
+  }
+
+  /*create chat events*/
+  createChat(type:number){
+    this.typeSection = this.typeSection == 2 ? 0 : 2;
+    //console.log(document.activeElement);
+  }
+  /*Friend request event*/
+  ToggleFriendRequest(){
+    this.typeSection = this.typeSection == 3 ? 0 : 3;
+  }
+
+  onCloseEvent(){
+    this.typeSection = 0;
   }
 }
