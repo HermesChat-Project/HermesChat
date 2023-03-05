@@ -2,9 +2,11 @@
   <div class="col-sm-12" id="div_search">
     <!-- SEARCH BOX -->
     <div class="form-floating">
-      <input type="search" placeholder="Search" class="" id="txtSearch" [(ngModel)]="txtSearchFriends" [ngModelOptions]="{standalone: true}" (input)="showFriends()">
+      <input type="search" placeholder="Search" class="" id="txtSearch" [(ngModel)]="txtSearchFriends"
+        [ngModelOptions]="{standalone: true}" (input)="showFriends()">
     </div>
-    <i class="bi bi-arrow-down-up reverse-list" (click)="reverseList()" title="cambia l'ordine" [ngClass]="{'not_visible' : friendList.length == 0}"></i>
+    <i class="bi bi-arrow-down-up reverse-list" (click)="reverseList()" title="cambia l'ordine"
+      [ngClass]="{'not_visible' : friendList.length == 0}"></i>
   </div>
 </div>
 <div id="div_friendList">
@@ -18,6 +20,9 @@
       <div class="col-sm-9">
         <div class="friendName">
           <h5 class="friend-name">{{friend.name}}</h5>
+        </div>
+        <div class="chatNow">
+          <i class="bi bi-chat-left-text-fill" [title]="'scrivi a ' +friend.name"></i>
         </div>
       </div>
     </div>

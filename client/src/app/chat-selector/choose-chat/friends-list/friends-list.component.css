@@ -83,12 +83,22 @@
   align-items: center;
 }
 
-.friendName{
+.col-sm-9{
   display: flex;
   align-items: center;
-  width: 100%;
   height: 100%;
+  justify-content: space-between;
 }
+.chatNow{
+  padding-right: 10px;
+}
+.chatNow i{
+  color: #0b2f5e;
+  margin: 0 0.2em;
+  cursor: pointer;
+  text-align: end;
+}
+
 /*Graphics when tere are no results during the search*/
 .listNotFound{
   width: 100%;

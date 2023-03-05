@@ -17,7 +17,11 @@ export class HeaderChatSelectorComponent {
   HideNewChatOptions(){
     this.showOptions = false;
   }
+  /*Settings events*/
   showProfile(){
     this.showUserProfile = !this.showUserProfile;
+  }
+  onCloseProfileEvent(){
+    this.showUserProfile = false;
   }
 }

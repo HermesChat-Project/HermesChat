@@ -33,7 +33,7 @@ i {
   background-color: whitesmoke;
   border-radius: 5px;
   position: absolute;
-  z-index: 1;
+  z-index: 5;
   right: -100%;
 }
 
@@ -67,14 +67,15 @@ i {
   background-color: transparent;
 }
 
-app-user-profile{
+app-settings{
   width: 300px;
   display: inline-block;
   height: 93%;
   position: absolute;
   bottom: 0;
   left: -300px;
-  z-index: 10;
+  z-index: 4;
+  background-color: #f5f5f5;
 }
 
 .showUser{
@@ -85,4 +86,14 @@ app-user-profile{
 .hideUser{
   left: -300px;
   transition: all 200ms ease-out;
+}
+
+.showSetting{
+  transform: rotate(45deg);
+  transition: transform 200ms ease-out;
+}
+
+.hideSetting{
+  transform: rotate(0deg);
+  transition: transform 200ms ease-out;
 }
