@@ -35,12 +35,12 @@
 .mainText{
   font-size: 1.2em;
   font-weight: bold;
-  margin: 0 0.5em;
+  margin: 0 5px;
 }
 
 .subText{
   font-size: 0.8em;
-  margin: 0 0.5em;
+  margin: 0 5px;
   color: #999;
 }
 

@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './chat-selector/header-chat-selector/settings/settings.component';
 import { CreateChatComponent } from './chat-selector/header-chat-selector/create-chat/create-chat.component';
 import { FriendsRequestComponent } from './chat-selector/header-chat-selector/friends-request/friends-request.component';
+import { ChatViewComponent } from './chat-selector/chat-view/chat-view.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { FriendsRequestComponent } from './chat-selector/header-chat-selector/fr
     LoginComponent,
     SettingsComponent,
     CreateChatComponent,
-    FriendsRequestComponent
+    FriendsRequestComponent,
+    ChatViewComponent
   ],
   imports: [
     BrowserModule,

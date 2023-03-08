@@ -1,13 +1,31 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-block;
+}
 app-header-chat-selector {
   width: 100%;
-  display: inline-block;
   height: 7%;
+  float: left;
 }
 app-choose-chat {
-  width: 100%;
-  display: inline-block;
-  height: 93%;
+  width: 300px;
+  height: 100%;
 }
+app-chat-view {
+  height: 100%;
+  flex-grow: 1;
+}
+
+.chat{
+  height: 93%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+
 
 
 

@@ -23,6 +23,7 @@
   justify-content: space-between;
   width: 100%;
   border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   margin-left: 0 !important;
   height: 7%;
 }
