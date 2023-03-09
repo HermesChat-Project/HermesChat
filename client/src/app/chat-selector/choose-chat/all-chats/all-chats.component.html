@@ -8,9 +8,8 @@
   </div>
 </div>
 <div id="div_chatlist" *ngIf="txtSearchChat.length<3">
-
   <div class="list_result" *ngIf="chatListUser.chatList.length != 0 && chatListUser.chatList">
-    <div class="row chat" *ngFor="let chat of chatListUser.chatList">
+    <div class="row chat" *ngFor="let chat of chatListUser.chatList" (click)="showEntireChat(chat)">
       <div class="col-sm-3">
         <div class="img img-fluid">
           <img [src]="chat.img" class="avatar">
@@ -21,8 +20,8 @@
           <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
-          <span class="text-truncate last-message">{{chat.Lastmessage}}</span>
-          <span>{{DateAdjustment(chat.LastmessageTime)}}</span>
+          <span class="text-truncate last-message">{{getLastMessage(chat)}}</span>
+          <span>{{DateAdjustment(getLastMessageTime(chat))}}</span>
         </div>
       </div>
     </div>
@@ -44,7 +43,7 @@
       <div id="personal" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch">
+          <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
             <div class="col-sm-3">
               <div class="img img-fluid">
                 <img [src]="personalChatSearch.img" class="avatar">
@@ -55,8 +54,8 @@
                 <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message">{{personalChatSearch.Lastmessage}}</span>
-                <span>{{DateAdjustment(personalChatSearch.LastmessageTime)}}</span>
+                <span class="text-truncate last-message">{{getLastMessage(personalChatSearch)}}</span>
+                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch))}}</span>
               </div>
             </div>
           </div>

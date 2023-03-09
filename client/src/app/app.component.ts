@@ -9,10 +9,8 @@ import { LoginService } from './login/login.service';
 export class AppComponent {
   title = 'HermesChat';
 
-  userLang = navigator.language;
+
   constructor(public logged: LoginService) {}
 
-  ngOnInit() {
-    console.log(this.userLang);
-  }
+
 }
