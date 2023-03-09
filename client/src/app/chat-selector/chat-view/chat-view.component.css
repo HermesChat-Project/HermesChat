@@ -9,6 +9,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+
 }
 /*bottom part or fhe chat*/
 #selectedChat {
@@ -17,9 +18,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  z-index: 2;
 }
 #messageSendText{
-  width: 85%;
+  position: relative;
+  width: 90%;
   height: 100%;
   font-family: 'Roboto', sans-serif;
 }
@@ -30,7 +33,7 @@
   border: 1px solid #555;
   outline: none;
   resize: none;
-  padding: 0px 10px;
+  padding: 0px 35px 0px 10px;
   font-size: 16px;
   font-family: 'Roboto', sans-serif;
 }
@@ -67,11 +70,79 @@
   margin-right: 10px;
 
 }
-#btnActions{
-  width: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/*attachments*/
+.attachments{
+  border: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: transparent;
   height: 100%;
-  padding: 10px;
+  width:fit-content;
+}
+
+#clip{
+  display: inline-block;
+  width: 20px;
+  height: 100%;
+  padding-right: 5px;
+}
+
+.othersActions{
+  width: fit-content;
+  height: fit-content;
+}
+
+
+.row-action{
+  right: -30px;
+  top: 0;
+  position: absolute;
+  z-index: -1;
+  top: -10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100px;
+  height: 40px;
+
+}
+.row-action i{
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.row-action i:hover, i.action:hover{
+  color: #fff;
+  background-color: #084595;
+  transition: all 200ms ease;
+}
+.showFirstActionsAnimation{
+  z-index: 1;
+  top: -60px;
+  transition: all 200ms ease;
+}
+.showSecondActionsAnimation{
+  top: -110px;
+  z-index: 1;
+  transition: all 200ms ease;
+}
+.showThirdActionsAnimation{
+  z-index: 1;
+  top: -160px;
+  transition: all 200ms ease;
+}
+.showFourthActionsAnimation{
+  z-index: 1;
+  top: -210px;
+  transition: top 200ms ease;
+}
+
+.hideActionAnimation{
+  z-index: -1;
+  top: -10px;
+  transition: top 200ms ease;
 }

@@ -19,6 +19,7 @@ import { SettingsComponent } from './chat-selector/header-chat-selector/settings
 import { CreateChatComponent } from './chat-selector/header-chat-selector/create-chat/create-chat.component';
 import { FriendsRequestComponent } from './chat-selector/header-chat-selector/friends-request/friends-request.component';
 import { ChatViewComponent } from './chat-selector/chat-view/chat-view.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ChatViewComponent } from './chat-selector/chat-view/chat-view.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

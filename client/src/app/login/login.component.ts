@@ -1,4 +1,5 @@
-import { Component, ElementRef, ViewChild} from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,17 +11,18 @@ export class LoginComponent {
   password: string = '';
   email: string = '';
   showPassword: boolean = false;
-
-  login(){
+  constructor(private logged: LoginService) { }
+  login() {
     //log email password
-    console.log(this.email, this.password);
+    if (this.email != '' && this.password != '')
+      this.logged.loggedIn = true;
   }
 
-  register(){
+  register() {
     console.log('register');
   }
 
-  changeClass(){
+  changeClass() {
     this.showPassword = !this.showPassword;
     this.pwd.nativeElement.type = this.showPassword ? 'text' : 'password';
   }
