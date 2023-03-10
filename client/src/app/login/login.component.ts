@@ -26,4 +26,8 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
     this.pwd.nativeElement.type = this.showPassword ? 'text' : 'password';
   }
+  keyEvent(event: any) {
+    if (event.key == 'Enter')
+      this.login();
+  }
 }

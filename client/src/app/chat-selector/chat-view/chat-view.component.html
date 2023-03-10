@@ -1,13 +1,28 @@
 <div id="selectedChat">
   <div id="listMessage">
     <div class="message" *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index">
-      <div class="date" *ngIf="differentDate(i)">{{fullDateView(messages.sentAt)}}</div>
-      <div class="sender" *ngIf="alreadyTexted(i)">
-        {{messages.name_sender}}
+      <div class="date" *ngIf="differentDate(i)">
+        <span>{{fullDateView(messages.sentAt)}}</span>
+        <hr>
       </div>
-      <div class="messageInfo">
-        <div class="text">{{messages.message}}</div>
-        <div class="time">{{messages.sentAt.getHours() + ":" + messages.sentAt.getMinutes()}}</div>
+      <div class="message-wrapper">
+        <div class="message-info">
+          <div class="sender" *ngIf="alreadyTexted(i)">
+            <span>{{messages.name_sender}}</span>
+          </div>
+          <div class="message-get">
+            <div class="text">{{messages.message}}</div>
+            <span class="time">{{getTimeFormatted(messages.sentAt)}}</span>
+          </div>
+        </div>
+        <div class="message-actions" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
+          <div class="all-actions">
+            <i class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></i>
+            <i class="bi bi-arrow-up-short"></i>
+            <i class="bi bi-arrow-up-short"></i>
+            <i class="bi bi-arrow-up-short"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -46,7 +61,9 @@
       </button>
     </div>
     <div id="messageSendButton">
-      <i class="bi bi-send action" title="Invia"></i>
+      <button class="chat-action" (click)="sendMsg()">
+        <i class="bi bi-send action" title="Invia"></i>
+      </button>
     </div>
     <div id="messageSendOptions" class="action">
       <i class="bi bi-three-dots-vertical" title="altre opzioni"></i>

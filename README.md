@@ -1,7 +1,7 @@
 
 # HermesChat
 
-HermesChat is a project created by Marello Gabriele, Molino Simone and Barbero Paolo. It's born as a school project for the graduation exam, but could be scaled and become an effective application.
+HermesChat is a project created by Marello Gabriele, Barbero Paolo and Molino Simone . It's born as a school project for the graduation exam, but could be scaled and become an effective application.
 
 ## Features
 
@@ -40,6 +40,6 @@ Some of the many features are:
 ## Authors
 
 - [Marello Gabriele](https://github.com/MarelloGabriele)
-- [Molino Simone](https://github.com/MolinoSimone)
 - [Barbero Paolo](https://github.com/PaoloBarbero23)
+- [Molino Simone](https://github.com/MolinoSimone)
 
