@@ -1,30 +1,6 @@
 <div id="selectedChat">
   <div id="listMessage">
-    <div class="message" *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index">
-      <div class="date" *ngIf="differentDate(i)">
-        <span>{{fullDateView(messages.sentAt)}}</span>
-        <hr>
-      </div>
-      <div class="message-wrapper">
-        <div class="message-info">
-          <div class="sender" *ngIf="alreadyTexted(i)">
-            <span>{{messages.name_sender}}</span>
-          </div>
-          <div class="message-get">
-            <div class="text">{{messages.message}}</div>
-            <span class="time">{{getTimeFormatted(messages.sentAt)}}</span>
-          </div>
-        </div>
-        <div class="message-actions" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
-          <div class="all-actions">
-            <i class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></i>
-            <i class="bi bi-arrow-up-short"></i>
-            <i class="bi bi-arrow-up-short"></i>
-            <i class="bi bi-arrow-up-short"></i>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-message *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index" [chatMessage]="messages" [index]="i"></app-message>
   </div>
   <div id="messageSend">
     <div id="messageSendText">

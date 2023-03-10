@@ -1,0 +1,24 @@
+<div class="message" >
+  <div class="date" *ngIf="differentDate(index)">
+    <span>{{fullDateView(chatMessage.sentAt)}}</span>
+    <hr>
+  </div>
+  <div class="message-wrapper">
+    <div class="message-info">
+      <div class="sender" *ngIf="alreadyTexted(index)">
+        <span>{{chatMessage.name_sender}}</span>
+      </div>
+      <div class="message-get">
+        <div class="text">{{chatMessage.message}}</div>
+        <span class="time">{{getTimeFormatted(chatMessage.sentAt)}}</span>
+      </div>
+    </div>
+    <div class="message-actions" *ngIf="chatMessage.id_sender == 0" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
+      <div class="all-actions">
+        <i class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></i>
+        <i class="bi bi-pen-fill"></i>
+        <i class="bi bi-trash-fill"></i>
+      </div>
+    </div>
+  </div>
+</div>

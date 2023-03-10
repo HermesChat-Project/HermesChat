@@ -11,7 +11,6 @@ export class ChatViewComponent {
   showChatActions: boolean = false;
   messageText: string = '';
   messageSent: string = '';
-  messageActions: boolean = false;
 
   constructor(public chatSelector: ChatSelectorService) { }
 
@@ -22,9 +21,7 @@ export class ChatViewComponent {
     this.showChatActions = false;
   }
 
-  toggleMessageActions() {
-    this.messageActions = !this.messageActions;
-  }
+
 
   sendMsg() {
     this.messageSent = this.messageText.trimEnd()
@@ -41,51 +38,6 @@ export class ChatViewComponent {
       event.preventDefault();
     }
   }
-
-
-  alreadyTexted(i: number) {
-    if (i != 0) {
-      if (this.chatSelector.selectedChat?.messages[i].id_sender == this.chatSelector.selectedChat?.messages[i - 1].id_sender)
-        return false;
-      else
-        return true;
-    }
-    return true;
-  }
-
-  DateView(date: Date) {
-    /*get the yer, month and the day*/
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    return year + "/" + month + "/" + day;
-  }
-
-  fullDateView(date: Date) {
-    //get the string like : thursay, 09 march 2023
-    return date.toLocaleDateString(this.chatSelector.userLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  }
-
-  differentDate(i: number) {
-    if (i != 0) {
-      if (this.DateView(this.chatSelector.selectedChat?.messages[i].sentAt as Date) == this.DateView(this.chatSelector.selectedChat?.messages[i - 1].sentAt as Date))
-        return false;
-      else
-        return true;
-    }
-    return true;
-  }
-
-  getTimeFormatted(date: Date) {
-    let hours = date.getHours().toString();
-    let minutes = date.getMinutes().toString();
-    if (minutes.length == 1)
-      minutes = "0" + minutes;
-    if (hours.length == 1)
-      hours = "0" + hours;
-    return hours + ":" + minutes;
-  }
-
 
 
 }
