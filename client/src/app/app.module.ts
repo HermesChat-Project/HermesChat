@@ -15,6 +15,12 @@ import { PersonalEventComponent } from './chat-selector/choose-chat/calendar/per
 import { GroupEventComponent } from './chat-selector/choose-chat/calendar/group/group-event/group-event.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
+import { SettingsComponent } from './chat-selector/header-chat-selector/settings/settings.component';
+import { CreateChatComponent } from './chat-selector/header-chat-selector/create-chat/create-chat.component';
+import { FriendsRequestComponent } from './chat-selector/header-chat-selector/friends-request/friends-request.component';
+import { ChatViewComponent } from './chat-selector/chat-view/chat-view.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MessageComponent } from './chat-selector/chat-view/message/message.component';
 
 @NgModule({
   declarations: [
@@ -30,12 +36,18 @@ import { FormsModule } from '@angular/forms';
     GroupComponent,
     PersonalEventComponent,
     GroupEventComponent,
-    LoginComponent
+    LoginComponent,
+    SettingsComponent,
+    CreateChatComponent,
+    FriendsRequestComponent,
+    ChatViewComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

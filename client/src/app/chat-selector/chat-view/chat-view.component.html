@@ -1,0 +1,48 @@
+<div id="selectedChat">
+  <div id="listMessage">
+    <app-message *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index" [chatMessage]="messages" [index]="i"></app-message>
+  </div>
+  <div id="messageSend">
+    <div id="messageSendText">
+      <textarea id="txtMessage" placeholder="Scrivi..." [(ngModel)]="messageText" [ngModelOptions]="{standalone: true}"
+        (keydown)="keyAction($event)"></textarea>
+      <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions()">
+        <i class="bi bi-paperclip" id="clip"></i>
+        <div class="row-action"
+          [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-geo-alt-fill"></i>
+          <i class="bi bi-person-fill-up"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-calendar-event-fill"></i>
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-bar-chart-fill"></i>
+          <i class="bi bi-file-earmark-fill"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-video-fill"></i>
+          <i class="bi bi-image"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-fill"></i>
+          <i class="bi bi-mic-fill"></i>
+        </div>
+
+      </button>
+    </div>
+    <div id="messageSendButton">
+      <button class="chat-action" (click)="sendMsg()">
+        <i class="bi bi-send action" title="Invia"></i>
+      </button>
+    </div>
+    <div id="messageSendOptions" class="action">
+      <i class="bi bi-three-dots-vertical" title="altre opzioni"></i>
+    </div>
+  </div>
+</div>

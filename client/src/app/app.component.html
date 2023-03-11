@@ -1,2 +1,2 @@
-<!--<app-chat-selector></app-chat-selector>-->
-<app-login></app-login>
+<app-chat-selector *ngIf="logged.loggedIn"></app-chat-selector>
+<app-login *ngIf="!logged.loggedIn"></app-login>

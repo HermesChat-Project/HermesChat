@@ -1,5 +1,8 @@
 [
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0a"
+    },
     "nickname": "Paolo23",
     "name": "Paolo",
     "surname": "Barbero",
@@ -12,12 +15,15 @@
     "ids": [
       {
         "friendship": "6401bdf701c6e9458e62ec05",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": "6403194deda06b1f0210e997"
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0b"
+    },
     "nickname": "TheRealGabbo27",
     "name": "Gabriele",
     "surname": "Marello",
@@ -30,12 +36,15 @@
     "ids": [
       {
         "friendship": "6401bdf701c6e9458e62ec06",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0c"
+    },
     "nickname": "Pomodoro",
     "name": "Simone",
     "surname": "Molino",
@@ -48,12 +57,15 @@
     "ids": [
       {
         "friendship": "6401bdf701c6e9458e62ec07",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": "6403194deda06b1f0210e998"
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0d"
+    },
     "nickname": "Pluto69",
     "name": "Pluto",
     "surname": "AAAAA",
@@ -66,12 +78,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0e"
+    },
     "nickname": "Paperino24",
     "name": "Paperino",
     "surname": "AAAAA",
@@ -84,12 +99,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec0f"
+    },
     "nickname": "Paperone38",
     "name": "Paperone",
     "surname": "AAAAA",
@@ -102,12 +120,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec10"
+    },
     "nickname": "Minnie44",
     "name": "Minnie",
     "surname": "AAAAA",
@@ -120,12 +141,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec11"
+    },
     "nickname": "Mickey99",
     "name": "Mickey",
     "surname": "Mouse",
@@ -138,12 +162,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec12"
+    },
     "nickname": "Qui04",
     "name": "Qui",
     "surname": "AAAAA",
@@ -156,12 +183,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec13"
+    },
     "nickname": "Quo07",
     "name": "Quo",
     "surname": "AAAAA",
@@ -174,12 +204,15 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   },
   {
+    "_id": {
+      "$oid": "6401c65c01c6e9458e62ec14"
+    },
     "nickname": "Banana33",
     "name": "Banana",
     "surname": "33 l'età non è",
@@ -192,8 +225,8 @@
     "ids": [
       {
         "friendship": "",
-        "pending": "",
-        "blocked": ""
+        "blocked": "",
+        "toAccept": ""
       }
     ]
   }

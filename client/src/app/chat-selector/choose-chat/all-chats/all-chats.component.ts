@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, AfterViewChecked } from '@angular/core';
 import { chatList } from 'model/chat-list.model';
 import { SearchModel } from 'model/search.model';
 import { userModel } from 'model/user.model';
+import { ChatSelectorService } from '../../chat-selector.service';
 
 @Component({
   selector: 'app-all-chats',
   templateUrl: './all-chats.component.html',
   styleUrls: ['./all-chats.component.css']
 })
-export class AllChatsComponent {
+export class AllChatsComponent implements AfterViewChecked {
   @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
@@ -46,8 +47,12 @@ export class AllChatsComponent {
     new SearchModel(27, "Gruppo 13", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Qui']),
     new SearchModel(28, "Gruppo 14", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Quo', 'Qua', 'Paperone'])
   ]
-  ngOnInit() {
-    this.chatListUser.chatList.sort((a, b) => b.LastmessageTime.getTime() - a.LastmessageTime.getTime());
+
+  constructor(public chatSelector: ChatSelectorService){}
+
+
+  ngAfterViewChecked() {
+    this.chatListUser.chatList.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
     this.PersonalListSearch = this.chatListUser.chatList;
   }
 
@@ -88,13 +93,26 @@ export class AllChatsComponent {
       this.OtherListSerach = [];
     }
     else {
-      this.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => a.LastmessageTime.getTime() - b.LastmessageTime.getTime());
-      this.PersonalListSearch.sort((a, b) => b.LastmessageTime.getTime() - a.LastmessageTime.getTime());
+      this.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a).getTime() - this.getLastMessageTime(b).getTime());
+      this.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
       this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
       this.OtherListSerach = this.OtherListSerach.filter((chat) => !this.PersonalListSearch.some((chat2) => chat2.global_id_chat == chat._id)).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
     }
   }
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
+  }
+
+  getLastMessage(chat: chatList) {
+    return chat.messages[chat.messages.length - 1].message;
+  }
+
+  getLastMessageTime(chat: chatList): Date {
+    return chat.messages[chat.messages.length - 1].sentAt;
+  }
+
+  showEntireChat(selected : chatList){
+    console.log(selected)
+    this.chatSelector.selectedChat = selected;
   }
 }

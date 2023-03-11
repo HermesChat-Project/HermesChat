@@ -1,16 +1,19 @@
 export class messageModel {
-  public id: number = 0;
-  public id_chat: number;
+  public _id: number;
   public id_sender: number;
+  public name_sender: string;
   public message: string;
-  public isRead: boolean;
   public sentAt: Date;
+  public type: string;
+  public options: object;
 
-  constructor(id_chat:number, id_user:number, mes:string, sentAt:Date, isRead:boolean) {
-    this.id_chat = id_chat;
+  constructor(_id: number, id_user:number, name_sender: string,  mes:string, sentAt:Date, type:string = "text", options:object = {}) {
+    this._id = _id;
     this.id_sender = id_user;
     this.message = mes;
-    this.sentAt = sentAt
-    this.isRead = isRead;
+    this.sentAt = sentAt;
+    this.name_sender = name_sender;
+    this.type = type;
+    this.options = options;
   }
 }

@@ -6,17 +6,109 @@
   box-sizing: border-box;
 }
 
-.row > * {
-  padding: 0px !important;
-}
 
 .row {
-  padding: 10px;
+  padding: 0px;
   border-bottom: 1px solid #ccc;
   margin: 0px !important;
   height: 100%;
   width: 100%;
+  justify-content: space-between;
 }
 i {
   cursor: pointer;
+}
+#newChat{
+  position: relative;
+}
+.chatOptions{
+  width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0px 10px;
+}
+
+#secret-chat-options{
+  display: grid;
+  justify-content: end;
+  align-items: center;
+}
+#selectNewChat{
+  overflow: hidden;
+  margin: 0px !important;
+  padding: 0px !important;
+  max-height: 0px;
+  width: max-content;
+  background-color: whitesmoke;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 6; /*It has to be always visible when clicked, so it has to have the highest z-index*/
+  right: -100%;
+}
+
+#selectNewChat.animateChatCreationOption{
+  box-shadow: 0px 0px 10px 0px #ccc;
+  max-height: 100px !important;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  transition: all 500ms ease-out;
+
+}
+
+#selectNewChat > div {
+  height: fit-content;
+  text-align: center;
+  font-size: 9pt;
+  margin: 0px !important;
+  width: 100%;
+  padding: 5px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+
+#selectNewChat > div:hover{
+  background-color: rgba(0,0,0,0.1);
+}
+
+#newChatOptions{
+  border: none;
+  background-color: transparent;
+}
+
+.header-section{
+  width: 300px;
+  display: inline-block;
+  height: 93%;
+  position: absolute;
+  bottom: 0;
+  right: 100%;
+  z-index: 4;
+  background-color: #f5f5f5;
+}
+
+
+
+.showHeaderSection{
+  z-index: 5;
+  left: 0px;
+  transition: left 200ms ease-out;
+}
+
+.hideHeaderSection{
+  left: -300px;
+  transition: all 200ms ease-out;
+}
+
+.showSetting{
+  transform: rotate(45deg);
+  transition: transform 200ms ease-out;
+}
+
+.hideSetting{
+  transform: rotate(0deg);
+  transition: transform 200ms ease-out;
 }
