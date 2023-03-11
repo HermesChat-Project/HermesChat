@@ -6,7 +6,6 @@ import (
 
 	"chat/pkg/utils"
 )
-
 func Login(c *gin.Context) {
 	c.Request.ParseForm()
 	username := c.Request.Form.Get("username")

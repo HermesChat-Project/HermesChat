@@ -19,3 +19,4 @@ func main() {
 	routes.SetupRoutes(router)
 	router.RunTLS(":" + strconv.Itoa(config.PORT), "cert.crt", "key.pem")
 }
+

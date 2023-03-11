@@ -47,7 +47,7 @@ func VerifyToken (c *gin.Context){
 	if err != nil {
 		go config.WriteFileLog(err)
 		//redirect to login page
-		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup") {
+		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()
 		}else{
 			c.JSON(http.StatusUnauthorized, gin.H{
