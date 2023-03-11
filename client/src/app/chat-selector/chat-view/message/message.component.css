@@ -23,12 +23,12 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
 }
 .message-info{
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  max-width: 60%;
+  max-width: 600px;
   margin-bottom: 5px;
   border-radius: 10px;
   background-color: #f5f5f5;
@@ -41,8 +41,6 @@
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  width: fit-content;
-
 }
 
 .text{
@@ -65,7 +63,7 @@
 /*message action section*/
 .message-actions{
   height: 40px;
-  width: 40px;
+  max-width: 40px;
   display:none;
   border-radius: 20px;
   background-color: #f5f5f5;
@@ -96,13 +94,13 @@
   background-color: #ddd;
 }
 .showMessageActions{
-  width: 120px;
-  transition: width 200ms ease;
+  max-width: 200px;
+  transition: all 200ms ease;
 }
 
 .hideMessageActions{
-  width: 40px;
-  transition: width 200ms ease;
+  max-width: 40px;
+  transition: all 200ms ease;
 }
 .showMessageActions .clickAction{
   transform: rotate(180deg);

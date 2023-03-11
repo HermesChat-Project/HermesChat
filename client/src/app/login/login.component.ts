@@ -15,7 +15,14 @@ export class LoginComponent {
   login() {
     //log email password
     if (this.email != '' && this.password != '')
-      this.logged.loggedIn = true;
+      {
+        // let formData = new FormData();
+        // formData.append("username", this.email);
+        // formData.append("password", this.password);
+        // console.log(formData);
+        // this.logged.login(formData);
+        this.logged.loggedIn = true;
+      }
   }
 
   register() {

@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "http://localhost:1337/api";
+  private REST_API_SERVER: string = "https://localhost:8080/";
   constructor(private httpClient: HttpClient) { }
 
   public getRequest(endpoint: string) {
@@ -18,7 +18,12 @@ export class DataStorageService {
   }
 
   public PostRequest(endpoint: string, body: any) {
-    return this.httpClient.post(this.REST_API_SERVER + endpoint, body)
+    let options = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    return this.httpClient.post(this.REST_API_SERVER + endpoint, body, options)
   }
 
   public PutRequest(endpoint: string, body: any) {
