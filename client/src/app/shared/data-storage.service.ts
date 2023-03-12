@@ -17,14 +17,15 @@ export class DataStorageService {
     return this.httpClient.delete(this.REST_API_SERVER + endpoint)
   }
 
-  public PostRequest(endpoint: string, body: any) {
-    let options = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+  public PostRequest(endpoint: string, body: FormData) {
+    console.log(body);
+    return this.httpClient.post(this.REST_API_SERVER + endpoint, body)
+  }
+
+  public PostRequestWithOptions(endpoint: string, body: any, options: any) {
     return this.httpClient.post(this.REST_API_SERVER + endpoint, body, options)
   }
+
 
   public PutRequest(endpoint: string, body: any) {
     return this.httpClient.put(this.REST_API_SERVER + endpoint, body)

@@ -51,6 +51,8 @@ export class MessageComponent {
     return true;
   }
 
+
+
   getTimeFormatted(date: Date) {
     let hours = date.getHours().toString();
     let minutes = date.getMinutes().toString();

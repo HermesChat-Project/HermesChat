@@ -35,6 +35,7 @@
   padding: 0px 35px 0px 10px;
   font-size: 16px;
   font-family: "Roboto", sans-serif;
+  overflow-y: auto;
 }
 
 #messageSendButton {
@@ -68,7 +69,7 @@
   margin-right: 10px;
 }
 
-.chat-action{
+.chat-action {
   border: none;
   background-color: transparent;
   height: 100%;
@@ -103,22 +104,30 @@
   align-items: center;
   width: 100px;
   height: 40px;
-
 }
-.row-action i {
+.row-action i,
+.row-action label {
   background-color: white;
   width: 40px;
   height: 40px;
   border: 1px solid #ddd;
   border-radius: 50%;
   padding: 5px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+input[type="file"] {
+  display: none;
 }
 
 .row-action i:hover,
-i.action:hover {
+i.action:hover, .row-action label:hover {
   color: #fff;
   background-color: #084595;
   transition: all 200ms ease;
+  cursor: pointer;
 }
 .showFirstActionsAnimation {
   z-index: 1;
@@ -159,6 +168,21 @@ i.action:hover {
   padding: 0px 5%;
   margin-bottom: 50px;
 }
-
-
-
+#font-styling {
+  font-family: "Roboto", sans-serif;
+  position: absolute;
+  z-index: 10;
+  display: none;
+  background-color: white;
+  border: 1px solid #ddd;
+}
+#font-styling i {
+  padding: 5px;
+  cursor: pointer;
+}
+#font-styling i:hover {
+  background-color: #ddd;
+}
+.bi-type-h1 {
+  background-color: #f4e576;
+}

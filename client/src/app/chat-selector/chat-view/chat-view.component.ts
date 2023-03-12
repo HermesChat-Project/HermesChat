@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../chat-selector.service';
 
@@ -8,8 +8,9 @@ import { ChatSelectorService } from '../chat-selector.service';
   styleUrls: ['./chat-view.component.css']
 })
 export class ChatViewComponent {
+  @ViewChild('textMessage') textMessage!: ElementRef;
+  @ViewChild('fontStyling') fontStyling!: ElementRef;
   showChatActions: boolean = false;
-  messageText: string = '';
   messageSent: string = '';
 
   constructor(public chatSelector: ChatSelectorService) { }
@@ -21,14 +22,44 @@ export class ChatViewComponent {
     this.showChatActions = false;
   }
 
+  getSelection() {
+    //get the selected text
+    let selected = window.getSelection();
+    let slectedtext:string;
+    if (selected != null) {
+      slectedtext = selected.toString();
+      if(slectedtext.length > 0){
+        let oRange = selected.getRangeAt(0); //get the text range
+        let oRect = oRange.getBoundingClientRect();
+        let top = oRect.top;
+        let left = oRect.left;
+        this.fontStyling.nativeElement.style.top = (top - 37)+ 'px';
+        this.fontStyling.nativeElement.style.left = left + 'px';
+        this.fontStyling.nativeElement.style.display = 'block';
+      }
+      else
+      {
+        this.fontStyling.nativeElement.style.display = 'none';
+      }
+
+    }
+
+  }
+  hideFontStyling(){
+    this.fontStyling.nativeElement.style.display = 'none';
+  }
+
 
 
   sendMsg() {
-    this.messageSent = this.messageText.trimEnd()
+    this.messageSent = this.textMessage.nativeElement.innerHTML;
+    console.log(this.textMessage.nativeElement.innerHTML);
+    console.log(this.textMessage.nativeElement.innerText);
     if (this.messageSent.length > 0) {
       console.log(this.messageSent)
       this.chatSelector.sendMessage(this.messageSent);
-      this.messageText = '';
+      this.textMessage.nativeElement.innerHTML = '';
+      this.textMessage.nativeElement.focus();
     }
   }
 

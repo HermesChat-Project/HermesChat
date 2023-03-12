@@ -9,7 +9,7 @@
         <span>{{chatMessage.name_sender}}</span>
       </div>
       <div class="message-get">
-        <div class="text">{{chatMessage.message}}</div>
+        <div class="text" [innerHTML]="chatMessage.message"></div>
         <span class="time">{{getTimeFormatted(chatMessage.sentAt)}}</span>
       </div>
     </div>

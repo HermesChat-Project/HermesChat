@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { LoginService } from './login.service';
 
@@ -14,15 +15,17 @@ export class LoginComponent {
   constructor(private logged: LoginService) { }
   login() {
     //log email password
-    if (this.email != '' && this.password != '')
-      {
-        // let formData = new FormData();
-        // formData.append("username", this.email);
-        // formData.append("password", this.password);
-        // console.log(formData);
-        // this.logged.login(formData);
-        this.logged.loggedIn = true;
-      }
+    if (this.email != '' && this.password != '') {
+      // let body = {
+      //   email: this.email.toString(),
+      //   password: this.password.toString(),
+      //   username: this.email.toString()
+      // }
+      // let options = { headers : new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })};
+
+      // this.logged.login(body, options);
+      this.logged.loggedIn = true;
+    }
   }
 
   register() {
