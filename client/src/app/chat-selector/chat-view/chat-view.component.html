@@ -6,7 +6,7 @@
   <div id="messageSend">
     <div id="messageSendText">
       <div id="txtMessage" #textMessage (keydown)="keyAction($event)" (mouseup)="getSelection()" contenteditable="true"
-        (blur)="hideFontStyling()"></div>
+        (blur)="hideFontStyling()" (paste)="pastedMessage($event)"></div>
       <button class="attachments" (click)="toggleShowChatActions()">
         <i class="bi bi-paperclip" id="clip"></i>
 
@@ -31,7 +31,7 @@
           [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
           <i class="bi bi-camera-video-fill"></i>
           <label for="txtImage" class="bi bi-image"></label>
-          <input type="file" id="txtImage">
+          <input type="file" id="txtImage" accept="image/*">
         </div>
         <div class="row-action"
           [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
@@ -56,5 +56,4 @@
   <i class="bi bi-subscript"></i>
   <i class="bi bi-superscript"></i>
   <i class="bi bi-type-strikethrough"></i>
-  <i class="bi bi-type-h1"></i>
 </div>
