@@ -8,15 +8,20 @@ import (
 )
 	
 
-func AddFriend (c *gin.Context) {
-	fName := c.PostForm("nickname")
-	if fName == "" {
-		err := fmt.Errorf("nickname not found")
+func SendFriendRequest (c *gin.Context) {
+	fIndex := c.PostForm("index")
+	if fIndex == "" {
+		err := fmt.Errorf("id not found")
 		utils.SendError(c, err)
 		c.Abort();
 		return
 	}
 
+	
+	
+}
+
+func UpdateInfo (c *gin.Context) {
 	//get the id from the user in the "username"
 	id := utils.GetId(c.PostForm("username"));
 	if id == "" {
@@ -25,7 +30,4 @@ func AddFriend (c *gin.Context) {
 		c.Abort();
 		return
 	}
-	
 }
-
-

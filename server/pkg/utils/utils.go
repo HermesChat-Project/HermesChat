@@ -19,9 +19,9 @@ import (
 
 const infoUser = "Hey I'm using HermesChat"
 
-func CreateToken (username string, c *gin.Context) {
+func CreateToken (index string, c *gin.Context) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": username,
+		"sub": index,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 	
@@ -29,7 +29,7 @@ func CreateToken (username string, c *gin.Context) {
 	tokenString, err := token.SignedString([]byte(config.SECRET))
 
 	if err != nil {
-		errr := fmt.Errorf("error while connecting to database")
+		errr := fmt.Errorf("error while creating token")
 		SendError(c, errr)
 		go config.WriteFileLog(err)
 		return
@@ -71,7 +71,7 @@ func VerifyToken (c *gin.Context){
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		fmt.Println(claims["sub"], claims["exp"])
-		c.Set("username", claims["sub"])
+		c.Set("index", claims["sub"])
 		c.Next()
 		return
 	} else {
@@ -108,8 +108,7 @@ func LoginMongoDB (username string, password string, c *gin.Context) {
 		SendError(c, errr)
 		return
 	}
-	CreateToken(username, c)
-	
+	CreateToken(result["_id"].(primitive.ObjectID).Hex(), c)	
 }
 
 func VerifyPassword(s string, u string, e string,c *gin.Context){
