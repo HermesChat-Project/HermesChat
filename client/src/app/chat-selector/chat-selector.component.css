@@ -16,6 +16,7 @@ app-choose-chat {
 app-chat-view {
   height: 100%;
   flex-grow: 1;
+  width: 20px;
 }
 
 .chat{

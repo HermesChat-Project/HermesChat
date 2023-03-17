@@ -9,15 +9,17 @@
         <span>{{chatMessage.name_sender}}</span>
       </div>
       <div class="message-get">
-        <div class="text">{{chatMessage.message}}</div>
+        <div class="text" [innerHTML]="chatMessage.message"></div>
         <span class="time">{{getTimeFormatted(chatMessage.sentAt)}}</span>
       </div>
     </div>
-    <div class="message-actions" *ngIf="chatMessage.id_sender == 0" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
+    <div class="message-actions" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
       <div class="all-actions">
         <i class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></i>
-        <i class="bi bi-pen-fill"></i>
-        <i class="bi bi-trash-fill"></i>
+        <i class="bi bi-pen-fill" *ngIf="chatMessage.id_sender == 0"></i>
+        <i class="bi bi-clipboard-plus-fill"></i>
+        <i class="bi bi-share-fill"></i>
+        <i class="bi bi-trash-fill" *ngIf="chatMessage.id_sender == 0"></i>
       </div>
     </div>
   </div>

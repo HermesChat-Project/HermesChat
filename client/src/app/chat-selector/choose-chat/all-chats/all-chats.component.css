@@ -80,12 +80,19 @@
   cursor: pointer;
 }
 
+.last-message{
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
 /*Graphic Last message in the chat selector*/
 .lastMessage span:last-of-type {
   font-size: 12px;
   color: #ccc;
   padding-right: 5px;
 }
+
 
 .lastMessage {
   display: flex;
@@ -126,6 +133,7 @@
   place-items: center;
   text-align: center;
   align-content: center;
+
 }
 
 .no_chat_user h5 {

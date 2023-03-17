@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../../chat-selector.service';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-message',
   templateUrl: './message.component.html',
-  styleUrls: ['./message.component.css']
+  styleUrls: ['./message.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MessageComponent {
   @Input() chatMessage!: messageModel
@@ -50,6 +52,8 @@ export class MessageComponent {
     }
     return true;
   }
+
+
 
   getTimeFormatted(date: Date) {
     let hours = date.getHours().toString();
