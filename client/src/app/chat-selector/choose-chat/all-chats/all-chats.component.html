@@ -28,14 +28,14 @@
   </div>
 </div>
 <div id="div_resultSearch" *ngIf="txtSearchChat.length >= 3">
-  <div class="list_result" *ngIf="PersonalListSearch.length == 0 && OtherListSerach.length == 0">
+  <div class="list_result" *ngIf="chatSelector.PersonalListSearch.length == 0 && OtherListSerach.length == 0">
     <div class="no_chat_user">
       <h5>Non hai nessuna chat</h5>
       <h5>Creane o cercane una!</h5>
     </div>
   </div>
-  <div class="accordion" *ngIf="PersonalListSearch.length != 0 || OtherListSerach.length != 0">
-    <div class="accordion-item" *ngIf="PersonalListSearch.length != 0">
+  <div class="accordion" *ngIf="chatSelector.PersonalListSearch.length != 0 || OtherListSerach.length != 0">
+    <div class="accordion-item" *ngIf="chatSelector.PersonalListSearch.length != 0">
       <span class="chatFound accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
           data-bs-target="#personal" aria-expanded="true" aria-controls="collapseOne">
           Chat personali
@@ -43,7 +43,7 @@
       <div id="personal" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <div class="row chat" *ngFor="let personalChatSearch of PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
+          <div class="row chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
             <div class="col-sm-3">
               <div class="img img-fluid">
                 <img [src]="personalChatSearch.img" class="avatar">

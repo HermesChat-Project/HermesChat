@@ -9,6 +9,7 @@ import { DataStorageService } from '../shared/data-storage.service';
   providedIn: 'root'
 })
 export class ChatSelectorService {
+  PersonalListSearch: chatList[] = [];
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
       new chatList(0, 0, 'Prova', "ok", "img", [
@@ -118,6 +119,14 @@ export class ChatSelectorService {
     }
   }
 
+  bottomScroll() {
+    let chat = document.getElementById('listMessage');
+    if (chat) {
+      chat.scrollTop = chat.scrollHeight;
+    }
+  }
+
+
   getMaxIndex(chat: chatList) {
     let max = 0;
     chat.messages.forEach((message) => {
@@ -126,5 +135,14 @@ export class ChatSelectorService {
       }
     });
     return max;
+  }
+
+  sortChats() {
+    this.chatList[0].chatList.sort((a, b) => {
+      let aDate = new Date(a.messages[a.messages.length - 1].sentAt);
+      let bDate = new Date(b.messages[b.messages.length - 1].sentAt);
+      return bDate.getTime() - aDate.getTime();
+    });
+    this.PersonalListSearch = this.chatList[0].chatList;
   }
 }

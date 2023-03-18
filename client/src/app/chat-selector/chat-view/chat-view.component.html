@@ -31,7 +31,7 @@
           [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
           <i class="bi bi-camera-video-fill"></i>
           <label for="txtImage" class="bi bi-image"></label>
-          <input type="file" id="txtImage" accept="image/*">
+          <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
         </div>
         <div class="row-action"
           [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">

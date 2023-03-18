@@ -73,21 +73,42 @@ export class ChatViewComponent {
   sendMsg() {
     this.messageSent = this.textMessage.nativeElement.innerHTML;
     //delete the first <br> tags
+    console.log(this.messageSent);
     while (this.messageSent.indexOf('<br>') == 0) {
       this.messageSent = this.messageSent.replace('<br>', '');
+      console.log(this.messageSent)
     }
     //delete the last <br> tags
-    while (this.messageSent.lastIndexOf('<br>') == this.messageSent.length - 4) {
+    while (this.messageSent.lastIndexOf('<br>') == this.messageSent.length - 4 && this.messageSent.length > 4) {
       this.messageSent = this.messageSent.substring(0, this.messageSent.length - 4);
+      console.log(this.messageSent)
     }
 
     if (this.messageSent.length > 0) {
       this.chatSelector.sendMessage(this.messageSent);
       this.textMessage.nativeElement.innerHTML = '';
       this.textMessage.nativeElement.focus();
+      this.chatSelector.sortChats();
+      //go to the bottom of the chat
+      this.chatSelector.bottomScroll();
     }
   }
-
+  getImages(event : any){
+    //get the images taken from the input file and convert them to base64
+    let files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      reader.readAsDataURL(files[i]);
+      reader.onload = () => {
+        let br = document.createElement('br');
+        this.textMessage.nativeElement.appendChild(br);
+        let img = document.createElement('img');
+        img.src = reader.result as string;
+        this.textMessage.nativeElement.appendChild(img);
+      }
+    }
+    this.textMessage.nativeElement.focus();
+  }
   keyAction(event: KeyboardEvent) {
     if (event.key == 'Enter' && !event.shiftKey) {
       this.sendMsg();
@@ -108,6 +129,10 @@ export class ChatViewComponent {
       range?.setEndAfter(newNode);
       window.getSelection()?.removeAllRanges();
       window.getSelection()?.addRange(range!);
+    }
+    console.log(event.clipboardData);
+    if(event.clipboardData.files.length > 0){
+      this.getImages(event);
     }
   }
 

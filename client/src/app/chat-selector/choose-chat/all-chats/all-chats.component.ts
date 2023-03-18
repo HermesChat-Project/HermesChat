@@ -9,11 +9,11 @@ import { ChatSelectorService } from '../../chat-selector.service';
   templateUrl: './all-chats.component.html',
   styleUrls: ['./all-chats.component.css']
 })
-export class AllChatsComponent implements AfterViewChecked {
+export class AllChatsComponent {
   @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
-  PersonalListSearch: chatList[] = [];
+
   OtherListSerach: SearchModel[] = [];
 
   totalUser: SearchModel[] = [
@@ -51,9 +51,9 @@ export class AllChatsComponent implements AfterViewChecked {
   constructor(public chatSelector: ChatSelectorService){}
 
 
-  ngAfterViewChecked() {
+  ngOnInit() {
     this.chatListUser.chatList.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
-    this.PersonalListSearch = this.chatListUser.chatList;
+    this.chatSelector.PersonalListSearch = this.chatListUser.chatList;
   }
 
   DateAdjustment(date: Date) {
@@ -89,14 +89,14 @@ export class AllChatsComponent implements AfterViewChecked {
 
   showChats() {
     if (this.txtSearchChat.length < 3) {
-      this.PersonalListSearch = this.chatListUser.chatList;
+      this.chatSelector.PersonalListSearch = this.chatListUser.chatList;
       this.OtherListSerach = [];
     }
     else {
-      this.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a).getTime() - this.getLastMessageTime(b).getTime());
-      this.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
+      this.chatSelector.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a).getTime() - this.getLastMessageTime(b).getTime());
+      this.chatSelector.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
       this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
-      this.OtherListSerach = this.OtherListSerach.filter((chat) => !this.PersonalListSearch.some((chat2) => chat2.global_id_chat == chat._id)).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+      this.OtherListSerach = this.OtherListSerach.filter((chat) => !this.chatSelector.PersonalListSearch.some((chat2) => chat2.global_id_chat == chat._id)).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
     }
   }
   GetDateWithoutTime(date: Date) {
