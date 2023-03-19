@@ -1,0 +1,114 @@
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid #0b2f5e;
+}
+
+.title{
+  font-size: 13pt;
+  font-weight: bold;
+  margin: 0px;
+  padding: 0px;
+  margin-left: 10px;
+}
+
+.close{
+  cursor: pointer;
+}
+.close i{
+  font-size: 1.5em;
+    color: #0b2f5e;
+    margin: 0 0.2em;
+    cursor: pointer;
+    text-align: end;
+}
+
+.createChat{
+  width: 100%;
+  height: 100%;
+}
+.row{
+  margin: 0px;
+}
+.chatCreation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  position: relative;
+  height: 40px;
+}
+.chatCreation div {
+  display: grid;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+}
+
+#movingDivChatCreation {
+  opacity: 1;
+  border: none;
+  width: 50%;
+  display: block;
+  margin: 0px;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-bottom: 2px solid #0b2f5e;
+  z-index: 2;
+}
+
+.selected {
+  font-weight: bold;
+}
+
+.singleChatSelected{
+  left: 0%;
+  transition: left 200ms ease-in-out;
+}
+
+.groupChatSelected{
+  left: 50%;
+  transition: left 200ms ease-in-out;
+}
+
+/*friends list*/
+.img {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.img img:before {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-image: url("../../../../assets/img/user.jpg");
+  background-size: cover;
+}
+
+.PossibleGroupChatUser {
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0;
+  height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+}
+
+

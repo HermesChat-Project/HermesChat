@@ -1,1 +1,39 @@
-<p>create-chat works!</p>
+<div class="createChat">
+  <div class="header">
+    <div class="title">
+      <div class="text">
+        Crea una nuova chat
+      </div>
+    </div>
+    <div class="close" (click)="closeCreateChat()">
+      <i class="bi bi-x"></i>
+    </div>
+
+  </div>
+  <div class="chatCreation">
+    <div id="movingDivChatCreation"
+      [ngClass]="{'singleChatSelected' : headerService.chatCreationType == 1, 'groupChatSelected' : headerService.chatCreationType == 2}">
+    </div>
+    <div class="received" [ngClass]="{'selected' : headerService.chatCreationType == 1}" (click)="changeSelection(1)">
+      Chat singola
+    </div>
+    <div class="sent" [ngClass]="{'selected' : headerService.chatCreationType == 2}" (click)="changeSelection(2)">
+      Gruppo
+    </div>
+  </div>
+  <div class="group-creation">
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.chatList[0].friends">
+      <div class="col-sm-3">
+        <div class="img">
+          <img [src]="friend.image" class="img-fluid">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="friendName">
+          <h5 class="friend-name">{{friend.name}}</h5>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

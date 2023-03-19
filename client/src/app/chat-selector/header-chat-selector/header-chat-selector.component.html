@@ -2,7 +2,7 @@
   <div id="user-options" class="chatOptions">
     <div class="col-sm-9 options">
       <i class="bi bi-gear-fill" (click)="showProfile()"
-        [ngClass]="{'showSetting' : typeSection == 1, 'hideSetting' : typeSection != 1}"></i>
+        [ngClass]="{'showSetting' : headerService.typeOfAction == 1, 'hideSetting' : headerService.typeOfAction != 1}"></i>
     </div>
     <div class="col-sm-3 options">
       <div id="newChat">
@@ -25,7 +25,6 @@
 </div>
 
 <app-settings class="header-section"
-  [ngClass]="{'showHeaderSection' : typeSection == 1, 'hideHeaderSection' : typeSection != 1}"
-  (closeProfile)="onCloseProfileEvent()"></app-settings>
-<app-create-chat class="header-section" [ngClass]="{'showHeaderSection' : typeSection == 2, 'hideHeaderSection' : typeSection != 2}"></app-create-chat>
-<app-friends-request class="header-section" [ngClass]="{'showHeaderSection' : typeSection == 3, 'hideHeaderSection' : typeSection != 3}" (closeEvent)="onCloseEvent()"></app-friends-request>
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 1, 'hideHeaderSection' : headerService.typeOfAction != 1}"></app-settings>
+<app-create-chat class="header-section" [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 2, 'hideHeaderSection' : headerService.typeOfAction != 2}"></app-create-chat>
+<app-friends-request class="header-section" [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 3, 'hideHeaderSection' : headerService.typeOfAction != 3}" ></app-friends-request>

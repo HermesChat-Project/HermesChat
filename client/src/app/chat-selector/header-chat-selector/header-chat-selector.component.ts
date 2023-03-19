@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
+import { HeaderService } from './header.service';
 
 @Component({
   selector: 'app-header-chat-selector',
@@ -7,7 +8,9 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 })
 export class HeaderChatSelectorComponent {
   showOptions:boolean = false;
-  typeSection:number = 0;//0: none, 1: settings, 2: new chat, 3 friends requests
+
+
+  constructor(public headerService : HeaderService) { }
   /*chat creation options events*/
   ToggleNewChatOptions(){
     this.showOptions = !this.showOptions;
@@ -18,23 +21,17 @@ export class HeaderChatSelectorComponent {
 
   /*Settings events*/
   showProfile(){
-    this.typeSection = this.typeSection == 1 ? 0 : 1;
-  }
-  onCloseProfileEvent(){
-    this.typeSection = 0;
+    this.headerService.typeOfAction = this.headerService.typeOfAction == 1 ? 0 : 1;
   }
 
   /*create chat events*/
   createChat(type:number){
-    this.typeSection = this.typeSection == 2 ? 0 : 2;
-    //console.log(document.activeElement);
+    this.headerService.typeOfAction = 2;
+    this.headerService.chatCreationType= type;
   }
   /*Friend request event*/
   ToggleFriendRequest(){
-    this.typeSection = this.typeSection == 3 ? 0 : 3;
+    this.headerService.typeOfAction = this.headerService.typeOfAction == 3 ? 0 : 3;
   }
 
-  onCloseEvent(){
-    this.typeSection = 0;
-  }
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ChatSelectorService } from '../../chat-selector.service';
+import { HeaderService } from '../header.service';
 
 @Component({
   selector: 'app-create-chat',
@@ -7,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class CreateChatComponent {
 
+  constructor(public headerService : HeaderService, public chatSelectorService:ChatSelectorService) { }
+  closeCreateChat() {
+    this.headerService.generalClosing();
+  }
+
+  changeSelection(type : number) {
+    console.log(type);
+    this.headerService.chatCreationType = type;
+  }
 }

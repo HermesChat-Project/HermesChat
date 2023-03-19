@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { HeaderService } from '../header.service';
 
 @Component({
   selector: 'app-settings',
@@ -6,10 +7,12 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent {
-  @Output() closeProfile = new EventEmitter<void>();
+
+
+  constructor(private headerService: HeaderService) { }
 
   closeSettings()
   {
-    this.closeProfile.emit();
+    this.headerService.generalClosing()
   }
 }
