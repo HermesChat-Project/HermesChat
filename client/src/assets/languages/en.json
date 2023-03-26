@@ -1,4 +1,14 @@
 {
+  "login" : {
+    "sign-in" : "Login",
+    "forgot-password" : "Forgot Password?",
+    "sign-up" : "Sign Up",
+    "new-to-hermes" : "New to Hermes?",
+    "email" : "Email",
+    "password" : "Password",
+    "missing-fields" : "Missing fields",
+    "wrong-credentials" : "Wrong credentials"
+  },
   "all-chats": "All Chats",
   "friends": "Friends",
   "calls": "Calls",

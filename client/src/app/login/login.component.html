@@ -9,33 +9,37 @@
     <div class="col-md-12 center">
       <div class="form-floating" id="form_email">
         <input type="email" class="form-control" id="txtEmail" placeholder="Email" [(ngModel)]="email" name="email">
-        <label for="email">Email</label>
+        <label for="email">{{loginWords["email"]}}</label>
       </div>
     </div>
     <!-- textbox password -->
     <div class="col-md-12 center" id="form_password">
       <div class="form-floating">
         <input type="password" #pwd class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
-        <label for="password">Password</label>
+        <label for="password">{{loginWords["password"]}}</label>
         <i class="bi" [ngClass]="{'bi-eye' : !showPassword, 'bi-eye-slash' : showPassword}" id="showPwd" (click)="changeClass()"></i>
       </div>
+    </div>
+    <!--errors-->
+    <div class="col-md-12">
+      <p class="errors" #errors></p>
     </div>
     <!-- forgot password -->
     <div class="col-md-12">
       <div class="form-group">
-        <a href="#" id="pwd_forgotten">Forgot Password?</a>
+        <a href="#" id="pwd_forgotten">{{loginWords["forgot-password"]}}</a>
       </div>
     </div>
     <!-- button login -->
     <div class="col-md-12 d-flex center">
       <div class="form-group d-flex center" id="login_btn">
-        <button type="button" class="btn btn-primary btn-block login-button" (click)="login()">Login</button>
+        <button type="button" class="btn btn-primary btn-block login-button" (click)="login()">{{loginWords["sign-in"]}}</button>
       </div>
     </div>
     <!-- button register -->
     <div class="col-md-12" id="register">
       <div class="form-group">
-        <p>New to Hermes? <a href="#">Registrati</a></p>
+        <p>New to Hermes? <a href="#">{{loginWords["sign-up"]}}</a></p>
       </div>
     </div>
   </div>
