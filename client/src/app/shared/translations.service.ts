@@ -21,6 +21,7 @@ export class TranslationsService {
         this.languageWords = _it
         break;
       default:
+        this.languageSelected = 'en'
         this.languageWords = _en
         break;
     }

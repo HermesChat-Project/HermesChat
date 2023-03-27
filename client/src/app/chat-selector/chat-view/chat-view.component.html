@@ -5,8 +5,8 @@
   </div>
   <div id="messageSend">
     <div id="messageSendText">
-      <div id="txtMessage" #textMessage [innerHTML]="messageOnCreation" (keydown)="keyAction($event)" (mouseup)="getSelection()" contenteditable="true"
-        (blur)="hideFontStyling()" (paste)="pastedMessage($event)"></div>
+      <div id="txtMessage" #textMessage [innerHTML]="messageOnCreation" (keydown)="keyAction($event)" contenteditable="true"
+        (blur)="hideFontStyling()" (paste)="pastedMessage($event)" (mouseup)="getSelection()"></div>
       <button class="attachments" (click)="toggleShowChatActions()">
         <i class="bi bi-paperclip" id="clip"></i>
 
