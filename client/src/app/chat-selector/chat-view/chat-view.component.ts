@@ -26,6 +26,8 @@ export class ChatViewComponent {
     strike: [] as any[],
   }
 
+  contents: DocumentFragment | undefined;
+
   constructor(public chatSelector: ChatSelectorService) { }
 
   toggleShowChatActions() {
@@ -37,35 +39,107 @@ export class ChatViewComponent {
   }
 
   getSelection() {
-    //get the selected text
-    let selected = window.getSelection();
-    console.log(selected);
-    if (selected != null) {
-      this.selectedText = selected.toString();
-      console.log(this.selectedText);
-      if (this.selectedText.length > 0) {
-        let oRange = selected.getRangeAt(0); //get the text range
-        let oRect = oRange.getBoundingClientRect();
-        let top = oRect.top;
-        let left = oRect.left;
-        //get the position of the selected text based on the full text
-        this.textSelectedOffset = oRange.startOffset;
-        this.fontStyling.nativeElement.style.top = (top - 37) + 'px';
-        this.fontStyling.nativeElement.style.left = left + 'px';
-        this.fontStyling.nativeElement.style.display = 'block';
+    const selection = window.getSelection();
+    this.contents = selection?.getRangeAt(0).cloneContents();//get the html content of the selection
+    //see if there is a img tag inside the selection
+    if (this.contents) {//check if the selection is not empty
+
+      if (!this.checkIfFontStylingDivShouldBeShown()) {
+        this.fontStyling.nativeElement.style.display = 'none';
+        return;
+      }
+      if (selection != null) {
+        this.selectedText = selection.toString();
+        console.log(this.selectedText);
+        if (this.selectedText.length > 0) {
+          let oRange = selection.getRangeAt(0); //get the text range
+          console.log(oRange);
+          let oRect = oRange.getBoundingClientRect();
+          let top = oRect.top;
+          let left = oRect.left;
+          //get the position of the selected text based on the full text
+          this.textSelectedOffset = oRange.startOffset;
+          this.fontStyling.nativeElement.style.top = (top - 37) + 'px';
+          this.fontStyling.nativeElement.style.left = left + 'px';
+          this.fontStyling.nativeElement.style.display = 'block';
+        }
+        else {
+          this.fontStyling.nativeElement.style.display = 'none';
+        }
+
       }
       else {
         this.fontStyling.nativeElement.style.display = 'none';
       }
+    }
+    // const text = this.textMessage.nativeElement;
+    // if (selection && selection.anchorNode && selection.focusNode) {
+    //   const selectionStartsAtElement = selection.anchorNode.parentNode;// get the element where the selection starts
+    //   const selectionEndsAtElement = selection.focusNode.parentNode;// get the element where the selection ends
+    //   console.log(selectionStartsAtElement);
+    //   console.log(selectionEndsAtElement);
+    //   if (selectionStartsAtElement === text && selectionEndsAtElement === text) { // if the selection is inside the text
+    //     console.log('no markup elements have been selected');
 
-    }
-    else {
-      this.fontStyling.nativeElement.style.display = 'none';
-    }
+
+    //   }
+    //   else {
+
+    //     const areElementsSelectedInsideText = text.contains(selectionStartsAtElement) && text.contains(selectionEndsAtElement);
+    //     console.log(areElementsSelectedInsideText);
+    //     if (areElementsSelectedInsideText) {
+    //       console.log('markup elements have been selected');
+
+    //       let parentElementsForSelectionEnd;
+    //       let parentElementsForSelectionStart;
+
+    //       // get selection end elements
+    //       if (selectionEndsAtElement !== text) {
+    //         parentElementsForSelectionEnd = [selectionEndsAtElement];
+
+    //         let nextParentAtSelectionEnd = selectionEndsAtElement!.parentNode;
+
+    //         while (nextParentAtSelectionEnd !== text) {
+    //           parentElementsForSelectionEnd.push(nextParentAtSelectionEnd);
+    //           nextParentAtSelectionEnd = nextParentAtSelectionEnd!.parentNode;
+    //         }
+    //       }
+
+    //       // get selection start elements
+    //       if (selectionStartsAtElement !== text) {
+    //         parentElementsForSelectionStart = [selectionStartsAtElement];
+
+    //         let nextParentAtSelectionStart = selectionStartsAtElement!.parentNode;
+
+    //         while (nextParentAtSelectionStart !== text) {
+    //           parentElementsForSelectionStart.push(nextParentAtSelectionStart);
+    //           nextParentAtSelectionStart = nextParentAtSelectionStart!.parentNode;
+    //         }
+    //       }
+
+    //       // do what ever you need here
+    //       // (as I understood - you should highlight buttons somewhere)
+    //       console.log(parentElementsForSelectionStart);
+    //       console.log(parentElementsForSelectionEnd);
+    //     }
+    //   }
+    // }
 
   }
   hideFontStyling() {
     // this.fontStyling.nativeElement.style.display = 'none';
+  }
+
+  checkIfFontStylingDivShouldBeShown() {
+    if(this.contents){
+      let img = this.contents.querySelector('img');
+      let video = this.contents.querySelector('video');
+      if (img || video) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
 
@@ -76,12 +150,10 @@ export class ChatViewComponent {
     console.log(this.messageSent);
     while (this.messageSent.indexOf('<br>') == 0) {
       this.messageSent = this.messageSent.replace('<br>', '');
-      console.log(this.messageSent)
     }
     //delete the last <br> tags
     while (this.messageSent.lastIndexOf('<br>') == this.messageSent.length - 4 && this.messageSent.length > 4) {
       this.messageSent = this.messageSent.substring(0, this.messageSent.length - 4);
-      console.log(this.messageSent)
     }
 
     if (this.messageSent.length > 0) {
@@ -93,18 +165,18 @@ export class ChatViewComponent {
       this.chatSelector.bottomScroll();
     }
   }
-  getImages(event : any){
+  getImages(event: any) {
     //get the images taken from the input file and convert them to base64
-    let files = event.target.files;
+    let files = event.target?.files || event.dataTransfer.files;
     for (let i = 0; i < files.length; i++) {
       let reader = new FileReader();
       reader.readAsDataURL(files[i]);
       reader.onload = () => {
         let br = document.createElement('br');
         this.textMessage.nativeElement.appendChild(br);
-        let img = document.createElement('img');
-        img.src = reader.result as string;
-        this.textMessage.nativeElement.appendChild(img);
+        let div = document.createElement('div');
+        div.innerHTML = '<img src="' + reader.result + '" style="max-width: 100%; max-height: 100%;"/>';
+        this.textMessage.nativeElement.appendChild(div);
       }
     }
     this.textMessage.nativeElement.focus();
@@ -116,9 +188,9 @@ export class ChatViewComponent {
     }
   }
 
-  pastedMessage(event: any) {
+  pastedMessage(event: ClipboardEvent) {
     //remove the style from the pasted text without using execCommand
-    let text = event.clipboardData.getData('text/plain');
+    let text = event.clipboardData!.getData('text/plain');
     if (text.length > 0) {
       event.preventDefault();
       //insert the text without the style at the cursor position without using execCommand
@@ -131,9 +203,6 @@ export class ChatViewComponent {
       window.getSelection()?.addRange(range!);
     }
     console.log(event.clipboardData);
-    if(event.clipboardData.files.length > 0){
-      this.getImages(event);
-    }
   }
 
   toggleFont(fonttype: number) {
