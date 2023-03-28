@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { messageModel } from 'model/message.model';
-import { ChatSelectorService } from '../chat-selector.service';
+import { ChatSelectorService } from '../chat.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({

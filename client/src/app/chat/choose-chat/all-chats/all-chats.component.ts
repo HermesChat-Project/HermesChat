@@ -2,7 +2,7 @@ import { Component, Input, AfterViewChecked } from '@angular/core';
 import { chatList } from 'model/chat-list.model';
 import { SearchModel } from 'model/search.model';
 import { userModel } from 'model/user.model';
-import { ChatSelectorService } from '../../chat-selector.service';
+import { ChatSelectorService } from '../../chat.service';
 
 @Component({
   selector: 'app-all-chats',

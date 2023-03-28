@@ -25,14 +25,13 @@ export class LoginComponent {
   login() {
     //log email password
     if (this.email != '' && this.password != '') {
-      // let body = {
-      //   email: this.email.toString(),
-      //   password: this.password.toString(),
-      //   username: this.email.toString()
-      // }
+      let body = {
+        email: this.email.toString(),
+        password: this.password.toString(),
+        username: this.email.toString()
+      }
 
-      // this.logged.login(body, this.errors.nativeElement);
-      this.logged.loggedIn = true;
+      this.logged.login(body, this.errors.nativeElement);
     }
     else {
       this.errors.nativeElement.innerHTML = this.loginWords["missing-fields"];
