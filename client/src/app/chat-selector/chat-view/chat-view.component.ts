@@ -17,14 +17,7 @@ export class ChatViewComponent {
   selectedText: string = '';
   textSelectedOffset: number = 0;
   messageOnCreation: string = '';
-  styling: any = {
-    bold: [] as any[],
-    italic: [] as any[],
-    ulined: [] as any[],
-    sub: [] as any[],
-    sup: [] as any[],
-    strike: [] as any[],
-  }
+  selection: Selection | null = null;
 
   contents: DocumentFragment | undefined;
 
@@ -33,27 +26,36 @@ export class ChatViewComponent {
   toggleShowChatActions() {
     this.showChatActions = !this.showChatActions;
   }
-  hideShowChatActions() {
+  hideShowChatActions(event: Event) {
     //get the focused element
-    this.showChatActions = false;
+    console.log("hideShowChatActions");
+    let focusedElement = document.activeElement;
+    console.log(focusedElement);
+    console.log(this.textMessage.nativeElement);
+    console.log(event.target);
+    // this.showChatActions = this.textMessage.nativeElement.contains(focusedElement);
   }
 
   getSelection() {
-    const selection = window.getSelection();
-    this.contents = selection?.getRangeAt(0).cloneContents();//get the html content of the selection
+    this.selection = window.getSelection();
+    this.contents = this.selection?.getRangeAt(0).cloneContents();//get the html content of the selection
     //see if there is a img tag inside the selection
+    console.log(this.contents);
+    console.log(this.contents?.textContent);
+    // const serializer = new XMLSerializer();
+    // const str = serializer.serializeToString(this.contents as Node);
+    // console.log(str);
     if (this.contents) {//check if the selection is not empty
 
       if (!this.checkIfFontStylingDivShouldBeShown()) {
         this.fontStyling.nativeElement.style.display = 'none';
         return;
       }
-      if (selection != null) {
-        this.selectedText = selection.toString();
+      if (this.selection != null) {
+        this.selectedText = this.selection.toString();
         console.log(this.selectedText);
         if (this.selectedText.length > 0) {
-          let oRange = selection.getRangeAt(0); //get the text range
-          console.log(oRange);
+          let oRange = this.selection.getRangeAt(0); //get the text range
           let oRect = oRange.getBoundingClientRect();
           let top = oRect.top;
           let left = oRect.left;
@@ -64,74 +66,23 @@ export class ChatViewComponent {
           this.fontStyling.nativeElement.style.display = 'block';
         }
         else {
-          this.fontStyling.nativeElement.style.display = 'none';
+          this.hideFontStyling();
         }
 
       }
       else {
-        this.fontStyling.nativeElement.style.display = 'none';
+        this.hideFontStyling();
       }
     }
-    // const text = this.textMessage.nativeElement;
-    // if (selection && selection.anchorNode && selection.focusNode) {
-    //   const selectionStartsAtElement = selection.anchorNode.parentNode;// get the element where the selection starts
-    //   const selectionEndsAtElement = selection.focusNode.parentNode;// get the element where the selection ends
-    //   console.log(selectionStartsAtElement);
-    //   console.log(selectionEndsAtElement);
-    //   if (selectionStartsAtElement === text && selectionEndsAtElement === text) { // if the selection is inside the text
-    //     console.log('no markup elements have been selected');
 
-
-    //   }
-    //   else {
-
-    //     const areElementsSelectedInsideText = text.contains(selectionStartsAtElement) && text.contains(selectionEndsAtElement);
-    //     console.log(areElementsSelectedInsideText);
-    //     if (areElementsSelectedInsideText) {
-    //       console.log('markup elements have been selected');
-
-    //       let parentElementsForSelectionEnd;
-    //       let parentElementsForSelectionStart;
-
-    //       // get selection end elements
-    //       if (selectionEndsAtElement !== text) {
-    //         parentElementsForSelectionEnd = [selectionEndsAtElement];
-
-    //         let nextParentAtSelectionEnd = selectionEndsAtElement!.parentNode;
-
-    //         while (nextParentAtSelectionEnd !== text) {
-    //           parentElementsForSelectionEnd.push(nextParentAtSelectionEnd);
-    //           nextParentAtSelectionEnd = nextParentAtSelectionEnd!.parentNode;
-    //         }
-    //       }
-
-    //       // get selection start elements
-    //       if (selectionStartsAtElement !== text) {
-    //         parentElementsForSelectionStart = [selectionStartsAtElement];
-
-    //         let nextParentAtSelectionStart = selectionStartsAtElement!.parentNode;
-
-    //         while (nextParentAtSelectionStart !== text) {
-    //           parentElementsForSelectionStart.push(nextParentAtSelectionStart);
-    //           nextParentAtSelectionStart = nextParentAtSelectionStart!.parentNode;
-    //         }
-    //       }
-
-    //       // do what ever you need here
-    //       // (as I understood - you should highlight buttons somewhere)
-    //       console.log(parentElementsForSelectionStart);
-    //       console.log(parentElementsForSelectionEnd);
-    //     }
-    //   }
-    // }
 
   }
   hideFontStyling() {
-    // this.fontStyling.nativeElement.style.display = 'none';
+    this.fontStyling.nativeElement.style.display = 'none';
   }
 
   checkIfFontStylingDivShouldBeShown() {
-    if(this.contents){
+    if (this.contents) {
       let img = this.contents.querySelector('img');
       let video = this.contents.querySelector('video');
       if (img || video) {
@@ -191,144 +142,120 @@ export class ChatViewComponent {
   pastedMessage(event: ClipboardEvent) {
     //remove the style from the pasted text without using execCommand
     let text = event.clipboardData!.getData('text/plain');
+    console.log(text);
     if (text.length > 0) {
-      event.preventDefault();
       //insert the text without the style at the cursor position without using execCommand
-      let range: Range | undefined = window.getSelection()?.getRangeAt(0);
-      let newNode = document.createTextNode(text);
-      range?.insertNode(newNode);
-      range?.setStartAfter(newNode);
-      range?.setEndAfter(newNode);
-      window.getSelection()?.removeAllRanges();
-      window.getSelection()?.addRange(range!);
+      event.preventDefault();
+      let selection = window.getSelection();
+      if (selection != null) {
+        let range = selection.getRangeAt(0);
+        range.deleteContents();
+        let textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
+    this.hideFontStyling();
     console.log(event.clipboardData);
   }
 
   toggleFont(fonttype: number) {
-    if (this.selectedText.length > 0) {
-
-      switch (fonttype) {
-        case 1:
-          //tag the selected text with <b> tag
-          let b_index = this.checkIfTagged(this.styling.bold, this.selectedText, this.textSelectedOffset);
-          if (b_index == -1) {
-            this.styling.bold.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          }
-          else {
-            this.styling.bold.splice(b_index, 1);
-          }
-          this.styling.bold = this.styling.bold.sort((a: any, b: any) => a.start - b.start);
-          this.createText()
-          break;
-        case 2:
-          //tag the selected text with <i> tag
-          let i_index = this.checkIfTagged(this.styling.italic, this.selectedText, this.textSelectedOffset);
-          if (i_index == -1) {
-
-            this.styling.italic.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          }
-          else {
-            this.styling.italic.splice(i_index, 1);
-          }
-          this.styling.italic = this.styling.italic.sort((a: any, b: any) => a.start - b.start);
-
-          break;
-        case 3:
-          //tag the selected text with <u> tag
-          this.styling.ulined.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          this.textMessage.nativeElement.innerHTML = this.replaceText(this.selectedText, '<u>' + this.selectedText + '</u>', this.textSelectedOffset);
-          break;
-        case 4:
-          //tag the selected text with <sub> tag
-          this.styling.sub.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          this.textMessage.nativeElement.innerHTML = this.replaceText(this.selectedText, '<sub>' + this.selectedText + '</sub>', this.textSelectedOffset);
-          break;
-        case 5:
-          //tag the selected text with <sup> tag
-          this.styling.sup.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          this.textMessage.nativeElement.innerHTML = this.replaceText(this.selectedText, '<sup>' + this.selectedText + '</sup>', this.textSelectedOffset);
-          break;
-        case 6:
-          //tag the selected text with <s> tag
-          this.styling.srike.push({ "start": this.textSelectedOffset, "end": this.textSelectedOffset + this.selectedText.length, "text": this.selectedText })
-          this.textMessage.nativeElement.innerHTML = this.replaceText(this.selectedText, '<s>' + this.selectedText + '</s>', this.textSelectedOffset);
-
+    //get the html content of the document fragment
+    console.log(this.contents);
+    const serializer = new XMLSerializer();
+    const str = serializer.serializeToString(this.contents as Node);
+    console.log(str);
+    //check if the selected text is already styled
+    if (this.checkIfSelectedTextIsStyled()) {
+      //remove the style
+      if (fonttype == 1) { //bold
+        let b = this.contents?.querySelector('b');
+        if (b) {
+          let text = b.innerHTML;
+          b.remove();
+          this.selection?.getRangeAt(0).deleteContents();
+          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
+        }
       }
-      console.log(this.styling);
-    }
-
-
-
-  }
-  replaceText(text: string, newText: string, offset: number) {
-
-    let textMessage = this.textMessage.nativeElement.innerHTML;
-    let newTextMessage = textMessage.substring(0, offset) + newText + textMessage.substring(offset + text.length, textMessage.length);
-    return newTextMessage;
-
-  }
-
-  checkIfTagged(tag: any[], text: string, offset: number) {
-    let index = -1;
-    for (let i = 0; i < tag.length; i++) {
-      if (tag[i].start == offset && tag[i].end == offset + text.length) {
-        index = i;
-        break;
+      else if (fonttype == 2) { //italic
+        let i = this.contents?.querySelector('i');
+        if (i) {
+          let text = i.innerHTML;
+          i.remove();
+          this.selection?.getRangeAt(0).deleteContents();
+          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
+        }
+      }
+      else if (fonttype == 3) { //underline
+        let u = this.contents?.querySelector('u');
+        if (u) {
+          let text = u.innerHTML;
+          u.remove();
+          this.selection?.getRangeAt(0).deleteContents();
+          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
+        }
+      }
+      else if (fonttype == 4) { //strike
+        let s = this.contents?.querySelector('s');
+        if (s) {
+          let text = s.innerHTML;
+          s.remove();
+          this.selection?.getRangeAt(0).deleteContents();
+          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
+        }
       }
     }
-    return index;
-  }
+    else {
+      if (fonttype == 1) {  //bold
+        let b = document.createElement('b');
+        b.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(b);
+      }
+      else if (fonttype == 2) { //italic
+        let i = document.createElement('i');
+        i.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(i);
+      }
+      else if (fonttype == 3) { //underline
+        let u = document.createElement('u');
+        u.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(u);
+      }
+      else if (fonttype == 4) { //strike
+        let s = document.createElement('s');
+        s.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(s);
+      }
+      else if (fonttype == 5) { //superscript
 
-  createText() {
-    let textMessage = this.textMessage.nativeElement.innerText;
-    console.log(textMessage);
-    let newTextMessage = '';
-    let bold = this.styling.bold;
-    let italic = this.styling.italic;
-    let ulined = this.styling.ulined;
-    let sub = this.styling.sub;
-    let sup = this.styling.sup;
-    let strike = this.styling.strike;
+        let sup = document.createElement('sup');
+        sup.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(sup);
+      }
+      else if (fonttype == 6) { //subscript
+        let sub = document.createElement('sub');
+        sub.innerHTML = this.selectedText;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(sub);
+      }
 
-    let boldIndex = 0;
-    let italicIndex = 0;
-    let ulinedIndex = 0;
-    let subIndex = 0;
-    let supIndex = 0;
-    let srikeIndex = 0;
-    let first_str;
-    let last_str;
-    newTextMessage = textMessage;
-    //bold
-    for (let i = 0; i < textMessage.length; i++) {
-      if (italicIndex < italic.length && i == italic[italicIndex].start) {
-        first_str = newTextMessage.substring(0, i);
-        last_str = newTextMessage.substring(i, newTextMessage.length);
-        newTextMessage = first_str + '<i>' + last_str;
-      }
-      if (italicIndex < italic.length && i == italic[italicIndex].end) {
-        first_str = newTextMessage.substring(0, i + 3);
-        last_str = newTextMessage.substring(i + 3, newTextMessage.length);
-        newTextMessage = first_str + '</i>' + last_str;
-        italicIndex++;
-      }
-      if (boldIndex < bold.length && i == bold[boldIndex].start) {
-        first_str = newTextMessage.substring(0, i);
-        last_str = newTextMessage.substring(i, newTextMessage.length);
-        newTextMessage = first_str + '<b>' + last_str;
-      }
-      if (boldIndex < bold.length && i == bold[boldIndex].end) {
-        first_str = newTextMessage.substring(0, i + 3);
-        last_str = newTextMessage.substring(i + 3, newTextMessage.length);
-        newTextMessage = first_str + '</b>' + last_str;
-        boldIndex++;
-      }
+      this.contents = this.selection?.getRangeAt(0).cloneContents();
+      console.log(this.contents);
 
     }
-
-    this.textMessage.nativeElement.innerHTML = newTextMessage;
   }
 
+  checkIfSelectedTextIsStyled() {
+    //check if the selected text is already styled or is contained in a styled element
+    return false;
+  }
 
 }

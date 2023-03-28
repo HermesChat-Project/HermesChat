@@ -185,10 +185,12 @@ i.action:hover, .row-action label:hover {
   display: none;
   background-color: white;
   border: 1px solid #ddd;
+  user-select: none;
 }
 #font-styling i {
   padding: 5px;
   cursor: pointer;
+  user-select: none;
 }
 #font-styling i:hover {
   background-color: #ddd;

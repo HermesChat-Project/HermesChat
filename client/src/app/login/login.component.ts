@@ -30,9 +30,8 @@ export class LoginComponent {
       //   password: this.password.toString(),
       //   username: this.email.toString()
       // }
-      // let options = { headers : new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })};
 
-      // this.logged.login(body, options, this.errors.nativeElement);
+      // this.logged.login(body, this.errors.nativeElement);
       this.logged.loggedIn = true;
     }
     else {

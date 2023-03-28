@@ -6,11 +6,9 @@
   <div id="messageSend">
     <div id="messageSendText">
       <div id="txtMessage" #textMessage [innerHTML]="messageOnCreation" (keydown)="keyAction($event)" contenteditable="true"
-        (blur)="hideFontStyling()" (paste)="pastedMessage($event)" (mouseup)="getSelection()"></div>
-      <button class="attachments" (click)="toggleShowChatActions()">
+       (paste)="pastedMessage($event)" (mouseup)="getSelection()"></div>
+      <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
-
-
       </button>
       <div class="row-action"
           [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">

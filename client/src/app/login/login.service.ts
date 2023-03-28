@@ -9,8 +9,8 @@ export class LoginService {
   loggedIn: boolean = false;
   constructor(private dataStorage: DataStorageService, private translationsService: TranslationsService) {}
 
-  login(body: any, options: any, errors: HTMLElement) {
-    this.dataStorage.PostRequestWithOptions(`login?username=${body.username}&password=${body.password}`, body, options).subscribe(
+  login(body: any, errors: HTMLElement) {
+    this.dataStorage.PostRequest(`login`, body).subscribe(
       (response: any) => {
         console.log(response);
         this.loggedIn = true;

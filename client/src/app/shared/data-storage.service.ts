@@ -22,9 +22,6 @@ export class DataStorageService {
     return this.httpClient.post(this.REST_API_SERVER + endpoint, body)
   }
 
-  public PostRequestWithOptions(endpoint: string, body: any, options: any) {
-    return this.httpClient.post(this.REST_API_SERVER + endpoint, body, options)
-  }
 
 
   public PutRequest(endpoint: string, body: any) {
