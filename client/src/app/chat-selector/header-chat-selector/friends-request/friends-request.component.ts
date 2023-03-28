@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { HeaderService } from '../header.service';
 
 @Component({
   selector: 'app-friends-request',
@@ -6,14 +7,15 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./friends-request.component.css']
 })
 export class FriendsRequestComponent {
-  @Output() closeEvent = new EventEmitter<void>();
   receivedRequest: boolean = true;
+
+  constructor(private headerService: HeaderService) { }
 
   changeSelection(sent: boolean) {
     this.receivedRequest = sent;
   }
 
   close() {
-    this.closeEvent.emit();
+    this.headerService.generalClosing();
   }
 }

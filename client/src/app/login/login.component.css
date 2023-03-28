@@ -117,3 +117,9 @@ center{
   text-decoration: none;
   float: left;
 }
+
+/*err*/
+.errors{
+  color: red;
+  font-size: 9pt;
+}

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FriendModel } from 'model/friendModel';
 import { userModel } from 'model/user.model';
 
 @Component({
@@ -7,30 +8,23 @@ import { userModel } from 'model/user.model';
   styleUrls: ['./friends-list.component.css']
 })
 export class FriendsListComponent {
-  @Input() friendListUser!: userModel[];
-  list: any[] = [];
-  friendList: any[] = [];
+  @Input() friendListUser!: FriendModel[];
+  friendList: FriendModel[] = [];
   txtSearchFriends: string = '';
   reverse: boolean = false;
 
 
   ngOnInit(): void {
-    this.getFriendListOf(0);
-    this.list.sort((a, b) => a.name.localeCompare(b.name));
-    this.friendList = this.list;
+    this.friendListUser = this.friendListUser.sort((a, b) => a.name.localeCompare(b.name));
+    this.friendList = this.friendListUser;
   }
 
-  getFriendListOf(id: number) {
-    let id_array: number[] = this.friendListUser[id].friend_id;
-    this.list = id_array.map((id) => this.friendListUser[id]);
-  }
 
   showFriends() {
-    if (this.txtSearchFriends == '')
-      this.friendList = this.list;
+    if (this.txtSearchFriends != '')
+      this.friendList = this.friendListUser.filter((friend) => friend.name.toLowerCase().startsWith(this.txtSearchFriends.toLowerCase()));
     else
-      this.friendList = this.list.filter((friend) => friend.name.toLowerCase().startsWith(this.txtSearchFriends.toLowerCase()));
-
+      this.friendList = this.friendListUser;
   }
 
   reverseList() {

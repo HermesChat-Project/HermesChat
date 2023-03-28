@@ -2,7 +2,7 @@
   <div id="sections">
     <div id="type_section" #sections>
       <app-all-chats [chatListUser]="chatSelector.chatList[0]" class="section" [ngStyle]="{'left' : 0 * width_section +'px' }" #chat></app-all-chats>
-      <app-friends-list [friendListUser]="chatSelector.chatList" class="section" [ngStyle]="{'left' : 1 * width_section  +'px' }" #friends></app-friends-list>
+      <app-friends-list [friendListUser]="chatSelector.chatList[0].friends" class="section" [ngStyle]="{'left' : 1 * width_section  +'px' }" #friends></app-friends-list>
       <app-calls-list [userList]="chatSelector.chatList[0]" class="section" [ngStyle]="{'left' : 2 * width_section  +'px'}" #calls></app-calls-list>
       <app-calendar class="section" [ngStyle]="{ 'left' : 3 * width_section  +'px'}" #calendar></app-calendar>
     </div>

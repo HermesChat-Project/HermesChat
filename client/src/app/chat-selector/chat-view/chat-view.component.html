@@ -5,7 +5,7 @@
   </div>
   <div id="messageSend">
     <div id="messageSendText">
-      <div id="txtMessage" #textMessage (keydown)="keyAction($event)" (mouseup)="getSelection()" contenteditable="true"
+      <div id="txtMessage" #textMessage [innerHTML]="messageOnCreation" (keydown)="keyAction($event)" (mouseup)="getSelection()" contenteditable="true"
         (blur)="hideFontStyling()" (paste)="pastedMessage($event)"></div>
       <button class="attachments" (click)="toggleShowChatActions()">
         <i class="bi bi-paperclip" id="clip"></i>
@@ -31,7 +31,7 @@
           [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
           <i class="bi bi-camera-video-fill"></i>
           <label for="txtImage" class="bi bi-image"></label>
-          <input type="file" id="txtImage" accept="image/*">
+          <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
         </div>
         <div class="row-action"
           [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
@@ -50,10 +50,10 @@
   </div>
 </div>
 <div id="font-styling" #fontStyling>
-  <i class="bi bi-type-bold"></i>
-  <i class="bi bi-type-italic"></i>
-  <i class="bi bi-type-underline"></i>
-  <i class="bi bi-subscript"></i>
-  <i class="bi bi-superscript"></i>
-  <i class="bi bi-type-strikethrough"></i>
+  <i class="bi bi-type-bold" (click)="toggleFont(1)"></i>
+  <i class="bi bi-type-italic" (click)="toggleFont(2)"></i>
+  <i class="bi bi-type-underline" (click)="toggleFont(3)"></i>
+  <i class="bi bi-subscript" (click)="toggleFont(4)"></i>
+  <i class="bi bi-superscript" (click)="toggleFont(5)"></i>
+  <i class="bi bi-type-strikethrough" (click)="toggleFont(6)"></i>
 </div>

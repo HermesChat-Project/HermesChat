@@ -80,6 +80,10 @@
   cursor: pointer;
 }
 
+.chat *{
+  user-select: none;
+}
+
 .last-message{
   height: 20px;
   width: 100%;

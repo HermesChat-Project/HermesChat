@@ -1,4 +1,14 @@
 {
+  "login" : {
+    "sign-in" : "Accedi",
+    "forgot-password" : "Password dimenticata?",
+    "sign-up" : "Registrati",
+    "new-to-hermes" : "Nuovo su Hermes?",
+    "email" : "Email",
+    "password" : "Password",
+    "missing-fields" : "Compila tutti i campi",
+    "wrong-credentials" : "Email o password errati"
+  },
   "all-chats": "Tutte le chat",
   "friends": "Amici",
   "calls": "Chiamate",

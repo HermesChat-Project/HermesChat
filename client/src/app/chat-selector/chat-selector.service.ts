@@ -4,11 +4,13 @@ import { chatList } from '../../../model/chat-list.model';
 import { callsModel } from '../../../model/calls.model';
 import { messageModel } from '../../../model/message.model';
 import { DataStorageService } from '../shared/data-storage.service';
+import { FriendModel } from 'model/friendModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatSelectorService {
+  PersonalListSearch: chatList[] = [];
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
       new chatList(0, 0, 'Prova', "ok", "img", [
@@ -87,7 +89,13 @@ export class ChatSelectorService {
       new chatList(10, 24, 'PC',"ok", "img",[
         new messageModel(0, 1, 'Pippo', 'ok', new Date()),
       ], true, [""]),
-    ], [1, 2, 3, 4, 5], [
+    ], [new FriendModel(1, "Pippo", "Pippo", "Pippo"),
+        new FriendModel(2, "Pluto", "Pluto", "Pluto"),
+        new FriendModel(3, "Paperino", "Paperino", "Paperino"),
+        new FriendModel(4, "Paperone", "Paperone", "Paperone"),
+        new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
+      ],
+    [
       new callsModel(0, 0, 0, new Date(), 0),
       new callsModel(1, 0, 2, new Date(), 1),
       new callsModel(2, 0, 3, new Date(), 2),
@@ -98,15 +106,49 @@ export class ChatSelectorService {
       new callsModel(7, 0, 8, new Date(), 1),
       new callsModel(8, 0, 9, new Date(), 0),
       new callsModel(9, 0, 9, new Date(), 0)]),
-    new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], [0, 2, 3]),
-    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [0, 1, 3, 5]),
-    new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], [0, 1, 2]),
-    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], [5, 6, 1, 2]),
-    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], [4, 6, 1]),
-    new userModel(6, 'Paperina', 'paperina@gmail.com', 'paperina', [], [4, 5]),
-    new userModel(7, 'Qui', 'qui@gmail.com', 'qui', [], [8, 9]),
-    new userModel(8, 'Quo', 'quo@gmail.com', 'quo', [], [7, 9]),
-    new userModel(9, 'Qua', 'qua@gmail.com', 'qua', [], [7, 8])
+    new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], [
+      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
+      new FriendModel(3, "Paperino", "Paperino", "Paperino"),
+      new FriendModel(0, "Username", "Prova", "Prova2")
+    ]),
+    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [
+      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
+      new FriendModel(3, "Paperino", "Paperino", "Paperino"),
+      new FriendModel(0, "Username", "Prova", "Prova2"),
+      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga")
+    ]),
+    new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], [
+      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
+      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
+      new FriendModel(0, "Username", "Prova", "Prova2")
+    ]),
+    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], [
+      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
+      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
+      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
+      new FriendModel(6, "Paperina", "Paperina", "Paperina")
+    ]),
+    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], [
+      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
+      new FriendModel(4, "Paperone", "Paperone", "Paperone"),
+      new FriendModel(6, "Paperina", "Paperina", "Paperina")
+    ]),
+    new userModel(6, 'Paperina', 'paperina@gmail.com', 'paperina', [], [
+      new FriendModel(4, "Paperone", "Paperone", "Paperone"),
+      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
+    ]),
+    new userModel(7, 'Qui', 'qui@gmail.com', 'qui', [], [
+      new FriendModel(8, "Quo", "Quo", "Quo"),
+      new FriendModel(9, "Qua", "Qua", "Qua")
+    ]),
+    new userModel(8, 'Quo', 'quo@gmail.com', 'quo', [], [
+      new FriendModel(7, "Qui", "Qui", "Qui"),
+      new FriendModel(9, "Qua", "Qua", "Qua")
+    ]),
+    new userModel(9, 'Qua', 'qua@gmail.com', 'qua', [], [
+      new FriendModel(7, "Qui", "Qui", "Qui"),
+      new FriendModel(8, "Quo", "Quo", "Quo")
+    ])
   ];
   selectedChat: chatList | null = null;
   userLang = navigator.language || 'en-US';
@@ -118,6 +160,14 @@ export class ChatSelectorService {
     }
   }
 
+  bottomScroll() {
+    let chat = document.getElementById('listMessage');
+    if (chat) {
+      chat.scrollTop = chat.scrollHeight;
+    }
+  }
+
+
   getMaxIndex(chat: chatList) {
     let max = 0;
     chat.messages.forEach((message) => {
@@ -126,5 +176,14 @@ export class ChatSelectorService {
       }
     });
     return max;
+  }
+
+  sortChats() {
+    this.chatList[0].chatList.sort((a, b) => {
+      let aDate = new Date(a.messages[a.messages.length - 1].sentAt);
+      let bDate = new Date(b.messages[b.messages.length - 1].sentAt);
+      return bDate.getTime() - aDate.getTime();
+    });
+    this.PersonalListSearch = this.chatList[0].chatList;
   }
 }
