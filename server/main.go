@@ -1,12 +1,13 @@
-package main 
+package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strconv"
 
-	"chat/pkg/routes"
+	"github.com/gin-gonic/gin"
+
 	"chat/pkg/config"
+	"chat/pkg/routes"
 )
 
 

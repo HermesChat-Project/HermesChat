@@ -10,6 +10,7 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	router.Use(AuthMiddleware())
 	router.Use(CORSMiddleware())
+	router.GET("/socket", controllers.Socket)
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
