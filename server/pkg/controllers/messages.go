@@ -19,14 +19,16 @@ var upgrader = websocket.Upgrader{
 }
 
 func Socket (c *gin.Context) {
-	
+     
+	fmt.Println("Socket Entrato")
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 
         if err != nil {
-            log.Fatal(err)
+            log.Print("upgrade:", err)
+            c.Abort()
+            return
         }
-
-        for {
+         for {
 
             msgType, msg, err := conn.ReadMessage()
             if err != nil {

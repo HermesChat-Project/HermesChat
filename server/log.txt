@@ -103,3 +103,55 @@
 2023-03-08 20:57:56 http: named cookie not present
 2023-03-08 20:57:57 http: named cookie not present
 2023-03-11 12:25:11 http: named cookie not present
+2023-03-28 11:43:50 error parsing uri: lookup _mongodb._tcp.clusterhermeschat.irp1ier.mongodb.net on [::1]:53: read udp [::1]:53085->[::1]:53: read: connection refused
+2023-03-28 11:45:02 error parsing uri: lookup _mongodb._tcp.clusterhermeschat.irp1ier.mongodb.net on [::1]:53: read udp [::1]:58427->[::1]:53: read: connection refused
+2023-03-28 11:45:23 error parsing uri: lookup _mongodb._tcp.clusterhermeschat.irp1ier.mongodb.net on [::1]:53: read udp [::1]:65185->[::1]:53: read: connection refused
+2023-03-28 11:47:53 error parsing uri: lookup _mongodb._tcp.clusterhermeschat.irp1ier.mongodb.net on [::1]:53: read udp [::1]:51026->[::1]:53: read: connection refused
+2023-03-29 20:58:25 http: named cookie not present
+2023-03-29 20:58:25 http: named cookie not present
+2023-03-29 21:06:10 http: named cookie not present
+2023-03-29 21:06:23 http: named cookie not present
+2023-03-29 21:07:44 http: named cookie not present
+2023-03-29 21:08:25 http: named cookie not present
+2023-03-29 21:08:33 http: named cookie not present
+2023-03-29 21:08:36 http: named cookie not present
+2023-03-29 21:08:38 http: named cookie not present
+2023-03-29 21:08:39 http: named cookie not present
+2023-03-29 21:08:40 http: named cookie not present
+2023-03-29 21:08:41 http: named cookie not present
+2023-03-29 21:08:41 http: named cookie not present
+2023-03-29 21:08:42 http: named cookie not present
+2023-03-29 21:08:43 http: named cookie not present
+2023-03-29 21:08:43 http: named cookie not present
+2023-03-29 21:08:44 http: named cookie not present
+2023-03-29 21:08:44 http: named cookie not present
+2023-03-29 21:08:45 http: named cookie not present
+2023-03-29 21:08:45 http: named cookie not present
+2023-03-29 21:08:46 http: named cookie not present
+2023-03-29 21:08:47 http: named cookie not present
+2023-03-29 21:08:47 http: named cookie not present
+2023-03-29 21:08:47 http: named cookie not present
+2023-03-29 21:08:48 http: named cookie not present
+2023-03-29 21:08:49 http: named cookie not present
+2023-03-29 21:08:52 http: named cookie not present
+2023-03-29 21:08:52 http: named cookie not present
+2023-03-29 21:08:52 http: named cookie not present
+2023-03-29 21:08:53 http: named cookie not present
+2023-03-29 21:08:54 http: named cookie not present
+2023-03-29 21:08:54 http: named cookie not present
+2023-03-29 21:08:55 http: named cookie not present
+2023-03-29 21:08:55 http: named cookie not present
+2023-03-29 21:08:56 http: named cookie not present
+2023-03-29 21:08:57 http: named cookie not present
+2023-03-29 21:08:57 http: named cookie not present
+2023-03-29 21:08:58 http: named cookie not present
+2023-03-29 21:08:58 http: named cookie not present
+2023-03-29 21:08:59 http: named cookie not present
+2023-03-29 21:09:01 http: named cookie not present
+2023-03-29 21:09:01 http: named cookie not present
+2023-03-29 21:09:03 http: named cookie not present
+2023-03-29 21:09:03 http: named cookie not present
+2023-03-29 21:09:05 http: named cookie not present
+2023-03-29 21:09:06 http: named cookie not present
+2023-03-29 21:09:06 http: named cookie not present
+2023-03-29 21:09:07 http: named cookie not present

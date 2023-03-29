@@ -18,6 +18,9 @@ func main() {
 	config.ConnectToDBMongoDB()
 	//set routers
 	routes.SetupRoutes(router)
-	router.RunTLS(":" + strconv.Itoa(config.PORT), "cert.crt", "key.pem")
+	//get my ip
+	ip := config.GetMyIP()
+	router.RunTLS(ip + ":" + strconv.Itoa(config.PORT), "cert.crt", "key.pem")
+	router.Static("/static", "./static")
 }
 

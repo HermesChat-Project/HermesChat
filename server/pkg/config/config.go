@@ -12,6 +12,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"net"
 
 )
 
@@ -69,3 +70,33 @@ func WriteFileLog(errF error) {
 	file.WriteString(time.Now().Format("2006-01-02 15:04:05") + " " + errF.Error() + "\n")
 }
 
+func GetMyIP() string {
+	var ip string
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		panic(err)
+	}
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			panic(err)
+		}
+		for _, addr := range addrs {
+			var ipnet *net.IPNet
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ipnet = v
+			case *net.IPAddr:
+				ipnet = &net.IPNet{
+					IP: v.IP,
+				}
+			}
+			if ipnet != nil && !ipnet.IP.IsLoopback() {
+				if ipnet.IP.To4() != nil {
+					ip = ipnet.IP.String()
+				}
+			}
+		}
+	}
+	return ip
+}
