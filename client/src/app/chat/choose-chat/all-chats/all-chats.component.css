@@ -71,7 +71,7 @@
   background-size: cover;
 }
 
-.chat {
+.div_chat {
   border-bottom: 1px solid #ccc;
   padding: 3% 0px;
   height: 14.29%;
@@ -80,7 +80,7 @@
   cursor: pointer;
 }
 
-.chat *{
+.div_chat *{
   user-select: none;
 }
 
@@ -88,6 +88,10 @@
   height: 20px;
   width: 100%;
   overflow: hidden;
+}
+
+.last-message i{
+  font-size: small !important;
 }
 
 /*Graphic Last message in the chat selector*/

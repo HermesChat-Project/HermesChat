@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { callsModel } from 'model/calls.model';
 import { chatList } from 'model/chat-list.model';
 import { userModel } from 'model/user.model';
-import { ChatSelectorService } from '../chat-selector.service';
+import { ChatSelectorService } from '../chat.service';
 
 @Component({
   selector: 'app-choose-chat',
