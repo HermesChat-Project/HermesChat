@@ -28,7 +28,6 @@ export class ChatViewComponent {
   }
   hideShowChatActions(event: Event) {
     //get the focused element
-    console.log("hideShowChatActions");
     let focusedElement = document.activeElement;
     console.log(focusedElement);
     console.log(this.textMessage.nativeElement);
@@ -41,7 +40,6 @@ export class ChatViewComponent {
     this.contents = this.selection?.getRangeAt(0).cloneContents();//get the html content of the selection
     //see if there is a img tag inside the selection
     console.log(this.contents);
-    console.log(this.contents?.textContent);
     // const serializer = new XMLSerializer();
     // const str = serializer.serializeToString(this.contents as Node);
     // console.log(str);
@@ -109,6 +107,7 @@ export class ChatViewComponent {
 
     if (this.messageSent.length > 0) {
       this.chatSelector.sendMessage(this.messageSent);
+      this.fontStyling.nativeElement.style.display = 'none';
       this.textMessage.nativeElement.innerHTML = '';
       this.textMessage.nativeElement.focus();
       this.chatSelector.sortChats();
@@ -142,7 +141,6 @@ export class ChatViewComponent {
   pastedMessage(event: ClipboardEvent) {
     //remove the style from the pasted text without using execCommand
     let text = event.clipboardData!.getData('text/plain');
-    console.log(text);
     if (text.length > 0) {
       //insert the text without the style at the cursor position without using execCommand
       event.preventDefault();
@@ -150,16 +148,17 @@ export class ChatViewComponent {
       if (selection != null) {
         let range = selection.getRangeAt(0);
         range.deleteContents();
-        let textNode = document.createTextNode(text);
-        range.insertNode(textNode);
-        range.setStartAfter(textNode);
-        range.setEndAfter(textNode);
+        text = text.replaceAll(/\n/g, '<br>');//replace the new line with <br>
+        let newDiv = document.createElement('div');//create a div to insert the text
+        newDiv.innerHTML = text;//insert the text. Without it the text will be inserted as plain text, so no html tags will be inserted
+        range.insertNode(newDiv as Node);
+        range.setStartAfter(newDiv as Node);
+        range.setEndAfter(newDiv as Node);
         selection.removeAllRanges();
         selection.addRange(range);
       }
     }
     this.hideFontStyling();
-    console.log(event.clipboardData);
   }
 
   toggleFont(fonttype: number) {
@@ -211,40 +210,41 @@ export class ChatViewComponent {
     else {
       if (fonttype == 1) {  //bold
         let b = document.createElement('b');
-        b.innerHTML = this.selectedText;
+        b.innerHTML = str;
         this.selection?.getRangeAt(0).deleteContents();
         this.selection?.getRangeAt(0).insertNode(b);
       }
       else if (fonttype == 2) { //italic
         let i = document.createElement('i');
-        i.innerHTML = this.selectedText;
+        i.innerHTML = str;
+        i.style.fontSize = "normal"
         this.selection?.getRangeAt(0).deleteContents();
         this.selection?.getRangeAt(0).insertNode(i);
       }
       else if (fonttype == 3) { //underline
         let u = document.createElement('u');
-        u.innerHTML = this.selectedText;
+        u.innerHTML = str;
         this.selection?.getRangeAt(0).deleteContents();
         this.selection?.getRangeAt(0).insertNode(u);
       }
-      else if (fonttype == 4) { //strike
-        let s = document.createElement('s');
-        s.innerHTML = this.selectedText;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(s);
-      }
-      else if (fonttype == 5) { //superscript
+      else if (fonttype == 4) { //superscript
 
         let sup = document.createElement('sup');
-        sup.innerHTML = this.selectedText;
+        sup.innerHTML = str;
         this.selection?.getRangeAt(0).deleteContents();
         this.selection?.getRangeAt(0).insertNode(sup);
       }
-      else if (fonttype == 6) { //subscript
+      else if (fonttype == 5) { //subscript
         let sub = document.createElement('sub');
-        sub.innerHTML = this.selectedText;
+        sub.innerHTML = str;
         this.selection?.getRangeAt(0).deleteContents();
         this.selection?.getRangeAt(0).insertNode(sub);
+      }
+      else if (fonttype == 6) { //strike
+        let s = document.createElement('s');
+        s.innerHTML = str;
+        this.selection?.getRangeAt(0).deleteContents();
+        this.selection?.getRangeAt(0).insertNode(s);
       }
 
       this.contents = this.selection?.getRangeAt(0).cloneContents();

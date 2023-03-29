@@ -3,11 +3,13 @@ import { chatList } from 'model/chat-list.model';
 import { SearchModel } from 'model/search.model';
 import { userModel } from 'model/user.model';
 import { ChatSelectorService } from '../../chat.service';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-all-chats',
   templateUrl: './all-chats.component.html',
-  styleUrls: ['./all-chats.component.css']
+  styleUrls: ['./all-chats.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AllChatsComponent {
   @Input() chatListUser!: userModel;
