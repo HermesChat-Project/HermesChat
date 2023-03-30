@@ -20,7 +20,6 @@ func main() {
 	routes.SetupRoutes(router)
 	//get my ip
 	ip := config.GetMyIP()
-	router.RunTLS(ip + ":" + strconv.Itoa(config.PORT), "cert.crt", "key.pem")
-	router.Static("/static", "./static")
+	router.RunTLS(ip + ":" + strconv.Itoa(config.PORT), "fullchain.pem", "privkey.pem")
 }
 
