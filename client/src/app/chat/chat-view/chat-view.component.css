@@ -37,7 +37,7 @@
   font-size: 15px;
   font-weight: 400;
   line-height: 20px;
-  padding: 10px;
+  padding: 10px 35px 10px 10px;
 }
 #txtMessage > img {
   max-width: 80%;
@@ -107,9 +107,6 @@
   padding-right: 5px;
 }
 
-#txtMessage i{
-  font-size:medium !important;
-}
 
 .row-action {
   right: -30px;
@@ -203,6 +200,14 @@ i.action:hover,
 #font-styling i:hover {
   background-color: #ddd;
 }
-.bi-type-h1 {
-  background-color: #f4e576;
+.fontIsSelected {
+  background-color: #ddd;
 }
+
+u sup, u sub {
+  text-decoration: underline;
+}
+i sup, i sub {
+  font-style: italic;
+}
+

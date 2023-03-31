@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, createNgModule, ElementRef, ViewChild } from '@angular/core';
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../chat.service';
 import { ViewEncapsulation } from '@angular/core';
@@ -15,11 +15,24 @@ export class ChatViewComponent {
   showChatActions: boolean = false;
   messageSent: string = '';
   selectedText: string = '';
-  textSelectedOffset: number = 0;
-  messageOnCreation: string = '';
   selection: Selection | null = null;
-
   contents: DocumentFragment | undefined;
+
+  textSelectedOffsetStart: number = 0;
+  textSelectedOffsetEnd: number = 0;
+  textSelectedLineFirst: number = 0;
+  textSelectedLineLast: number = 0;
+
+  serializer: XMLSerializer = new XMLSerializer();
+  serializedStr: string = '';
+
+  //for the css style of the buttons
+  isBold: boolean = false;
+  isItalic: boolean = false;
+  isUnderline: boolean = false;
+  isStrikethrough: boolean = false;
+  isSuperscript: boolean = false;
+  isSubscript: boolean = false;
 
   constructor(public chatSelector: ChatSelectorService) { }
 
@@ -57,11 +70,15 @@ export class ChatViewComponent {
           let oRect = oRange.getBoundingClientRect();
           let top = oRect.top;
           let left = oRect.left;
-          //get the position of the selected text based on the full text
-          this.textSelectedOffset = oRange.startOffset;
+          this.textSelectedOffsetEnd = oRange.endOffset;
+          this.textSelectedOffsetStart = oRange.startOffset;
+          console.log(this.textSelectedOffsetStart);
+          console.log(this.textSelectedOffsetEnd);
           this.fontStyling.nativeElement.style.top = (top - 37) + 'px';
           this.fontStyling.nativeElement.style.left = left + 'px';
           this.fontStyling.nativeElement.style.display = 'block';
+
+          this.getStylesAlreadyApplied();
         }
         else {
           this.hideFontStyling();
@@ -75,9 +92,170 @@ export class ChatViewComponent {
 
 
   }
+
+  getTextBeforeAndAfterSelection(fonttype: string) {
+    let commonAncestorContainer = this.selection?.getRangeAt(0).commonAncestorContainer;
+    while (commonAncestorContainer?.nodeName != fonttype.toUpperCase()) {
+      commonAncestorContainer = commonAncestorContainer?.parentNode!;
+    }
+    console.log(commonAncestorContainer);
+
+    let serializedString = this.serializer.serializeToString(commonAncestorContainer as Node);
+    console.log(serializedString);
+    serializedString = serializedString.replaceAll(/xmlns="[^"]+"/g, '');
+    serializedString = serializedString.replaceAll("<" + fonttype + " >", '<' + fonttype + ">");
+    //regex that make br don't have space between the tag and the >
+    let regex = /<br\s*\/?>/gi;
+    serializedString = serializedString.replaceAll(regex, "<br/>");
+    let startingLine = this.getStartingLine();
+    let endingLine = this.getEndingLine(startingLine, this.textSelectedOffsetEnd);
+
+    let wait: boolean = false;
+    let htmlString = '';
+    //recreate the html string
+    let lines = serializedString.split('<br/>')
+    let cont = 0;
+    console.log(lines);
+    for (let i = 0; i < lines.length; i++) {
+      if (i < startingLine || i > endingLine || (i > startingLine && i < endingLine)) {
+        htmlString += lines[i] + '<br/>';
+      }
+      else {
+        if (i == startingLine && startingLine != endingLine) {
+          for (let j = 0; j < lines[i].length; j++) {
+            if (lines[i][j] == '<') {
+              wait = true;
+            }
+            if (!wait) {
+              if (cont == this.textSelectedOffsetStart) {
+                htmlString += '</' + fonttype + '>';
+              }
+              cont++;
+            }
+            if (lines[i][j] == '>') {
+              wait = false;
+            }
+            htmlString += lines[i][j];
+          }
+          htmlString += '<br/>';
+        }
+        else if (i == endingLine && endingLine != startingLine) {
+          cont = 0;
+          for (let j = 0; j < lines[i].length; j++) {
+            if (lines[i][j] == '<') {
+              wait = true;
+            }
+            if (!wait) {
+              if (cont == this.textSelectedOffsetEnd) {
+                htmlString += '<' + fonttype + '>';
+              }
+              cont++;
+            }
+            if (lines[i][j] == '>') {
+              wait = false;
+            }
+            htmlString += lines[i][j];
+          }
+        }
+        else if (i == startingLine && i == endingLine) {
+          cont = 0;
+          for (let j = 0; j < lines[i].length; j++) {
+            if (lines[i][j] == '<') {
+              wait = true;
+            }
+            if (!wait) {
+              if (cont == this.textSelectedOffsetStart) {
+                htmlString += '</' + fonttype + '>';
+              }
+              if (cont == this.textSelectedOffsetEnd) {
+                htmlString += '<' + fonttype + '>';
+              }
+              cont++;
+            }
+            if (lines[i][j] == '>') {
+              wait = false;
+            }
+            htmlString += lines[i][j];
+          }
+        }
+      }
+
+      console.log(htmlString);
+      //replace all the &lt; and other html entities
+
+
+    }
+
+    console.log(htmlString);
+    //change range to commonAncestorContainer and set the html string
+    this.selection?.getRangeAt(0).selectNode(commonAncestorContainer as Node);
+    this.selection?.getRangeAt(0).deleteContents();
+    let fragment = document.createRange().createContextualFragment(htmlString);
+    this.selection?.getRangeAt(0).insertNode(fragment);
+    this.selection?.getRangeAt(0).collapse(false);
+
+
+  }
   hideFontStyling() {
     this.fontStyling.nativeElement.style.display = 'none';
   }
+  getStartingLine() {
+
+    let line = 0;
+    let previousSibling = this.selection?.getRangeAt(0).startContainer.previousSibling;
+    console.log(this.selection?.getRangeAt(0).startContainer.nodeValue);
+    while (previousSibling != null) {
+      console.log(previousSibling);
+      if (previousSibling!.nodeName == 'BR') {
+        line++;
+      }
+      previousSibling = previousSibling.previousSibling;
+    }
+
+
+    return line;//linea di partenza rispetto al commonAncestorContainer
+  }
+  getEndingLine(startingLine: number, offsetEnd: number) {
+    let line = startingLine;
+    let lines = this.serializedStr.split('<br').length;
+    return line + lines - 1;
+  }
+  getStylesAlreadyApplied() {
+
+    let serializedStr = this.serializer.serializeToString(this.selection?.getRangeAt(0).cloneContents() as Node);
+    this.serializedStr = serializedStr;
+    console.log(serializedStr);
+    //get the parent of the selection
+    let parent = this.selection?.getRangeAt(0).commonAncestorContainer.parentElement; //genitore del container comune
+    let commonAncestorContainer = this.selection?.getRangeAt(0).commonAncestorContainer; //container comune. Può essere un testo o un tag
+    // check if commonAncestorContainer is just text
+    console.log(parent?.nodeName);
+    let tagsContainingSelectedText: any[] = [];
+    if (commonAncestorContainer?.nodeName == '#text') {
+      while (parent?.nodeName != 'DIV') {
+        tagsContainingSelectedText.push(parent?.nodeName);
+        parent = parent?.parentElement;
+      }
+    }
+    else {
+      if (commonAncestorContainer?.nodeName != 'DIV')
+        tagsContainingSelectedText.push(commonAncestorContainer!.nodeName);
+      while (parent?.nodeName != 'DIV') {
+        tagsContainingSelectedText.push(parent?.nodeName);
+        parent = parent?.parentElement;
+      }
+
+    }
+    //check if tagsContainingSelectedText contains a bold, italic, underline, strikethrough, superscript or subscript
+    this.isBold = tagsContainingSelectedText.includes('B');
+    this.isItalic = tagsContainingSelectedText.includes('I');
+    this.isUnderline = tagsContainingSelectedText.includes('U');
+    this.isStrikethrough = tagsContainingSelectedText.includes('S');
+    this.isSuperscript = tagsContainingSelectedText.includes('SUP');
+    this.isSubscript = tagsContainingSelectedText.includes('SUB');
+
+  }
+
 
   checkIfFontStylingDivShouldBeShown() {
     if (this.contents) {
@@ -161,101 +339,125 @@ export class ChatViewComponent {
     this.hideFontStyling();
   }
 
-  toggleFont(fonttype: number) {
+  toggleFont(fonttype: string) {
     //get the html content of the document fragment
     console.log(this.contents);
-    const serializer = new XMLSerializer();
-    const str = serializer.serializeToString(this.contents as Node);
-    console.log(str);
-    //check if the selected text is already styled
-    if (this.checkIfSelectedTextIsStyled()) {
-      //remove the style
-      if (fonttype == 1) { //bold
-        let b = this.contents?.querySelector('b');
-        if (b) {
-          let text = b.innerHTML;
-          b.remove();
-          this.selection?.getRangeAt(0).deleteContents();
-          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
-        }
-      }
-      else if (fonttype == 2) { //italic
-        let i = this.contents?.querySelector('i');
-        if (i) {
-          let text = i.innerHTML;
-          i.remove();
-          this.selection?.getRangeAt(0).deleteContents();
-          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
-        }
-      }
-      else if (fonttype == 3) { //underline
-        let u = this.contents?.querySelector('u');
-        if (u) {
-          let text = u.innerHTML;
-          u.remove();
-          this.selection?.getRangeAt(0).deleteContents();
-          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
-        }
-      }
-      else if (fonttype == 4) { //strike
-        let s = this.contents?.querySelector('s');
-        if (s) {
-          let text = s.innerHTML;
-          s.remove();
-          this.selection?.getRangeAt(0).deleteContents();
-          this.selection?.getRangeAt(0).insertNode(document.createTextNode(text));
-        }
-      }
+    console.log(this.contents?.nextSibling);
+    this.serializedStr = this.serializer.serializeToString(this.contents as Node);
+    console.log(this.serializedStr);
+    this.serializedStr = this.serializedStr.replaceAll(/xmlns="[^"]+"/g, '');
+    this.serializedStr = this.serializedStr.replaceAll("<" + fonttype + " >", '<' + fonttype + ">");
+
+    if (fonttype == 'b' && this.isBold) {
+      this.getTextBeforeAndAfterSelection(fonttype);
+    }
+    else if (fonttype == 'i' && this.isItalic) {
+      this.getTextBeforeAndAfterSelection(fonttype);
+
+    }
+    else if (fonttype == 'u' && this.isUnderline) {
+      this.getTextBeforeAndAfterSelection(fonttype);
+    }
+    else if (fonttype == 's' && this.isStrikethrough) {
+      this.getTextBeforeAndAfterSelection(fonttype);
+    }
+    else if (fonttype == 'sup' && this.isSuperscript) {
+      this.getTextBeforeAndAfterSelection(fonttype);
+    }
+    else if (fonttype == 'sub' && this.isSubscript) {
+      this.getTextBeforeAndAfterSelection(fonttype);
     }
     else {
-      if (fonttype == 1) {  //bold
-        let b = document.createElement('b');
-        b.innerHTML = str;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(b);
-      }
-      else if (fonttype == 2) { //italic
-        let i = document.createElement('i');
-        i.innerHTML = str;
-        i.style.fontSize = "normal"
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(i);
-      }
-      else if (fonttype == 3) { //underline
-        let u = document.createElement('u');
-        u.innerHTML = str;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(u);
-      }
-      else if (fonttype == 4) { //superscript
-
-        let sup = document.createElement('sup');
-        sup.innerHTML = str;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(sup);
-      }
-      else if (fonttype == 5) { //subscript
-        let sub = document.createElement('sub');
-        sub.innerHTML = str;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(sub);
-      }
-      else if (fonttype == 6) { //strike
-        let s = document.createElement('s');
-        s.innerHTML = str;
-        this.selection?.getRangeAt(0).deleteContents();
-        this.selection?.getRangeAt(0).insertNode(s);
-      }
-
-      this.contents = this.selection?.getRangeAt(0).cloneContents();
-      console.log(this.contents);
-
+      this.insertStyle(fonttype);
     }
+
+    //get the parent element of the selected text
+
+
   }
 
-  checkIfSelectedTextIsStyled() {
-    //check if the selected text is already styled or is contained in a styled element
-    return false;
+  insertStyle(fonttype: string) {
+    // console.log(this.serializedStr);
+    // console.log(this.serializedStr.indexOf('<' + fonttype));
+    // this.serializedStr = this.serializedStr.replaceAll('<' + fonttype + ">", '');
+    // this.serializedStr = this.serializedStr.replaceAll('</' + fonttype + '>', '');
+    // let style = document.createElement(fonttype);
+    // style.innerHTML = this.serializedStr;
+    // this.selection?.getRangeAt(0).deleteContents();
+    // this.selection?.getRangeAt(0).insertNode(style);
+    // this.contents = this.selection?.getRangeAt(0).cloneContents();
+
+    // let nextSibling = style.nextElementSibling;
+    // console.log(nextSibling);
+    // let childrenSibling = nextSibling
+    // while (childrenSibling != null && childrenSibling.nodeName != fonttype.toUpperCase()) {
+    //   console.log(childrenSibling.nodeName);
+    //   childrenSibling = childrenSibling?.children.item(0)!;
+    // }
+    // if (childrenSibling != null) {
+    //   if (childrenSibling.textContent == nextSibling?.textContent) {
+    //     style.innerHTML += childrenSibling.innerHTML;
+    //     childrenSibling.remove();
+    //   }
+    // }
+
+    // let prevSibling = style.previousElementSibling;
+    // childrenSibling = prevSibling
+    // while(childrenSibling != null && childrenSibling.nodeName != fonttype.toUpperCase()){
+    //   childrenSibling = childrenSibling?.children.item(0)!;
+    // }
+    // if(childrenSibling != null){
+    //   if(childrenSibling.textContent == prevSibling?.textContent){
+    //     style.innerHTML = childrenSibling.innerHTML + style.innerHTML;
+    //     childrenSibling.remove();
+    //   }
+    // }
+    // console.log(style);
+
+
+
+    if (this.serializedStr.indexOf('<' + fonttype) != 0 && this.serializedStr.indexOf('</' + fonttype + '>') != this.serializedStr.length - ('</' + fonttype + '>').length) {
+      this.serializedStr = this.serializedStr.replaceAll('<' + fonttype + ">", '');
+      this.serializedStr = this.serializedStr.replaceAll('</' + fonttype + '>', '');
+      this.insertTag(fonttype);
+      console.log("tipo 1");
+    }
+    else if (this.serializedStr.indexOf('<' + fonttype) != 0 && this.serializedStr.indexOf('</' + fonttype + '>') == this.serializedStr.length - ('</' + fonttype + '>').length) {
+      this.serializedStr = this.serializedStr.replaceAll('<' + fonttype + ">", '');
+      this.serializedStr = this.serializedStr.replaceAll('</' + fonttype + '>', '');
+      this.serializedStr = '<' + fonttype + '>' + this.serializedStr
+      console.log(this.serializedStr);
+      this.selection?.getRangeAt(0).deleteContents();
+      this.selection?.getRangeAt(0).insertNode(this.selection?.getRangeAt(0).createContextualFragment(this.serializedStr) as Node);
+      this.contents = this.selection?.getRangeAt(0).cloneContents();
+
+      console.log("tipo 2");
+    }
+    else if (this.serializedStr.indexOf('<' + fonttype) == 0 && this.serializedStr.indexOf('</' + fonttype + '>') != this.serializedStr.length - ('</' + fonttype + '>').length) {
+      this.serializedStr = this.serializedStr.replaceAll('</' + fonttype + '>', '');
+      this.serializedStr = this.serializedStr + '</' + fonttype + '>';
+      console.log(this.serializedStr);
+      this.selection?.getRangeAt(0).deleteContents();
+      this.selection?.getRangeAt(0).insertNode(this.selection?.getRangeAt(0).createContextualFragment(this.serializedStr) as Node);
+      this.contents = this.selection?.getRangeAt(0).cloneContents();
+      console.log("tipo 3");
+    }
+    console.log(this.serializedStr);
+    // this.adjustText()
+  }
+
+  adjustText() {
+
+
+
+  }
+
+  insertTag(fonttype: string) {
+    let style = document.createElement(fonttype);
+    style.innerHTML = this.serializedStr;
+    this.selection?.getRangeAt(0).deleteContents();
+    this.selection?.getRangeAt(0).insertNode(style);
+    this.contents = this.selection?.getRangeAt(0).cloneContents();
   }
 
 }
