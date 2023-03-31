@@ -5,7 +5,7 @@
   </div>
   <div id="messageSend">
     <div id="messageSendText">
-      <div id="txtMessage" #textMessage [innerHTML]="messageOnCreation" (keydown)="keyAction($event)" contenteditable="true"
+      <div id="txtMessage" #textMessage (keydown)="keyAction($event)" contenteditable="true"
        (paste)="pastedMessage($event)" (mouseup)="getSelection()"></div>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
@@ -48,10 +48,10 @@
   </div>
 </div>
 <div id="font-styling" #fontStyling>
-  <i class="bi bi-type-bold" (click)="toggleFont(1)"></i>
-  <i class="bi bi-type-italic" (click)="toggleFont(2)"></i>
-  <i class="bi bi-type-underline" (click)="toggleFont(3)"></i>
-  <i class="bi bi-subscript" (click)="toggleFont(4)"></i>
-  <i class="bi bi-superscript" (click)="toggleFont(5)"></i>
-  <i class="bi bi-type-strikethrough" (click)="toggleFont(6)"></i>
+  <i class="bi bi-type-bold" (click)="toggleFont('b')" [ngClass]="{'fontIsSelected' : isBold}"></i>
+  <i class="bi bi-type-italic" (click)="toggleFont('i')" [ngClass]="{'fontIsSelected' : isItalic}"></i>
+  <i class="bi bi-type-underline" (click)="toggleFont('u')" [ngClass]="{'fontIsSelected' : isUnderline}"></i>
+  <i class="bi bi-subscript" (click)="toggleFont('sub')" [ngClass]="{'fontIsSelected' : isSubscript}"></i>
+  <i class="bi bi-superscript" (click)="toggleFont('sup')" [ngClass]="{'fontIsSelected' : isSuperscript}"></i>
+  <i class="bi bi-type-strikethrough" (click)="toggleFont('s')" [ngClass]="{'fontIsSelected' : isStrikethrough}"></i>
 </div>
