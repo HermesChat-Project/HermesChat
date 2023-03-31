@@ -47,7 +47,7 @@ func VerifyToken (c *gin.Context){
 	if err != nil {
 		go config.WriteFileLog(err)
 		//redirect to login page
-		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/socket") {
+		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()
 		}else{
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -251,4 +251,71 @@ func GetId (u string) string{
 		return ""
 	}
 	return result["_id"].(primitive.ObjectID).Hex()
+}
+
+func UpdateInfoDB(i string, inf string, c *gin.Context){
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	_, err = collection.UpdateOne(
+		context.Background(),
+		bson.M{"_id": objID},
+		bson.M{"$set": bson.M{"info": inf}},
+	)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while updating info",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "info updated",
+	})
+}
+
+func GetFriendsDB(i string, c *gin.Context){
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	
+	//how to get in result i have a "ids" that is an array of json, the first json contains a "frindship" which is a string
+	id := result["ids"].([]interface{})[0].(primitive.M)["friendship"].(string)
+	fmt.Print(id)
 }
