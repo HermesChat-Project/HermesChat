@@ -315,7 +315,46 @@ func GetFriendsDB(i string, c *gin.Context){
 		return
 	}
 	
-	//how to get in result i have a "ids" that is an array of json, the first json contains a "frindship" which is a string
-	id := result["ids"].([]interface{})[0].(primitive.M)["friendship"].(string)
-	fmt.Print(id)
+	id := result["ids"]
+	id = id.(primitive.A)[0]
+	id = id.(primitive.M)["friendship"]
+	
+	collection = config.ClientMongoDB.Database("user").Collection("friendship")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(id.(string))
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	ris = collection.FindOne(context.Background(), bson.M{"_id": objID2})
+	var result2 bson.M
+	ris.Decode(&result2)
+	if result2 == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+
+	//just want a list of friends's nicknames
+	var friendsNickname []string
+	for _, v := range result2["friends"].(primitive.A) {
+		friendsNickname = append(friendsNickname, v.(primitive.M)["nickname"].(string))
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "friends found",
+		"friends": friendsNickname,
+	})
+
 }

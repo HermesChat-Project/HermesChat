@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 
-	"chat/pkg/utils"
 	"chat/pkg/models"
+	"chat/pkg/utils"
 )
 	
 
@@ -25,17 +25,14 @@ func UpdateInfo (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	index, _ := c.Get("index")
 
-	utils.UpdateInfoDB(form.Index, form.NewInfo, c)
+	utils.UpdateInfoDB(index.(string), form.NewInfo, c)
 
 }
 
 func GetFriends (c *gin.Context) {
-	var form models.General;
-	if err := c.ShouldBind(&form); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-
-	utils.GetFriendsDB(form.Index, c)
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetFriendsDB(index.(string), c)
 }

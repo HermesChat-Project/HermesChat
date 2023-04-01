@@ -189,3 +189,8 @@
 2023-03-31 10:07:05 http: named cookie not present
 2023-03-31 10:07:24 http: named cookie not present
 2023-03-31 10:07:41 http: named cookie not present
+2023-04-01 16:47:28 http: named cookie not present
+2023-04-01 16:47:48 http: named cookie not present
+2023-04-01 17:07:12 error while connecting to database
+2023-04-01 17:27:40 error while connecting to database
+2023-04-01 17:28:39 error while connecting to database
