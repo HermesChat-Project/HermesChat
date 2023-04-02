@@ -14,6 +14,7 @@ export class LoginService {
     // this.dataStorage.PostRequest(`login`, body).subscribe(
     //   (response: any) => {
     //     console.log(response);
+    //     console.log(document.cookie);
     //     this.router.navigate(['/chat']);
     //   },
     //   (error: Error) => {
