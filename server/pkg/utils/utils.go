@@ -45,7 +45,6 @@ func CreateToken (index string, c *gin.Context) {
 func VerifyToken (c *gin.Context){
 	cookie, err := c.Cookie("Authorization")
 	if err != nil {
-		go config.WriteFileLog(err)
 		//redirect to login page
 		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()
@@ -347,14 +346,22 @@ func GetFriendsDB(i string, c *gin.Context){
 	}
 
 	//just want a list of friends's nicknames
-	var friendsNickname []string
+	type Friend struct {
+		Nickname string `json:"nickname"`
+		ID string `json:"id"`
+		Image string `json:"image"`
+	}
+	var friends []Friend
 	for _, v := range result2["friends"].(primitive.A) {
-		friendsNickname = append(friendsNickname, v.(primitive.M)["nickname"].(string))
+		friends = append(friends, Friend{
+			Nickname: v.(primitive.M)["nickname"].(string),
+			ID: v.(primitive.M)["idUser"].(string),
+			Image: v.(primitive.M)["image"].(string),
+		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "friends found",
-		"friends": friendsNickname,
+		"friends": friends,
 	})
 
 }
