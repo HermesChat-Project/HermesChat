@@ -36,3 +36,9 @@ func GetFriends (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.GetFriendsDB(index.(string), c)
 }
+
+func GetFriendRequests (c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetFriendRequestsDB(index.(string), c)
+}

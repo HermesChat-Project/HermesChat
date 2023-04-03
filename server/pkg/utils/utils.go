@@ -287,7 +287,8 @@ func UpdateInfoDB(i string, inf string, c *gin.Context){
 }
 
 func GetFriendsDB(i string, c *gin.Context){
-	collection := config.ClientMongoDB.Database("user").Collection("user")
+	idFriendship := getIDS("friendship", i, c);
+	collection := config.ClientMongoDB.Database("user").Collection("friendship")
 	if collection == nil {
 		errConn();
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -295,7 +296,7 @@ func GetFriendsDB(i string, c *gin.Context){
 		})
 		return
 	}
-	objID, err := primitive.ObjectIDFromHex(i)
+	objID2, err := primitive.ObjectIDFromHex(idFriendship)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -303,38 +304,7 @@ func GetFriendsDB(i string, c *gin.Context){
 		})
 		return
 	}
-	ris := collection.FindOne(context.Background(), bson.M{"_id": objID})
-	var result bson.M
-	ris.Decode(&result)
-	if result == nil {
-		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
-		return
-	}
-	
-	id := result["ids"]
-	id = id.(primitive.A)[0]
-	id = id.(primitive.M)["friendship"]
-	
-	collection = config.ClientMongoDB.Database("user").Collection("friendship")
-	if collection == nil {
-		errConn();
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
-		})
-		return
-	}
-	objID2, err := primitive.ObjectIDFromHex(id.(string))
-	if err != nil {
-		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
-		return
-	}
-	ris = collection.FindOne(context.Background(), bson.M{"_id": objID2})
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID2})
 	var result2 bson.M
 	ris.Decode(&result2)
 	if result2 == nil {
@@ -350,12 +320,14 @@ func GetFriendsDB(i string, c *gin.Context){
 		Nickname string `json:"nickname"`
 		ID string `json:"id"`
 		Image string `json:"image"`
+		Name string `json:"name"`
 	}
 	var friends []Friend
 	for _, v := range result2["friends"].(primitive.A) {
 		friends = append(friends, Friend{
 			Nickname: v.(primitive.M)["nickname"].(string),
 			ID: v.(primitive.M)["idUser"].(string),
+			Name: v.(primitive.M)["name"].(string) + " " + v.(primitive.M)["surname"].(string),
 			Image: v.(primitive.M)["image"].(string),
 		})
 	}
@@ -363,5 +335,75 @@ func GetFriendsDB(i string, c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"friends": friends,
 	})
+}
 
+func GetFriendRequestsDB(i string, c *gin.Context){
+	idRequests := getIDS("toAccept", i, c);
+	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idRequests)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID2})
+	var result2 bson.M
+	ris.Decode(&result2)
+	if result2 == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	aus := result2["pending"];
+	c.JSON(http.StatusOK, gin.H{
+		"requests": aus,
+	})
+}
+
+
+
+
+func getIDS(res string, i string, c *gin.Context) (string) {
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return "";
+	}
+	objID, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return "";
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return "";
+	}
+	
+	id := result["ids"];
+	id = id.(primitive.A)[0];
+
+	return id.(primitive.M)[res].(string);
 }

@@ -15,6 +15,8 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/signup", controllers.SignUp)
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
 	router.POST("/getFriends", controllers.GetFriends)
+	router.POST("/getFriendRequests", controllers.GetFriendRequests)
+	
 	/*
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
 	router.GET("/getUsers", controllers.commondHand.SearchUsers)
@@ -28,7 +30,6 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/sendGroupMessage", controllers.SendGroupMessage)
 	router.POST("/getMessages", controllers.GetMessages)
 	router.POST("/getGroupMessages", controllers.GetGroupMessages)
-	router.POST("/getFriendRequests", controllers.GetFriendRequests)
 	router.POST("/getGroups", controllers.GetGroups)
 	router.POST("/getGroupUsers", controllers.GetGroupUsers)
 	*/
