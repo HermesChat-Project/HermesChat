@@ -16,6 +16,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
 	router.POST("/getFriends", controllers.GetFriends)
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
+	router.POST("/getBlocked", controllers.GetBlocked)
 	
 	/*
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)

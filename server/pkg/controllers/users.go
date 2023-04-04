@@ -42,3 +42,9 @@ func GetFriendRequests (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.GetFriendRequestsDB(index.(string), c)
 }
+
+func GetBlocked(c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetBlockedDB(index.(string), c)
+}

@@ -371,7 +371,40 @@ func GetFriendRequestsDB(i string, c *gin.Context){
 	})
 }
 
+func GetBlockedDB(i string, c *gin.Context){
+	idBlocked := getIDS("blocked", i, c);
 
+	collection := config.ClientMongoDB.Database("user").Collection("blocked")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idBlocked)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID2})
+	var result2 bson.M
+	ris.Decode(&result2)
+	if result2 == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	aus := result2["blocked"];
+	c.JSON(http.StatusOK, gin.H{
+		"blocked": aus,
+	})
+}
 
 
 func getIDS(res string, i string, c *gin.Context) (string) {
