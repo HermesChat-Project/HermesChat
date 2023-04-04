@@ -15,6 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"chat/pkg/config"
+	"chat/pkg/models"
 )
 
 const infoUser = "Hey I'm using HermesChat"
@@ -439,4 +440,73 @@ func getIDS(res string, i string, c *gin.Context) (string) {
 	id = id.(primitive.A)[0];
 
 	return id.(primitive.M)[res].(string);
+}
+
+func SendFriendRequestDB(i string, username string, c *gin.Context){
+
+	var friend models.Friend;
+
+	collectionFriend := config.ClientMongoDB.Database("user").Collection("user")
+	if collectionFriend == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	objID, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	ris := collectionFriend.FindOne(context.Background(), bson.M{"_id": objID})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+
+	friend.Nickname = result["nickname"].(string);
+	friend.ID = i;
+	friend.Image = result["image"].(string);
+
+	idUsr := GetId(username);
+	idToAccept := getIDS("toAccept", idUsr, c);
+	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idToAccept)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	
+	// update the pending array
+	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"pending": friend}})
+	ris2.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "friend request sent",
+	})
 }

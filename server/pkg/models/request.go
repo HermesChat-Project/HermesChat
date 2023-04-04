@@ -17,7 +17,12 @@ type UpdateInfo struct {
 }
 
 type SendFriendRequest struct {
-	Index string `json:"index" binding:"required"`
 	Username string `json:"username" binding:"required"`
+}
+
+type Friend struct {
+	Nickname string `json:"nickname"`
+	ID string `json:"idUser"`
+	Image string `json:"image"`
 }
 

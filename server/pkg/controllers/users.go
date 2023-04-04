@@ -14,8 +14,9 @@ func SendFriendRequest (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}	
+	index, _ := c.Get("index")
 
-	//utils.SendFriendRequestDB(form.Index, form.Username, c)
+	utils.SendFriendRequestDB(index.(string), form.Username, c)
 	
 }
 
