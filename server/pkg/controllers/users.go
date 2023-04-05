@@ -49,3 +49,14 @@ func GetBlocked(c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.GetBlockedDB(index.(string), c)
 }
+
+func BlockUser (c *gin.Context) {
+	var form models.BlockUser;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+
+	utils.BlockUserDB(index.(string), form.Username, c)
+}

@@ -20,6 +20,10 @@ type SendFriendRequest struct {
 	Username string `json:"username" binding:"required"`
 }
 
+type BlockUser struct {
+	Username string `json:"username" binding:"required"`
+}
+
 type Friend struct {
 	Nickname string `json:"nickname"`
 	ID string `json:"idUser"`

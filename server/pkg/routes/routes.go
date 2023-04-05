@@ -19,6 +19,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
 	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
+	router.POST("/blockUser", controllers.BlockUser)
 	/*
 	router.POST("/acceptFriend", controllers.AcceptFriend)
 	router.GET("/getUsers", controllers.SearchUsers)
