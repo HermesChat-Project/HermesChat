@@ -16,12 +16,10 @@ export class ChatViewComponent {
   messageSent: string = '';
   selectedText: string = '';
   selection: Selection | null = null;
-  contents: DocumentFragment | undefined;
+  contents: DocumentFragment | undefined = undefined;
 
   textSelectedOffsetStart: number = 0;
   textSelectedOffsetEnd: number = 0;
-  textSelectedLineFirst: number = 0;
-  textSelectedLineLast: number = 0;
 
   serializer: XMLSerializer = new XMLSerializer();
   serializedStr: string = '';
@@ -50,7 +48,11 @@ export class ChatViewComponent {
 
   getSelection() {
     this.selection = window.getSelection();
-    this.contents = this.selection?.getRangeAt(0).cloneContents();//get the html content of the selection
+    if (this.selection)
+      this.contents = this.selection.getRangeAt(0).cloneContents();//get the html content of the selection
+    else
+      this.contents = undefined;
+
     //see if there is a img tag inside the selection
     // const serializer = new XMLSerializer();
     // const str = serializer.serializeToString(this.contents as Node);
@@ -112,7 +114,7 @@ export class ChatViewComponent {
       this.textMessage.nativeElement.focus();
       this.chatSelector.sortChats();
       //go to the bottom of the chat
-      this.chatSelector.bottomScroll();
+      // this.chatSelector.bottomScroll();
       this.fontStyling.nativeElement.style.display = 'none';
     }
   }
@@ -545,7 +547,8 @@ export class ChatViewComponent {
     if (this.contents) {
       let img = this.contents.querySelector('img');
       let video = this.contents.querySelector('video');
-      if (img || video) {
+      let commonAncestor = this.selection?.getRangeAt(0).commonAncestorContainer;
+      if ((img || video) || !(this.textMessage.nativeElement.contains(commonAncestor as Node))) {
         return false;
       }
       return true;

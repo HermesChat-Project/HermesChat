@@ -1,4 +1,4 @@
-<div id="selectedChat">
+<div id="selectedChat" (mouseup)="getSelection()">
   <div id="listMessage">
     <app-message *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index" [chatMessage]="messages"
       [index]="i"></app-message>
@@ -6,7 +6,7 @@
   <div id="messageSend">
     <div id="messageSendText">
       <div id="txtMessage" #textMessage (keydown)="keyAction($event)" contenteditable="true"
-       (paste)="pastedMessage($event)" (mouseup)="getSelection()"></div>
+       (paste)="pastedMessage($event)" ></div>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
       </button>

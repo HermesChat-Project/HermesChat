@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
@@ -12,9 +12,11 @@ import { ViewEncapsulation } from '@angular/core';
 export class MessageComponent {
   @Input() chatMessage!: messageModel
   @Input() index!: number;
+  @ViewChild('copy') copy!: ElementRef;
   messageActions: boolean = false;
 
   constructor(public chatSelector: ChatSelectorService) { }
+
 
   alreadyTexted(i: number) {
     if (i != 0) {
@@ -63,5 +65,29 @@ export class MessageComponent {
     if (hours.length == 1)
       hours = "0" + hours;
     return hours + ":" + minutes;
+  }
+
+
+  copyToClipboard() {
+    navigator.clipboard.writeText(this.chatMessage.message).then(() => {
+      console.log("copied");
+      this.copy.nativeElement.classList.add("bi-clipboard-check-fill");
+      this.copy.nativeElement.classList.remove("bi-clipboard-plus-fill");
+    })
+      .catch((err: Error) => {
+        console.log(err.message);
+        this.copy.nativeElement.classList.add("bi-clipboard-x-fill");
+        this.copy.nativeElement.classList.remove("bi-clipboard-plus-fill");
+      });
+  }
+
+  changeIcon(){
+    this.copy.nativeElement.classList.remove("bi-clipboard-check-fill");
+    this.copy.nativeElement.classList.remove("bi-clipboard-x-fill");
+    this.copy.nativeElement.classList.add("bi-clipboard-plus-fill");
+  }
+
+  hideActions(){
+    this.messageActions = false;
   }
 }
