@@ -15,6 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"chat/pkg/config"
+	"chat/pkg/models"
 )
 
 const infoUser = "Hey I'm using HermesChat"
@@ -372,7 +373,144 @@ func GetFriendRequestsDB(i string, c *gin.Context){
 }
 
 
+func GetBlockedDB(i string, c *gin.Context){
+	idBlocked := getIDS("blocked", i, c);
 
+	collection := config.ClientMongoDB.Database("user").Collection("blocked")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idBlocked)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID2})
+	var result2 bson.M
+	ris.Decode(&result2)
+	if result2 == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	aus := result2["blocked"];
+	c.JSON(http.StatusOK, gin.H{
+		"blocked": aus,
+	})
+}
+
+func SendFriendRequestDB(i string, username string, c *gin.Context){
+
+	var friend models.Friend;
+
+	collectionFriend := config.ClientMongoDB.Database("user").Collection("user")
+	if collectionFriend == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	objID, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	ris := collectionFriend.FindOne(context.Background(), bson.M{"_id": objID})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+
+	friend.Nickname = result["nickname"].(string);
+	friend.ID = i;
+	friend.Image = result["image"].(string);
+
+	idUsr := GetId(username);
+	idToAccept := getIDS("toAccept", idUsr, c);
+	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idToAccept)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	
+	// update the pending array
+	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"pending": friend}})
+	ris2.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "friend request sent",
+	})
+}
+
+func BlockUserDB(i string, username string, c *gin.Context){
+	idBlocked := getIDS("blocked", i, c);
+	collection := config.ClientMongoDB.Database("user").Collection("blocked")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID2, err := primitive.ObjectIDFromHex(idBlocked)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	
+	//findOneAndUpdate with push to add the blocked user
+	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"blocked": username}})
+	var result2 bson.M
+	ris2.Decode(&result2)
+	if result2 == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user blocked",
+	})
+}
 
 func getIDS(res string, i string, c *gin.Context) (string) {
 	collection := config.ClientMongoDB.Database("user").Collection("user")

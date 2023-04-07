@@ -14,8 +14,9 @@ func SendFriendRequest (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}	
+	index, _ := c.Get("index")
 
-	//utils.SendFriendRequestDB(form.Index, form.Username, c)
+	utils.SendFriendRequestDB(index.(string), form.Username, c)
 	
 }
 
@@ -41,4 +42,21 @@ func GetFriendRequests (c *gin.Context) {
 	//get a value added with c.Set
 	index, _ := c.Get("index")
 	utils.GetFriendRequestsDB(index.(string), c)
+}
+
+func GetBlocked(c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetBlockedDB(index.(string), c)
+}
+
+func BlockUser (c *gin.Context) {
+	var form models.BlockUser;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+
+	utils.BlockUserDB(index.(string), form.Username, c)
 }

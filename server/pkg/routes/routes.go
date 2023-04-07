@@ -10,18 +10,20 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	router.Use(AuthMiddleware())
 	router.Use(CORSMiddleware())
+
 	router.GET("/socket", controllers.Socket)
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
 	router.POST("/getFriends", controllers.GetFriends)
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
-	
-	/*
+	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
-	router.GET("/getUsers", controllers.commondHand.SearchUsers)
-	router.POST("/removeFriend", controllers.RemoveFriend)
+	router.POST("/blockUser", controllers.BlockUser)
+	/*
 	router.POST("/acceptFriend", controllers.AcceptFriend)
+	router.GET("/getUsers", controllers.SearchUsers)
+	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/declineFriend", controllers.DeclineFriend)
 	router.POST("/createGroup", controllers.CreateGroup)
 	router.POST("/addUserToGroup", controllers.AddUserToGroup)
