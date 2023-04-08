@@ -21,6 +21,7 @@ import { FriendsRequestComponent } from './chat/header-chat-selector/friends-req
 import { ChatViewComponent } from './chat/chat-view/chat-view.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageComponent } from './chat/chat-view/message/message.component';
+import { WebcamModule } from 'ngx-webcam';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { MessageComponent } from './chat/chat-view/message/message.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    WebcamModule
   ],
   providers: [],
   bootstrap: [AppComponent]

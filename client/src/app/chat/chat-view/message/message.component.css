@@ -74,6 +74,10 @@
   display: block;
 }
 
+.text img{
+  cursor: pointer;
+}
+
 .all-actions{
   width: fit-content;
   position: relative;

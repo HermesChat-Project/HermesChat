@@ -152,6 +152,7 @@ export class ChatSelectorService {
   ];
   selectedChat: chatList | null = null;
   userLang = navigator.language || 'en-US';
+  src: string = "";
   constructor(private dataStorage: DataStorageService) { }
   sendMessage(message: string) {
     if (this.selectedChat) {
@@ -160,13 +161,6 @@ export class ChatSelectorService {
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
-
-      //wait until the message is sent
-      // setTimeout(() => {
-      //   this.selectedChat!.messages.push(new messageModel(i + 2, 1, 'Pippo', 'ok', new Date()));
-      //   this.bottomScroll();
-      // }, 0);
-
     }
   }
 

@@ -88,6 +88,10 @@ export class ChatViewComponent {
     }
 
 
+
+  }
+  closeModal(event: Event) {
+    this.chatSelector.src = '';
   }
 
 

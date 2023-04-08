@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
@@ -9,14 +9,24 @@ import { ViewEncapsulation } from '@angular/core';
   styleUrls: ['./message.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class MessageComponent {
+export class MessageComponent implements AfterViewInit {
   @Input() chatMessage!: messageModel
   @Input() index!: number;
   @ViewChild('copy') copy!: ElementRef;
+  @ViewChild("text") text!: ElementRef;
   messageActions: boolean = false;
+
 
   constructor(public chatSelector: ChatSelectorService) { }
 
+  ngAfterViewInit(): void {
+    this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
+      img.addEventListener("click", () => {
+        this.chatSelector.src = img.src;
+
+      })
+    })
+  }
 
   alreadyTexted(i: number) {
     if (i != 0) {

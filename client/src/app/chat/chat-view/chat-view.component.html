@@ -6,36 +6,36 @@
   <div id="messageSend">
     <div id="messageSendText">
       <div id="txtMessage" #textMessage (keydown)="keyAction($event)" contenteditable="true"
-       (paste)="pastedMessage($event)" ></div>
+        (paste)="pastedMessage($event)"></div>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
       </button>
       <div class="row-action"
-          [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-          <i class="bi bi-geo-alt-fill"></i>
-          <i class="bi bi-person-fill-up"></i>
-        </div>
-        <div class="row-action"
-          [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-          <i class="bi bi-calendar-event-fill"></i>
-          <i class="bi bi-graph-up-arrow"></i>
-        </div>
-        <div class="row-action"
-          [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-          <i class="bi bi-bar-chart-fill"></i>
-          <i class="bi bi-file-earmark-fill"></i>
-        </div>
-        <div class="row-action"
-          [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-          <i class="bi bi-camera-video-fill"></i>
-          <label for="txtImage" class="bi bi-image"></label>
-          <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
-        </div>
-        <div class="row-action"
-          [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-          <i class="bi bi-camera-fill"></i>
-          <i class="bi bi-mic-fill"></i>
-        </div>
+        [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+        <i class="bi bi-geo-alt-fill"></i>
+        <i class="bi bi-person-fill-up"></i>
+      </div>
+      <div class="row-action"
+        [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+        <i class="bi bi-calendar-event-fill"></i>
+        <i class="bi bi-graph-up-arrow"></i>
+      </div>
+      <div class="row-action"
+        [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+        <i class="bi bi-bar-chart-fill"></i>
+        <i class="bi bi-file-earmark-fill"></i>
+      </div>
+      <div class="row-action"
+        [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+        <i class="bi bi-camera-video-fill"></i>
+        <label for="txtImage" class="bi bi-image"></label>
+        <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
+      </div>
+      <div class="row-action"
+        [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+        <i class="bi bi-camera-fill"></i>
+        <i class="bi bi-mic-fill"></i>
+      </div>
     </div>
     <div id="messageSendButton">
       <button class="chat-action" (click)="sendMsg()">
@@ -54,4 +54,15 @@
   <i class="bi bi-subscript" (click)="toggleFont('sub')" [ngClass]="{'fontIsSelected' : isSubscript}"></i>
   <i class="bi bi-superscript" (click)="toggleFont('sup')" [ngClass]="{'fontIsSelected' : isSuperscript}"></i>
   <i class="bi bi-type-strikethrough" (click)="toggleFont('s')" [ngClass]="{'fontIsSelected' : isStrikethrough}"></i>
+</div>
+
+<!-- modal -->
+<div class="media_modal" *ngIf="chatSelector.src != ''" [ngClass]="{'show_modal': chatSelector.src != ''}" (click)="closeModal($event)">
+  <div (click)="$event.stopPropagation()">
+    <div class="content_modal" >
+      <div class="body_modal">
+        <img [src]="chatSelector.src" alt="">
+      </div>
+    </div>
+  </div>
 </div>
