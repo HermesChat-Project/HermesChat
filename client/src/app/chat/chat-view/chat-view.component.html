@@ -27,13 +27,13 @@
       </div>
       <div class="row-action"
         [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-camera-video-fill"></i>
+        <i class="bi bi-camera-video-fill" (click)="showCamera(2)"></i>
         <label for="txtImage" class="bi bi-image"></label>
         <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
       </div>
       <div class="row-action"
         [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-camera-fill"></i>
+        <i class="bi bi-camera-fill"  (click)="showCamera(1)"></i>
         <i class="bi bi-mic-fill"></i>
       </div>
     </div>
@@ -66,3 +66,6 @@
     </div>
   </div>
 </div>
+
+<!-- camera component -->
+<app-camera *ngIf="chatSelector.flagCamera != 0"></app-camera>

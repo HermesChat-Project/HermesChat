@@ -243,3 +243,13 @@ i sub {
   opacity: 1;
   transition: all 200ms ease;
 }
+
+/*camera component*/
+app-camera{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}

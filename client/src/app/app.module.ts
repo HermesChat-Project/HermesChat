@@ -22,6 +22,7 @@ import { ChatViewComponent } from './chat/chat-view/chat-view.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageComponent } from './chat/chat-view/message/message.component';
 import { WebcamModule } from 'ngx-webcam';
+import { CameraComponent } from './chat/chat-view/camera/camera.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { WebcamModule } from 'ngx-webcam';
     CreateChatComponent,
     FriendsRequestComponent,
     ChatViewComponent,
-    MessageComponent
+    MessageComponent,
+    CameraComponent
   ],
   imports: [
     BrowserModule,
