@@ -153,7 +153,7 @@ export class ChatSelectorService {
   selectedChat: chatList | null = null;
   userLang = navigator.language || 'en-US';
   src: string = "";
-  flagCamera: number = 0; //0: off, 1: photo, 2: video
+  flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
   constructor(private dataStorage: DataStorageService) { }
   sendMessage(message: string) {
     if (this.selectedChat) {

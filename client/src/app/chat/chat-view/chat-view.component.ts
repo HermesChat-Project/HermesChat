@@ -32,10 +32,31 @@ export class ChatViewComponent {
   isSuperscript: boolean = false;
   isSubscript: boolean = false;
 
+  //camera variables
+  isCameraPermitted: boolean = false;
+
   constructor(public chatSelector: ChatSelectorService) { }
 
-  showCamera(type:number){
-    this.chatSelector.flagCamera = type;
+  showCamera(type: number) {
+    //check if the camera is permitted
+    if (navigator.mediaDevices) {
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(() => {
+          this.isCameraPermitted = true;
+          this.chatSelector.flagCamera = type;
+        }).catch((err: Error) => {
+          this.isCameraPermitted = false;
+          this.chatSelector.flagCamera = -1; //camera not permitted
+          console.log('Please allow the camera to use this feature. Error: ', err.message);
+        });
+      }
+    }
+    else {
+      this.chatSelector.flagCamera = -2; //camera not supported
+      console.log("Camera not supported");
+    }
+    // this.chatSelector.flagCamera = type;
+
   }
 
   toggleShowChatActions() {
@@ -50,6 +71,7 @@ export class ChatViewComponent {
     // this.showChatActions = this.textMessage.nativeElement.contains(focusedElement);
   }
 
+
   getSelection() {
     this.selection = window.getSelection();
     if (this.selection)
@@ -57,10 +79,7 @@ export class ChatViewComponent {
     else
       this.contents = undefined;
 
-    //see if there is a img tag inside the selection
-    // const serializer = new XMLSerializer();
-    // const str = serializer.serializeToString(this.contents as Node);
-    if (this.contents) {//check if the selection is not empty
+    if (this.contents != undefined && this.contents) {//check if the selection is not empty
 
       if (!this.checkIfFontStylingDivShouldBeShown()) {
         this.fontStyling.nativeElement.style.display = 'none';
