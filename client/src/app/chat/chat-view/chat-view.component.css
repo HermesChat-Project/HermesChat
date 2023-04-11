@@ -252,4 +252,7 @@ app-camera{
   top: 0;
   left: 0;
   z-index: 200;
+
+  overflow: auto;
+  background-color: white;
 }

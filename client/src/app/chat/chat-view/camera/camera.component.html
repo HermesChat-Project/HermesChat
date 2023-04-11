@@ -2,7 +2,7 @@
   <i class="bi bi-x-lg webcam_close" (click)="closeWebcam()"></i>
   <div id="webcam">
     <div id="timer" *ngIf="chatSelector.flagCamera == 2">{{getTime()}}</div>
-    <webcam (initError)="cameraProblem($event)"></webcam>
+    <webcam (initError)="cameraProblem($event)" [trigger]="$trigger" (imageCapture)="getImage($event)"></webcam>
     <div class="optionsMedia">
       <div class="typeMedia">
         <button class="photo" [ngClass]="{'selected_media' : chatSelector.flagCamera == 1, 'media_video' : chatSelector.flagCamera != 1}" (click)="changeMedia(1)">Photo</button>
@@ -14,5 +14,12 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="media_container">
+  <div class="media_scrolling" #media_scrolling></div>
+  <div class="scroller">
+    <div class="media_changing" *ngFor="let sigle_media of media"></div>
   </div>
 </div>

@@ -48,6 +48,8 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
+  user-select: none;
+  text-shadow: 1px 1px 0 white;
 }
 
 #takeMedia {
@@ -96,12 +98,12 @@
 
 .media_photo {
   transform: translate(70%, -50%) !important;
-  transition: all 0.5s ease;
+  transition: transform 0.5s ease;
 }
 
 .media_video {
   transform: translate(-170%, -50%) !important;
-  transition: all 0.5s ease;
+  transition: transform 0.5s ease;
 }
 
 #timer {
@@ -116,4 +118,37 @@
   color: whitesmoke;
   font-size: small;
   z-index: 3;
+}
+
+.media_container {
+  overflow: hidden;
+}
+
+.media_scrolling {
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: 640px; /*to change in case changing the width of the camera*/
+  overflow: hidden;
+}
+
+.scroller {
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.media_changing {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  margin-right: 5px;
+}
+
+.media_changing:first-of-type {
+  margin-left: 20px;
 }

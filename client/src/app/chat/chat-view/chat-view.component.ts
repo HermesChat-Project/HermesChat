@@ -41,7 +41,8 @@ export class ChatViewComponent {
     //check if the camera is permitted
     if (navigator.mediaDevices) {
       if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(() => {
+        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+          this.chatSelector.stream = stream;
           this.isCameraPermitted = true;
           this.chatSelector.flagCamera = type;
         }).catch((err: Error) => {
@@ -78,7 +79,7 @@ export class ChatViewComponent {
       this.contents = this.selection.getRangeAt(0).cloneContents();//get the html content of the selection
     else
       this.contents = undefined;
-
+    console.log(this.contents);
     if (this.contents != undefined && this.contents) {//check if the selection is not empty
 
       if (!this.checkIfFontStylingDivShouldBeShown()) {
