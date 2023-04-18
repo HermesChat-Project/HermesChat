@@ -15,4 +15,8 @@ export class SettingsComponent {
   {
     this.headerService.generalClosing()
   }
+
+  logout(){
+    this.headerService.logout()
+  }
 }

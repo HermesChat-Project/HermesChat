@@ -16,12 +16,10 @@ export class ChatViewComponent {
   messageSent: string = '';
   selectedText: string = '';
   selection: Selection | null = null;
-  contents: DocumentFragment | undefined;
+  contents: DocumentFragment | undefined = undefined;
 
   textSelectedOffsetStart: number = 0;
   textSelectedOffsetEnd: number = 0;
-  textSelectedLineFirst: number = 0;
-  textSelectedLineLast: number = 0;
 
   serializer: XMLSerializer = new XMLSerializer();
   serializedStr: string = '';
@@ -34,7 +32,33 @@ export class ChatViewComponent {
   isSuperscript: boolean = false;
   isSubscript: boolean = false;
 
+  //camera variables
+  isCameraPermitted: boolean = false;
+
   constructor(public chatSelector: ChatSelectorService) { }
+
+  showCamera(type: number) {
+    //check if the camera is permitted
+    if (navigator.mediaDevices) {
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+          this.chatSelector.stream = stream;
+          this.isCameraPermitted = true;
+          this.chatSelector.flagCamera = type;
+        }).catch((err: Error) => {
+          this.isCameraPermitted = false;
+          this.chatSelector.flagCamera = -1; //camera not permitted
+          console.log('Please allow the camera to use this feature. Error: ', err.message);
+        });
+      }
+    }
+    else {
+      this.chatSelector.flagCamera = -2; //camera not supported
+      console.log("Camera not supported");
+    }
+    // this.chatSelector.flagCamera = type;
+
+  }
 
   toggleShowChatActions() {
     this.showChatActions = !this.showChatActions;
@@ -48,13 +72,15 @@ export class ChatViewComponent {
     // this.showChatActions = this.textMessage.nativeElement.contains(focusedElement);
   }
 
+
   getSelection() {
     this.selection = window.getSelection();
-    this.contents = this.selection?.getRangeAt(0).cloneContents();//get the html content of the selection
-    //see if there is a img tag inside the selection
-    // const serializer = new XMLSerializer();
-    // const str = serializer.serializeToString(this.contents as Node);
-    if (this.contents) {//check if the selection is not empty
+    if (this.selection)
+      this.contents = this.selection.getRangeAt(0).cloneContents();//get the html content of the selection
+    else
+      this.contents = undefined;
+    console.log(this.contents);
+    if (this.contents != undefined && this.contents) {//check if the selection is not empty
 
       if (!this.checkIfFontStylingDivShouldBeShown()) {
         this.fontStyling.nativeElement.style.display = 'none';
@@ -86,14 +112,22 @@ export class ChatViewComponent {
     }
 
 
+
+  }
+  closeModal(event: Event) {
+    this.chatSelector.src = '';
   }
 
 
-
-
-
-
   sendMsg() {
+    let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
+    for (let i = 0; i < imgTags.length; i++) {
+      let imgTag = imgTags[i];
+      let div = document.createElement('div');
+      div.classList.add('img-container');
+      imgTag.parentNode?.insertBefore(div, imgTag);
+      div.appendChild(imgTag);
+    }
     this.messageSent = this.textMessage.nativeElement.innerHTML;
     //delete the first <br> tags
     console.log(this.messageSent);
@@ -106,13 +140,14 @@ export class ChatViewComponent {
     }
 
     if (this.messageSent.length > 0) {
+      //for every img tag add a div tag with the class img-container
       this.chatSelector.sendMessage(this.messageSent);
       this.fontStyling.nativeElement.style.display = 'none';
       this.textMessage.nativeElement.innerHTML = '';
       this.textMessage.nativeElement.focus();
       this.chatSelector.sortChats();
       //go to the bottom of the chat
-      this.chatSelector.bottomScroll();
+      // this.chatSelector.bottomScroll();
       this.fontStyling.nativeElement.style.display = 'none';
     }
   }
@@ -545,7 +580,8 @@ export class ChatViewComponent {
     if (this.contents) {
       let img = this.contents.querySelector('img');
       let video = this.contents.querySelector('video');
-      if (img || video) {
+      let commonAncestor = this.selection?.getRangeAt(0).commonAncestorContainer;
+      if ((img || video) || !(this.textMessage.nativeElement.contains(commonAncestor as Node))) {
         return false;
       }
       return true;

@@ -1,0 +1,154 @@
+.webcam_container {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.webcam_close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+#webcam {
+  position: relative;
+}
+
+.optionsMedia {
+  position: absolute;
+  bottom: 20px;
+  height: fit-content;
+  width: 100%;
+}
+
+.typeMedia {
+  position: relative;
+  height: 20px;
+}
+
+.typeMedia button {
+  font-size: small;
+  padding: 0px 10px;
+  border-radius: 200px;
+  cursor: pointer;
+  border: 1px solid #0b2f5e;
+  background-color: transparent;
+  min-width: fit-content;
+  width: 100px;
+  color: #0b2f5e;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  text-shadow: 1px 1px 0 white;
+}
+
+#takeMedia {
+  display: flex;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  color: #0b2f5e;
+  border-radius: 50%;
+  background: transparent;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 0;
+  cursor: pointer;
+}
+
+#takeMedia div {
+  align-items: stretch;
+  justify-content: center;
+  display: flex;
+  align-content: space-around;
+  flex-wrap: wrap;
+}
+
+.outer_circle {
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  border: 10px solid #0b2f5e;
+  background-color: transparent;
+}
+
+.inner_circle {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  border: 2px solid #0b2f5e;
+  background-color: #0b2f5e;
+}
+
+.selected_media {
+  font-size: large !important;
+  transform: translate(-50%, -50%) !important;
+  transition: transform 0.5s ease;
+}
+
+.media_photo {
+  transform: translate(70%, -50%) !important;
+  transition: transform 0.5s ease;
+}
+
+.media_video {
+  transform: translate(-170%, -50%) !important;
+  transition: transform 0.5s ease;
+}
+
+#timer {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translate(-50%, 0%);
+  border: 1px solid black;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background-color: #444;
+  color: whitesmoke;
+  font-size: small;
+  z-index: 3;
+}
+
+.media_container {
+  overflow: hidden;
+}
+
+.media_scrolling {
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: 640px; /*to change in case changing the width of the camera*/
+  overflow: hidden;
+}
+
+.scroller {
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.media_changing {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  margin-right: 5px;
+}
+
+.media_changing:first-of-type {
+  margin-left: 20px;
+}

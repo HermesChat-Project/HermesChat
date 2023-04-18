@@ -152,18 +152,26 @@ export class ChatSelectorService {
   ];
   selectedChat: chatList | null = null;
   userLang = navigator.language || 'en-US';
+  src: string = "";
+  flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
+  stream: MediaStream | null = null;
   constructor(private dataStorage: DataStorageService) { }
   sendMessage(message: string) {
     if (this.selectedChat) {
       let i = this.getMaxIndex(this.selectedChat)
       this.selectedChat.messages.push(new messageModel(i + 1, 0, 'Username', message, new Date()));
+      setTimeout(() => {
+        this.bottomScroll();
+      }, 0);//to improve
     }
   }
 
   bottomScroll() {
     let chat = document.getElementById('listMessage');
+    console.log(chat);
     if (chat) {
-      chat.scrollTop = chat.scrollHeight;
+      chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+      // console.log(chat.scrollTop);
     }
   }
 

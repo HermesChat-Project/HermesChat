@@ -73,12 +73,18 @@
 .message:hover .message-actions{
   display: block;
 }
+
+.text img{
+  cursor: pointer;
+}
+
 .all-actions{
   width: fit-content;
   position: relative;
   display: flex;
 }
-.all-actions i{
+.all-actions button{
+  border: none;
   width: 40px;
   display: grid;
   height: 40px;
@@ -90,7 +96,7 @@
   border-radius: 20px;
 
 }
-.all-actions i:hover{
+.all-actions button:hover{
   background-color: #ddd;
 }
 .showMessageActions{

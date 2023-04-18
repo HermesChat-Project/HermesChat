@@ -114,7 +114,9 @@ export class AllChatsComponent {
   }
 
   showEntireChat(selected : chatList){
-    console.log(selected)
     this.chatSelector.selectedChat = selected;
+    setTimeout(() => {
+    this.chatSelector.bottomScroll()
+    }, 0);//to improve
   }
 }
