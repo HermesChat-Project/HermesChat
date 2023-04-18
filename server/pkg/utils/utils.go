@@ -36,11 +36,14 @@ func CreateToken (index string, c *gin.Context) {
 		return
 	}
 
+	//set cookie with token in http only mode
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "", "", false, true)
+	c.Header("Authorization", tokenString)
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "Token created",
 	})
+
 }
 
 func VerifyToken (c *gin.Context){
@@ -478,6 +481,11 @@ func SendFriendRequestDB(i string, username string, c *gin.Context){
 }
 
 func BlockUserDB(i string, username string, c *gin.Context){
+	var friend models.Friend;
+
+	friend.Nickname = username;
+	friend.ID = GetId(username);
+
 	idBlocked := getIDS("blocked", i, c);
 	collection := config.ClientMongoDB.Database("user").Collection("blocked")
 	if collection == nil {
@@ -497,7 +505,7 @@ func BlockUserDB(i string, username string, c *gin.Context){
 	}
 	
 	//findOneAndUpdate with push to add the blocked user
-	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"blocked": username}})
+	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"blocked": friend}})
 	var result2 bson.M
 	ris2.Decode(&result2)
 	if result2 == nil {

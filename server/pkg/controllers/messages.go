@@ -1,12 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 
 	"net/http"
-	"log"
-	"fmt"
+
+    "github.com/gin-gonic/gin"
 )
 
 var upgrader = websocket.Upgrader{
@@ -18,29 +17,20 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func Socket (c *gin.Context) {
-     
-	fmt.Println("Socket Entrato")
-	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+func Socket(c *gin.Context) {
+    conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+    if err != nil {
+        http.NotFound(c.Writer, c.Request)
+        return
+    }
 
+    for {
+        messageType, p, err := conn.ReadMessage()
         if err != nil {
-            log.Print("upgrade:", err)
-            c.Abort()
             return
         }
-         for {
-
-            msgType, msg, err := conn.ReadMessage()
-            if err != nil {
-                return
-            }
-
-            fmt.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-			
-
-            if err = conn.WriteMessage(msgType, msg); err != nil {
-                return
-            }
+        if err = conn.WriteMessage(messageType, p); err != nil {
+            return
         }
-
+    }
 }

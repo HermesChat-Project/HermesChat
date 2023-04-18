@@ -29,4 +29,3 @@ type Friend struct {
 	ID string `json:"idUser"`
 	Image string `json:"image"`
 }
-
