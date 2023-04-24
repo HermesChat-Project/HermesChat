@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "https://10.88.219.139/";
+  private REST_API_SERVER: string = "https://10.88.200.20:8090/";
   constructor(private httpClient: HttpClient) { }
 
   public getRequest(endpoint: string) {
@@ -20,6 +20,10 @@ export class DataStorageService {
   public PostRequest(endpoint: string, body: FormData) {
     console.log(body);
     return this.httpClient.post(this.REST_API_SERVER + endpoint, body)
+  }
+
+  public PostRequestWithHeaders(endpoint: string, body: any, options: any) {
+    return this.httpClient.post(this.REST_API_SERVER + endpoint, body, options);
   }
 
 

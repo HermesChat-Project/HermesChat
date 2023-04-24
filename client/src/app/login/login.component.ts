@@ -30,8 +30,14 @@ export class LoginComponent {
         password: this.password.toString(),
         username: this.email.toString()
       }
-
-      this.logged.login(body, this.errors.nativeElement);
+      let options= {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: "response" as "response",
+        withCredentials: true
+      }
+      this.logged.login(body, this.errors.nativeElement, options);
     }
     else {
       this.errors.nativeElement.innerHTML = this.loginWords["missing-fields"];

@@ -22,8 +22,13 @@ export class ChooseChatComponent {
 
 
   changeSelection(type: number, event: Event) {
-
     let target = event.currentTarget as HTMLElement;
+    if(target.classList.contains("calendar")){
+      this.chatSelector.calendarSectionClicked = true;
+    }
+    else{
+      this.chatSelector.calendarSectionClicked = false;
+    }
     let keyFrames: Keyframe[] = [
       { left: this.div_selected.nativeElement.offsetLeft + 'px' },
       { left: target.offsetLeft + 'px' }

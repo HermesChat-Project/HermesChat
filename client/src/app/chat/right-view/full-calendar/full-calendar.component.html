@@ -1,0 +1,68 @@
+<!-- Calendar in table (not mat card) -->
+<div class="container_calendar">
+  <div class="container_header">
+    <div class="container_header_date">
+      <button mat-icon-button class="btn_change" (click)="prevMonth()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="header_date">{{chatSelector.months[chatSelector.selectedMonth]}} {{chatSelector.selectedYear}}</span>
+      <button mat-icon-button class="btn_change " (click)="nextMonth()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  <table id="table_calendar">
+    <thead>
+      <tr>
+        <th *ngFor="let day of chatSelector.weekDays">{{day}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+      </tr>
+      <tr>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+      </tr>
+      <tr>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+      </tr>
+      <tr>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+      </tr>
+      <tr>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+        <td class="day_calendar"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

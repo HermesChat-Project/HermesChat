@@ -1,17 +1,22 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { ChatSelectorService } from '../../chat.service';
 import { WebcamImage, WebcamInitError } from 'ngx-webcam';
 import { Subject } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-camera',
   templateUrl: './camera.component.html',
-  styleUrls: ['./camera.component.css']
+  styleUrls: ['./camera.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CameraComponent {
   @ViewChild("media_scrolling") media_scrolling!: ElementRef;
-
-  constructor(public chatSelector: ChatSelectorService) { }
+  @ViewChild("media_changing") media_changing!: ElementRef;
+  @ViewChild("container_webcam") container_webcam!: ElementRef;
+  constructor(public chatSelector: ChatSelectorService, public sanitizer: DomSanitizer) {
+    this.onResize();
+  }
 
   seconds: number = 0;
   minutes: number = 0;
@@ -28,12 +33,28 @@ export class CameraComponent {
 
   video: MediaRecorder | null = null;
 
+  width: number = 0;
+  height: number = 0;
+
+  media_position: number = 0;
+  scroll_position: number = 0;
+
+  seeMedia : string = "none";
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?: Event) {
+    const win = !!event ? (event.target as Window) : window;
+    console.log(win.innerWidth, win.innerHeight);
+    this.width = win.innerWidth - 100;
+    this.height = win.innerHeight - 100;
+  }
   //webcam snapshot trigger
   get $trigger() {
     return this.trigger.asObservable();
   }
 
   closeWebcam() {
+    this.chatSelector.stream?.getTracks().forEach(track => track.stop());
     this.chatSelector.flagCamera = 0;
   }
 
@@ -58,6 +79,7 @@ export class CameraComponent {
           console.log("Video saved");
           console.log(this.media);
           this.showAllMedia()
+
         }
 
         console.log(this.media);
@@ -92,13 +114,20 @@ export class CameraComponent {
   showAllMedia() {
     this.media_scrolling.nativeElement.innerHTML = "";
     for (let i = 0; i < this.media.length; i++) {
+      let div = document.createElement("div")
+      div.classList.add("media-item");
+      this.media_scrolling.nativeElement.appendChild(div);
       let el = document.createElement(this.media[i].type);
       el.setAttribute("src", this.media[i].src);
-      if(this.media[i].type == "video"){
+      el.style.position = "relative";
+      el.style.maxWidth = "640px";
+      if (this.media[i].type == "video") {
         el.setAttribute("controls", "true");
+        el.setAttribute("controlsList", "nodownload");
+        el.setAttribute("controlsList", "nofullscreen");
 
       }
-      this.media_scrolling.nativeElement.appendChild(el);
+      div.appendChild(el);
     }
   }
 
@@ -144,5 +173,45 @@ export class CameraComponent {
       time += this.seconds;
     }
     return time;
+  }
+
+  CheckIfShouldBeShown() {
+    this.seeMedia = this.media.length != 0 ? "flex" : "none";
+    if(this.media.length != 0){
+      console.log(this.chatSelector.stream)
+      this.chatSelector.stream?.getTracks().forEach(track => track.stop());
+      this.container_webcam.nativeElement.style.display = "none";
+    }
+    return { "display": this.seeMedia };
+  }
+
+  getMedia(media: { src: string, type: string }) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(media.src);
+  }
+
+  changeMediaSelected(index: number) {
+    console.log(index);
+    let left = index * (-670) + "px";
+    let keyFrames = [
+      { transform: "translateX(" + this.media_position * (-670) + "px)" },
+      { transform: "translateX(" + left + ")" }
+
+    ];
+
+    let keyFrames2 = [
+      { transform: "translateX(" + this.scroll_position * (-71.66) + "px)" },
+      { transform: "translateX(" + index * (-71.66) + "px)" }
+    ];
+    console.log(keyFrames2)
+    let options: object = {
+      duration: 200,
+      iterations: 1,
+      fill: "forwards",
+      easing: "ease-in-out"
+    }
+    this.media_position = index;
+    this.scroll_position = index
+    this.media_scrolling.nativeElement.animate(keyFrames, options);
+    this.media_changing.nativeElement.animate(keyFrames2, options);
   }
 }
