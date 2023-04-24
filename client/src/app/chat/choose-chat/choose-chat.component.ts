@@ -19,14 +19,19 @@ export class ChooseChatComponent {
 
   day = new Date().getDate();
   width_section = 300;
-
+  firstCalendarClick: boolean = true;
 
   changeSelection(type: number, event: Event) {
     let target = event.currentTarget as HTMLElement;
-    if(target.classList.contains("calendar")){
+    if (target.classList.contains("calendar")) {
       this.chatSelector.calendarSectionClicked = true;
+      if (this.firstCalendarClick) {
+        this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+        this.firstCalendarClick = false;
+      }
+
     }
-    else{
+    else {
       this.chatSelector.calendarSectionClicked = false;
     }
     let keyFrames: Keyframe[] = [

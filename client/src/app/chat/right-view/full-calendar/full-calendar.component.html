@@ -19,49 +19,94 @@
     </thead>
     <tbody>
       <tr>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i=index" [ngStyle]="checkFistDayOfMonth(i)">
+          <div class="calendar_container" (click)="goToDate(0, i, $event)"  (dblclick)="eventAction($event)">
+            <p class="date_month">{{getThisDate(0, i)}}</p>
+            <div class="calendar_day_list">
+              <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(0,i)]" [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+              </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(0, i)">
+              ...
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i = index">
+          <div class="calendar_container" (click)="goToDate(1, i, $event)"  (dblclick)="eventAction($event)">
+            <p class="date_month">{{getThisDate(1, i)}}</p>
+            <div class="calendar_day_list">
+              <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(1,i)]" [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+              </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(1, i)">
+              ...
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i = index">
+          <div class="calendar_container" (click)="goToDate(2, i, $event)"  (dblclick)="eventAction($event)">
+            <p class="date_month">{{getThisDate(2, i)}}</p>
+            <div class="calendar_day_list">
+              <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(2,i)]" [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+              </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(2, i)">
+              ...
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i = index">
+          <div class="calendar_container" (click)="goToDate(3, i, $event)"  (dblclick)="eventAction($event)">
+            <p class="date_month">{{getThisDate(3, i)}}</p>
+            <div class="calendar_day_list">
+              <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(3,i)]" [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+              </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(3, i)">
+              ...
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
-        <td class="day_calendar"></td>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i = index" [ngStyle]="checkLastDayOfMonth(i)">
+          <div class="calendar_container" (click)="goToDate(4, i, $event)"  (dblclick)="eventAction($event)" >
+            <p class="date_month">{{getThisDate(4, i)}}</p>
+            <div class="calendar_day_list">
+              <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(4,i)] " [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+              </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(4, i)">
+              ...
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="day_calendar" *ngFor="let day of chatSelector.weekDays; let i = index" [ngStyle]="checkLastDayOfMonth(i,5)">
+          <div class="calendar_container" (click)="goToDate(5, i, $event)" (dblclick)="eventAction($event)">
+            <p class="date_month">{{getThisDate(5, i)}}</p>
+            <div class="calendar_day_list">
+                <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(5,i)]" [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title">
+                  <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span><p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
+                </div>
+            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(5, i)">
+              ...
+            </div>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

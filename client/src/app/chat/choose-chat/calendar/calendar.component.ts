@@ -14,43 +14,18 @@ export class CalendarComponent {
 
 
   constructor(public chatSelector: ChatSelectorService) {}
-  isPersonal = true;
+
   width_section = 300;
 
 
 
 
   changeDate() {
+    console.log(this.date.nativeElement.value);
     this.chatSelector.selectedDate = this.date.nativeElement.value;
   }
-
-
-
   changeEvent(type:number, event: Event) {
-    this.isPersonal = type == 0;
-    let target = event.currentTarget as HTMLInputElement;
-    //animation options
-    let options: object = {
-      duration: 200,
-      iterations: 1,
-      fill: 'forwards',
-      easing: 'ease-in-out'
-    }
-    // animation for the div selector
-    let KeyFrame: Keyframe[]= [
-      {left: this.selected.nativeElement.offsetLeft + 'px'},
-      {left: target.offsetLeft + 'px'}
-    ]
-
-    this.selected.nativeElement.animate(KeyFrame, options);
-
-    // animation for the div events
-    let KeyFrame2: Keyframe[]= [
-      {left : this.events.nativeElement.offsetLeft + 'px'},
-      {left : -type * 100 + '%'}
-    ]
-
-    this.events.nativeElement.animate(KeyFrame2, options);
+    this.chatSelector.isPersonalEvent = type == 0;
   }
 
   PersonalEvents() {

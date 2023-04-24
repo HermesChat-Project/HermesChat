@@ -19,7 +19,7 @@ export class ChatSelectorComponent {
       observe: "response" as "response",
       withCredentials: true
     }
-    console.log(options.headers.get('Authorization'));
+    // console.log(options.headers.get('Authorization'));
     this.chatSelector.getFriends(options);
   }
 
