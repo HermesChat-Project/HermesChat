@@ -2,15 +2,20 @@ import { Component } from '@angular/core';
 import { ChatSelectorService } from '../../chat.service';
 import { CalendarModel } from 'model/calendar.model';
 
+
 @Component({
   selector: 'app-full-calendar',
   templateUrl: './full-calendar.component.html',
-  styleUrls: ['./full-calendar.component.css']
+  styleUrls: ['./full-calendar.component.css'],
 })
+
 export class FullCalendarComponent {
   constructor(public chatSelector: ChatSelectorService) { }
   rows = new Array(5);
 
+  isOnModifyingMode: boolean = false;
+
+  today = new Date();
 
   nextMonth() {
     this.chatSelector.selectedMonth++;
@@ -63,21 +68,28 @@ export class FullCalendarComponent {
     let date = new Date(this.chatSelector.selectedYear, this.chatSelector.selectedMonth, day);
     this.chatSelector.selectedDate = date.getFullYear() + "-" + (this.chatSelector.returnMonth(date, true)) + "-" + this.chatSelector.returnDay(date);
 
-    if((event.target as HTMLElement).tagName == "P" || (event.target as HTMLElement).tagName == "SPAN")
-    {
+    if ((event.target as HTMLElement).tagName == "P" || (event.target as HTMLElement).tagName == "SPAN") {
       (event.target as HTMLElement).parentElement?.firstChild?.textContent == "[P]" ? this.chatSelector.isPersonalEvent = true : this.chatSelector.isPersonalEvent = false;
     }
-    else
-    {
-      if((event.target as HTMLElement).classList.contains("calendar_day_events"))
+    else {
+      if ((event.target as HTMLElement).classList.contains("calendar_day_events"))
         (event.target as HTMLElement).firstChild?.textContent == "[P]" ? this.chatSelector.isPersonalEvent = true : this.chatSelector.isPersonalEvent = false;
     }
 
 
   }
 
-  eventAction(event: MouseEvent) {
-    console.log("double click");
+  createEvent(event: MouseEvent) {
+    let elClicked = event.target as HTMLElement;
+    console.log(elClicked.tagName);
+    if (elClicked.tagName == "P" || elClicked.tagName == "SPAN") {
+      event.stopPropagation();
+    }
+    console.log(this.chatSelector.triggerCalendarModal);
+  }
+  seeEvent(event: CalendarModel) {
+    this.chatSelector.triggerCalendarModal = true;
+    this.chatSelector.selectedCalendarEvent = event;
   }
 
   checkIfIsPersonalOrShared(event: CalendarModel) {
@@ -89,14 +101,51 @@ export class FullCalendarComponent {
 
   checkIfThereAreManyEvents(row: number, col: number) {
     let eventPerDate = this.chatSelector.EventsPerMonth[this.getThisDate(row, col)];
-    if(eventPerDate)
-    {
-      if(eventPerDate.length > 3)
+    if (eventPerDate) {
+      if (eventPerDate.length > 3)
         return true;
       else
         return false;
     }
     return false;
+  }
+  close(event: MouseEvent) {
+    if ((event.target as HTMLElement).classList.contains("cal_modal") && !this.isOnModifyingMode){
+      this.chatSelector.triggerCalendarModal = false;
+      this.isOnModifyingMode = false;
+    }
+  }
+  closeModal() {
+    if(!this.isOnModifyingMode){
+      this.chatSelector.triggerCalendarModal = false;
+      this.isOnModifyingMode = false;
+    }
+  }
+
+  exitModifyingMode(event: MouseEvent){
+    let el = event.target as HTMLElement;
+    el = el.nextElementSibling as HTMLElement;
+    el.innerHTML = "Modifica";
+    this.isOnModifyingMode = false;
+  }
+
+  checkIfThaEventCanBeModified() {
+    if (this.chatSelector.selectedCalendarEvent?.date! >= (new Date()))
+      return true;
+    else
+      return false;
+  }
+
+  modifyEvent(event: MouseEvent) {
+    let el = event.target as HTMLElement;
+    if (el.classList.contains("btn-success")) {
+      this.isOnModifyingMode = false;
+      el.innerHTML = "Modifica";
+    }
+    else {
+      el.innerHTML = "Salva"
+      this.isOnModifyingMode = true;
+    }
   }
 
 }

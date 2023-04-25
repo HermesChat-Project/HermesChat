@@ -195,10 +195,13 @@ export class ChatSelectorService {
     new CalendarModel(22, 'Meeting', new Date(2023, 2, 18, 18, 3), false, 'Meeting with the team'),
     new CalendarModel(23, 'Meeting', new Date(2023, 2, 18, 19, 3), false, 'Meeting with the team'),
     new CalendarModel(24, 'Meeting', new Date(2023, 3, 18, 20, 3), true, 'Meeting with the team'),
-    new CalendarModel(25, 'Meeting', new Date(2023, 3, 30, 21, 3), true, 'Meeting with the team', "#777777"),
+    new CalendarModel(25, 'Meeting', new Date(2023, 3, 30, 21, 3), true, 'Meeting with the team', "#777777", false, "00:00"),
 
   ]
-
+  /*variables for the calendar modal*/
+  triggerCalendarModal: boolean = false;
+  selectedCalendarEvent: CalendarModel | null = null;
+  /************************************/
   isPersonalEvent = true;
   weekDays: string[] = this.getDaysBasedOnLang(this.userLang);
   months: string[] = this.getMonthsBasedOnLang(this.userLang);
