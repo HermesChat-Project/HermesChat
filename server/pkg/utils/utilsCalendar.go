@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -101,4 +102,114 @@ func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gi
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "event deleted",
 	})
+}
+
+func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin.Context){
+	//update an event from the calendar
+
+	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	if form.Title != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"title": "form.Title"}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.Description != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"description": form.Description}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.Date != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"dateTime": form.Date}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.Type != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"type": form.Type}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.Notify != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"notify": form.Notify}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.NotifyTime != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"notifyTime": form.NotifyTime}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.Color != "" {
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"color": form.Color}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	if form.IdChats != nil {
+		//push the new chats ids in the array of the event
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$push": bson.M{"idChats": form.IdChats}})
+		if err != nil {
+			errConn();
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "event updated",
+	})
+
+
+
+
 }

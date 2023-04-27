@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"fmt"
 
 	"chat/pkg/utils"
 	"chat/pkg/models"
@@ -34,7 +35,6 @@ func AddCalendarEvent (c *gin.Context) {
 		
 		utils.DeleteCalendarEventDB(index.(string), form, c)
 	}
-	/*
 
 func UpdateCalendarEvent (c *gin.Context) {
 	var form models.UpdateCalendarEvent;
@@ -42,8 +42,8 @@ func UpdateCalendarEvent (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println("form:", form.Description)
 	index, _ := c.Get("index")
 
 	utils.UpdateCalendarEventDB(index.(string), form, c)
 }
-*/
