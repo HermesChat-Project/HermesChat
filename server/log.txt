@@ -18,3 +18,4 @@
 2023-04-01 17:28:39 error while connecting to database
 
 2023-04-03 21:42:19 error while connecting to database
+2023-04-26 11:58:02 illegal base64 data at input byte 5
