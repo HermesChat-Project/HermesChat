@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"chat/pkg/utils"
+	"chat/pkg/models"
 )
 
 
@@ -12,7 +13,6 @@ func GetCalendarEvents (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.GetCalendarEvents(index.(string), c)
 }
-/*
 func AddCalendarEvent (c *gin.Context) {
 	var form models.AddCalendarEvent;
 	if err := c.ShouldBind(&form); err != nil {
@@ -20,10 +20,11 @@ func AddCalendarEvent (c *gin.Context) {
 		return
 	}
 	index, _ := c.Get("index")
-
+	
 	utils.AddCalendarEventDB(index.(string), form, c)
-} 
-
+	} 
+	
+	/*
 func DeleteCalendarEvent (c *gin.Context) {
 	var form models.DeleteCalendarEvent;
 	if err := c.ShouldBind(&form); err != nil {
