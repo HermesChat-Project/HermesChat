@@ -6,15 +6,19 @@ app-event {
 
 .event{
   width: 100%;
-
+  min-height: 20%;
+  border-bottom: 1px solid #ccc;
 }
 
 #no_events {
-  width: 100%;
+  width: 80%;
+  margin: auto;
   height: 100%;
   text-align: center;
   font-size: 10pt;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
+  color:#084595
 }

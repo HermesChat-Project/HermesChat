@@ -8,4 +8,25 @@ import { ChatSelectorService } from './chat.service';
 })
 export class ChatSelectorComponent {
   constructor(public chatSelector: ChatSelectorService) { }
+
+  ngOnInit() {
+    //create a option for a post request and send the cookie to the server
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Cookie', localStorage.getItem("Authorization")!);
+    let options = {
+      headers: headers,
+      observe: "response" as "response",
+      withCredentials: true
+    }
+    console.log(options.headers.get('Cookie'));
+    this.chatSelector.getFriends(options);
+  }
+
+  checkWhatShouldBeShown() {
+    if(this.chatSelector.selectedChat || this.chatSelector.calendarSectionClicked)
+      return true;
+    else
+     return false;
+  }
 }

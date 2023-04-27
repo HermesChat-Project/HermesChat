@@ -1,5 +1,6 @@
 import { Component, Input, Output, AfterContentInit, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { CalendarModel } from 'model/calendar.model';
+import { ChatSelectorService } from 'src/app/chat/chat.service';
 
 @Component({
   selector: 'app-group-event',
@@ -11,20 +12,11 @@ export class GroupEventComponent implements AfterContentInit{
   @Output() expandEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild("desc", { static: true }) div_desc!: ElementRef;
 
+  constructor(public chatSelector: ChatSelectorService) {}
   expand: boolean = false;
   message: string = 'Mostra di più';
   divDesc!: ElementRef;
-  getHoursAndMinutes(date: Date) {
-    let hours = date.getHours().toString();
-    let minutes = date.getMinutes().toString();
-    if (hours.length < 2) {
-      hours = '0' + hours;
-    }
-    if (minutes.length < 2) {
-      minutes = '0' + minutes;
-    }
-    return hours + ':' + minutes;
-  }
+
 
   ngAfterContentInit() {
     this.divDesc = this.div_desc;

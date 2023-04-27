@@ -76,6 +76,8 @@
 
 .text img{
   cursor: pointer;
+  min-height: 100px;
+  object-fit: cover;
 }
 
 .all-actions{

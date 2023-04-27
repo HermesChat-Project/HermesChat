@@ -45,6 +45,25 @@
   border-bottom: 1px solid #0b2f5e;
 }
 
+.Ppos{
+  left: 0;
+  transition: all 0.2s ease;
+}
+.Spos{
+  left: 50%;
+  transition: all 0.2s ease;
+}
+
+.personal{
+  left: 0%;
+  transition: all 0.2s ease;
+}
+
+.shared{
+  left: -100%;
+  transition: all 0.2s ease;
+}
+
 /*EVENT*/
 #calendar_event {
   width: 100%;

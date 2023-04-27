@@ -13,7 +13,7 @@ app-choose-chat {
   width: 300px;
   height: 100%;
 }
-app-chat-view {
+app-right-view {
   height: 100%;
   flex-grow: 1;
   width: 20px;

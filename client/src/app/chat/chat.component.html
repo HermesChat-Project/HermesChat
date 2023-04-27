@@ -1,6 +1,6 @@
 <app-header-chat-selector></app-header-chat-selector>
 <div class="chat">
   <app-choose-chat></app-choose-chat>
-  <app-chat-view *ngIf="chatSelector.selectedChat"></app-chat-view>
+  <app-right-view *ngIf="checkWhatShouldBeShown()"></app-right-view>
 </div>
 

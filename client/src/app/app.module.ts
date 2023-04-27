@@ -23,6 +23,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { MessageComponent } from './chat/chat-view/message/message.component';
 import { WebcamModule } from 'ngx-webcam';
 import { CameraComponent } from './chat/chat-view/camera/camera.component';
+import { FullCalendarComponent } from './chat/right-view/full-calendar/full-calendar.component';
+import { RightViewComponent } from './chat/right-view/right-view.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatIconModule} from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -44,16 +52,26 @@ import { CameraComponent } from './chat/chat-view/camera/camera.component';
     FriendsRequestComponent,
     ChatViewComponent,
     MessageComponent,
-    CameraComponent
+    CameraComponent,
+    FullCalendarComponent,
+    RightViewComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    WebcamModule
+    WebcamModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [
+    MatDatepickerModule,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
