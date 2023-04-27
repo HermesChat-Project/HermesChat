@@ -13,13 +13,13 @@ export class ChatSelectorComponent {
     //create a option for a post request and send the cookie to the server
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', `${document.cookie.split('=')[1]}`);
+    headers.append('Cookie', localStorage.getItem("Authorization")!);
     let options = {
       headers: headers,
       observe: "response" as "response",
       withCredentials: true
     }
-    // console.log(options.headers.get('Authorization'));
+    console.log(options.headers.get('Cookie'));
     this.chatSelector.getFriends(options);
   }
 

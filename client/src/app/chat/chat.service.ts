@@ -201,6 +201,7 @@ export class ChatSelectorService {
   /*variables for the calendar modal*/
   triggerCalendarModal: boolean = false;
   selectedCalendarEvent: CalendarModel | null = null;
+  selectedNotifyTime: string = "00:00";
   /************************************/
   isPersonalEvent = true;
   weekDays: string[] = this.getDaysBasedOnLang(this.userLang);
@@ -357,7 +358,7 @@ export class ChatSelectorService {
   token: string = '';
 
   getFriends(options: any) {
-    // this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, options).subscribe(
+    // this.dataStorage.PostRequestWithHeaders(`getFriends`, {"Cookie" : localStorage.getItem("Authorization")}, options).subscribe(
     //   (response: any) => {
     //     console.log(response);
     //     // this.router.navigate(['/chat']);

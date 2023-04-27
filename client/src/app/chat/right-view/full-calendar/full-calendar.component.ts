@@ -1,21 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, Inject } from '@angular/core';
 import { ChatSelectorService } from '../../chat.service';
 import { CalendarModel } from 'model/calendar.model';
+import { ConstantPool } from '@angular/compiler';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSelectChange } from '@angular/material/select';
 
 
 @Component({
   selector: 'app-full-calendar',
   templateUrl: './full-calendar.component.html',
   styleUrls: ['./full-calendar.component.css'],
+
 })
 
 export class FullCalendarComponent {
-  constructor(public chatSelector: ChatSelectorService) { }
+  @ViewChild("date") date!: ElementRef;
+  @ViewChild("time") time!: ElementRef;
+  @ViewChild("description") description!: ElementRef;
+  @ViewChild("title") title!: ElementRef;
+
+  @ViewChild("datepicker") datepicker!: ElementRef;
+  constructor(public chatSelector: ChatSelectorService, private _adapter: DateAdapter<any>, @Inject(MAT_DATE_LOCALE) private _locale: string) { }
   rows = new Array(5);
 
   isOnModifyingMode: boolean = false;
+  modifyingEvent: CalendarModel | null = null;
+  selDate: string = "";
+
+  ngOnInit() {
+    this._locale = this.chatSelector.userLang
+    this._adapter.setLocale(this._locale);
+  }
 
   today = new Date();
+
+  notifyTime: { time: string, val: string }[] = [
+    { time: "Non notificare", val: "00:00" },
+    { time: "5 minuti prima", val: "00:05" },
+    { time: "10 minuti prima", val: "00:10" },
+    { time: "15 minuti prima", val: "00:15" },
+    { time: "30 minuti prima", val: "00:30" },
+    { time: "1 ora prima", val: "01:00" },
+    { time: "2 ore prima", val: "02:00" },
+  ]
+
+  input: Date = new Date();
 
   nextMonth() {
     this.chatSelector.selectedMonth++;
@@ -87,9 +117,12 @@ export class FullCalendarComponent {
     }
     console.log(this.chatSelector.triggerCalendarModal);
   }
-  seeEvent(event: CalendarModel) {
+  seeEvent(sel_event: CalendarModel) {
     this.chatSelector.triggerCalendarModal = true;
-    this.chatSelector.selectedCalendarEvent = event;
+    this.chatSelector.selectedCalendarEvent = sel_event;
+    this.modifyingEvent = { ...sel_event };
+    console.log(this.modifyingEvent);
+    this.chatSelector.selectedNotifyTime = sel_event.notifyTime;
   }
 
   checkIfIsPersonalOrShared(event: CalendarModel) {
@@ -110,23 +143,41 @@ export class FullCalendarComponent {
     return false;
   }
   close(event: MouseEvent) {
-    if ((event.target as HTMLElement).classList.contains("cal_modal") && !this.isOnModifyingMode){
+    if ((event.target as HTMLElement).classList.contains("cal_modal") && !this.isOnModifyingMode) {
       this.chatSelector.triggerCalendarModal = false;
       this.isOnModifyingMode = false;
     }
   }
   closeModal() {
-    if(!this.isOnModifyingMode){
+    if (!this.isOnModifyingMode) {
       this.chatSelector.triggerCalendarModal = false;
       this.isOnModifyingMode = false;
     }
   }
 
-  exitModifyingMode(event: MouseEvent){
+  deleteEvent() {
+    this.chatSelector.calendarExample.splice(this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!), 1);
+    this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+    this.chatSelector.triggerCalendarModal = false;
+  }
+
+  changeDate(event: MatDatepickerInputEvent<any, any>) {
+    let aus_hr = this.modifyingEvent!.date!.getHours();
+    let aus_min = this.modifyingEvent!.date!.getMinutes();
+    let date = new Date(event.value);
+    date.setHours(aus_hr, aus_min);
+
+    this.modifyingEvent!.date = date;
+
+  }
+
+  exitModifyingMode(event: MouseEvent) {
     let el = event.target as HTMLElement;
     el = el.nextElementSibling as HTMLElement;
     el.innerHTML = "Modifica";
     this.isOnModifyingMode = false;
+    this.modifyingEvent = { ...this.chatSelector.selectedCalendarEvent! };
+    this.chatSelector.selectedNotifyTime = this.notifyTime.find(x => x.val == this.modifyingEvent!.notifyTime)?.val!;
   }
 
   checkIfThaEventCanBeModified() {
@@ -136,16 +187,45 @@ export class FullCalendarComponent {
       return false;
   }
 
+  changeTime(event: any) {
+    this.modifyingEvent!.date = new Date(this.modifyingEvent!.date!.getFullYear(), this.modifyingEvent!.date!.getMonth(), this.modifyingEvent!.date!.getDate(), event.target.value.split(":")[0], event.target.value.split(":")[1]);
+  }
+
+  chengeDesc(event: any) {
+    this.modifyingEvent!.description = event.target.value;
+  }
+
+ changeCol(event: any) {
+    this.modifyingEvent!.color = event.target.value;
+  }
+
+  changeTitle(event: any) {
+    this.modifyingEvent!.title = event.target.value;
+  }
+
+
+
+
   modifyEvent(event: MouseEvent) {
     let el = event.target as HTMLElement;
     if (el.classList.contains("btn-success")) {
       this.isOnModifyingMode = false;
       el.innerHTML = "Modifica";
+      this.chatSelector.calendarExample[this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
+      this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+      this.modifyingEvent = null;
+      this.chatSelector.triggerCalendarModal = false;
     }
     else {
       el.innerHTML = "Salva"
       this.isOnModifyingMode = true;
     }
+  }
+
+  returnMinutes(min: number | undefined) {
+    if (min! < 10)
+      return "0" + min!.toString();
+    return min;
   }
 
 }

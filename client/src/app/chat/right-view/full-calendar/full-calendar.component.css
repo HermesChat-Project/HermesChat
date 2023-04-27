@@ -155,19 +155,19 @@ tbody {
 /***********************************/
 
 /******************CAL_MODAL******************/
-.cal_modal{
+.cal_modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
 }
-.cal_modal_container{
+.cal_modal_container {
   width: 50%;
   height: 75%;
   background-color: #fff;
@@ -178,10 +178,10 @@ tbody {
   align-items: center;
   padding: 10px;
 }
-.cal_modal_container *{
+.cal_modal_container * {
   user-select: none;
 }
-.cal_modal_header{
+.cal_modal_header {
   width: 100%;
   height: 10%;
   display: flex;
@@ -189,14 +189,17 @@ tbody {
   align-items: center;
 }
 
-.cal_modal_title{
+.cal_modal_title {
   font-size: 20px;
   font-weight: 500;
   color: #000;
   margin: 0;
+  outline: none;
+  flex-grow: 1;
+  border: none;
 }
 
-.cal_modal_close{
+.cal_modal_close {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -208,7 +211,7 @@ tbody {
   cursor: pointer;
 }
 
-.cal_modal_body{
+.cal_modal_body {
   width: 100%;
   height: 80%;
   display: flex;
@@ -217,7 +220,7 @@ tbody {
   align-items: center;
 }
 
-.cal_modal_body_container{
+.cal_modal_body_container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -226,21 +229,20 @@ tbody {
   align-items: flex-start;
 }
 
-.cal_modal_description{
+.cal_modal_description {
   width: 100%;
 }
 
-#cal_modal_desc{
+#cal_modal_desc {
   height: 150px;
   resize: none;
 }
 
-.cal_modal_desc_header label{
+.cal_modal_desc_header label {
   margin-left: 10px;
   font-size: small;
-
 }
-.cal_modal_footer{
+.cal_modal_footer {
   width: 100%;
   height: 10%;
   display: flex;
@@ -248,11 +250,12 @@ tbody {
   align-items: center;
 }
 
-.cal_modal_footer button:last-of-type{
+.cal_modal_footer button:last-of-type,
+.cal_modal_footer button:nth-of-type(2) {
   margin-left: 10px;
 }
 
-.cal_modal_datetime input{
+.cal_modal_datetime input {
   height: 100%;
   border-radius: 5px;
   border: 1px solid #e5e5e5;
@@ -260,27 +263,56 @@ tbody {
   font-weight: 500;
   color: #000;
 }
-.cal_modal_datetime{
+.cal_modal_datetime {
   display: flex;
+  align-items: center;
 }
-.cal_modal_date{
+
+.cal_modal_date {
   border-radius: 5px;
   display: flex;
   justify-content: space-evenly;
   border: 1px solid #e5e5e5;
   padding: 0 10px 0 10px;
+  margin: 0 10px 0 10px;
   align-items: center;
 }
-.cal_modal_date input{
+.cal_modal_date input {
   border: none;
   width: 100px;
   outline: none;
 }
 
-.cal_modal_time{
+.cal_modal_time {
   outline: none;
   margin-left: 15px;
 }
 
+.cal_modal_notify {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.cal_modal_notify i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.cal_modal_color {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.cal_modal_color p {
+  margin: 0;
+  margin: 0 10px 0 10px;
+}
+
+.cal_modal_color input {
+  flex-grow: 1;
+}
 
 /*********************************************/

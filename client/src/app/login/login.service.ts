@@ -17,13 +17,14 @@ export class LoginService {
     //     console.log(response.headers.get('Authorization'));
     //     console.log(response)
     //     let authorization = response.headers.get('Authorization');
-    //     this.chatSelector.token = authorization;
-    //     let d = new Date()
-    //     d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
-    //     let expires = "expires=" + d.toUTCString();
-    //     let cookie = `token=${authorization};${expires};path=/;HttpOnly`
-    //     console.log(cookie);
-    //     document.cookie = `Authorization=${authorization};${expires};path=/;`;
+    //     // this.chatSelector.token = authorization;
+    //     // let d = new Date()
+    //     // d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
+    //     // let expires = "expires=" + d.toUTCString();
+    //     // let cookie = `token=${authorization};${expires};path=/;HttpOnly`
+    //     // console.log(cookie);
+    //     // document.cookie = `Authorization=${authorization};${expires};path=/;`;
+    //     localStorage.setItem("Authorization", authorization);
     //     this.router.navigate(['/chat']);
     //   },
     //   (error: Error) => {
