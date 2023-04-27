@@ -8,12 +8,14 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	router.Use(AuthMiddleware())
 	router.Use(CORSMiddleware())
+	router.Use(AuthMiddleware())
 
 	router.GET("/socket", controllers.Socket)
+	
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
+
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
 	router.POST("/getFriends", controllers.GetFriends)
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
@@ -45,11 +47,13 @@ func AuthMiddleware() gin.HandlerFunc {
 
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*") // Allow all origins
+        //setta l'origin con quello che arriva dalla richiesta
+		c.Writer.Header().Set("Access-Control-Allow-Origin", c.Request.Header.Get("Origin"))
         c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
         c.Writer.Header().Set("Access-Control-Allow-Headers",
             "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Set-Cookie, Cookie") // Allow all headers
         c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH") // Allow all these methods
+		c.Writer.Header().Set("Access-Control-Expose-Headers", "Set-Cookie, Cookie, Authorization")
 
         if c.Request.Method == "OPTIONS" {
             c.AbortWithStatus(204)

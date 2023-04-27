@@ -35,20 +35,25 @@ func CreateToken (index string, c *gin.Context) {
 		go config.WriteFileLog(err)
 		return
 	}
-
-	//set cookie with token in http only mode
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600 * 24 * 30, "", "", false, true)
 	c.Header("Authorization", tokenString)
-	c.JSON(http.StatusOK, gin.H{
-		"ris": "Token created",
-	})
+	//c.Header("Set-Cookie", "token="+tokenString+"; Path=/; HttpOnly");
+	c.Header("Access-Control-Allow-Credentials", "true")
+	c.Header("Access-Control-Expose-Headers", "Authorization")
+	c.SetCookie("token", tokenString, 3600, "/", "localhost", false, true)
+	c.Header("Access-Control-Allow-Origin", c.Request.Header.Get("Origin"))
 
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "ok",
+	})
 }
 
 func VerifyToken (c *gin.Context){
-	cookie, err := c.Cookie("Authorization")
-	if err != nil {
+	//print header
+	fmt.Println(c.Request.Header)
+	cookie := c.Request.Header.Get("Authorization")
+	fmt.Println("cookie:" + cookie)
+	//check if token is empty
+	if (cookie == "") {
 		//redirect to login page
 		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()
@@ -60,29 +65,28 @@ func VerifyToken (c *gin.Context){
 		}
 		return
 	}
+
+	//check if token is valid
 	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("there was an error")
-		}
 		return []byte(config.SECRET), nil
 	})
 	if err != nil {
-		errr := fmt.Errorf("error while connecting to database")
-		SendError(c, errr)
-		go config.WriteFileLog(err)
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"ris": "Unauthorized",
+		})
+		c.Abort()
 		return
 	}
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		fmt.Println(claims["sub"], claims["exp"])
-		c.Set("index", claims["sub"])
-		c.Next()
-		return
-	} else {
-		errr := fmt.Errorf("error while connecting to database")
-		SendError(c, errr)
-		go config.WriteFileLog(err)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"ris": "Unauthorized",
+		})
+		c.Abort()
 		return
 	}
+	c.Set("index", claims["sub"])
+	c.Next()
 }
 
 func LoginMongoDB (username string, password string, c *gin.Context) {
