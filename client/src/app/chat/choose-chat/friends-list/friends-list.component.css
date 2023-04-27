@@ -64,16 +64,17 @@
   height: 50px;
   border-radius: 50%;
   background-size: cover;
+  background-color: #ccc;
 }
 
-.img img:before {
+/* .img img:before {
   content: "";
   display: block;
   height: 50px;
   width: 50px;
   background-image: url("../../../../assets/img/user.jpg");
   background-size: cover;
-}
+} */
 
 .friends {
   border-bottom: 1px solid #ccc;

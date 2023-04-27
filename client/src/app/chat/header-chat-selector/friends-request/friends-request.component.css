@@ -74,4 +74,52 @@
   transition: left 200ms ease-in-out;
 }
 
+.request_user{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 3% 0;
+  height: 14.29%;
+  border-bottom: 1px solid #ccc;
+}
+
+.request_user_image{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+  margin: 0 10px 0 10px;
+}
+
+.request_user_name{
+  flex-grow: 1;
+  margin: 0;
+  padding-left: 20px;
+  font-weight: 500;
+}
+
+.request_options{
+  padding-right: 20px;
+  height: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.request_options .vr{
+  margin: 0 10px;
+}
+
+.request_options .bi-check-lg{
+  color: #0a692d;
+  cursor: pointer;
+}
+
+.request_options .bi-x-lg{
+  color: #a00;
+  cursor: pointer;
+}
+
+
+
 

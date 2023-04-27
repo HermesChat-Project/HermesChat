@@ -17,3 +17,14 @@
     Inviato
   </div>
 </div>
+<div class="list-request" *ngIf="receivedRequest">
+  <div class="request_user" *ngFor="let request of chatSelector.requestList">
+    <img class="request_user_image" [src]="request.image">
+    <h5 class="request_user_name text-truncate" title="{{request.nickname}}">{{request.nickname}}</h5>
+    <div class="request_options">
+      <i class="bi bi-check-lg"></i>
+      <div class="vr"></div>
+      <i class="bi bi-x-lg"></i>
+    </div>
+  </div>
+</div>

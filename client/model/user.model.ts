@@ -1,6 +1,6 @@
 import { callsModel } from "./calls.model";
 import { chatList } from "./chat-list.model";
-import { FriendModel } from "./friendModel";
+import { FriendModel } from "./friend.model";
 
 export class userModel {
   public id: number;

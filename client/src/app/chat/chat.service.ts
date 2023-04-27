@@ -4,14 +4,20 @@ import { chatList } from '../../../model/chat-list.model';
 import { callsModel } from '../../../model/calls.model';
 import { messageModel } from '../../../model/message.model';
 import { DataStorageService } from '../shared/data-storage.service';
-import { FriendModel } from 'model/friendModel';
+import { FriendModel } from 'model/friend.model';
 import { CalendarModel } from 'model/calendar.model';
+import { requestModel } from 'model/request.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatSelectorService {
+
   PersonalListSearch: chatList[] = [];
+  friendList: FriendModel[] = [];
+  friendSerachList: FriendModel[] = [];
+  requestList: requestModel[] = [];
+
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
       new chatList(0, 0, 'Prova', "ok", "img", [
@@ -297,7 +303,7 @@ export class ChatSelectorService {
       }
     });
 
-    let eventsPerDay: {[key: string]: CalendarModel[]} = {};
+    let eventsPerDay: { [key: string]: CalendarModel[] } = {};
     events.forEach((event: CalendarModel) => {
       let day = event.date.getDate();
       if (eventsPerDay[day.toString()]) {
@@ -357,17 +363,41 @@ export class ChatSelectorService {
   //#region server calls
   token: string = '';
 
-  getFriends(options: any) {
-    // this.dataStorage.PostRequestWithHeaders(`getFriends`, {"Cookie" : localStorage.getItem("Authorization")}, options).subscribe(
-    //   (response: any) => {
-    //     console.log(response);
-    //     // this.router.navigate(['/chat']);
-    //   },
-    //   (error: Error) => {
-    //     console.log(error);
+  getFriends() {
+    this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe(
+      (response: any) => {
+        this.friendList = response.body.friends;
+        this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
+        this.friendSerachList = this.friendList;
+      },
+      (error: Error) => {
+        console.log(error);
 
-    //   }
-    // );
+      }
+    );
+  }
+
+  getRequestsFriends() {
+    this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.requestList = response.body.requests;
+      },
+      (error: Error) => {
+        console.log(error);
+
+      });
+  }
+
+  getOptionsForRequest() {
+    return {
+      observe: 'response',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': localStorage.getItem("Authorization")
+      },
+      withCredentials: true
+    };
   }
 
   //#endregion

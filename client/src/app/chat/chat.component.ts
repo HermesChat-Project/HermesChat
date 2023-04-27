@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ChatSelectorService } from './chat.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat',
@@ -11,16 +12,10 @@ export class ChatSelectorComponent {
 
   ngOnInit() {
     //create a option for a post request and send the cookie to the server
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json; charset=utf-8');
-    headers.append('Authorization', localStorage.getItem("Authorization")!);
-    let options = {
-      headers: headers,
-      observe: "response" as "response",
-      withCredentials: true
-    }
-    console.log(options.headers.get('Cookie'));
-    this.chatSelector.getFriends(options);
+
+
+    this.chatSelector.getFriends();
+    this.chatSelector.getRequestsFriends();
   }
 
   checkWhatShouldBeShown() {
