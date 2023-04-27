@@ -12,8 +12,8 @@ export class ChatSelectorComponent {
   ngOnInit() {
     //create a option for a post request and send the cookie to the server
     let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Cookie', localStorage.getItem("Authorization")!);
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+    headers.append('Authorization', localStorage.getItem("Authorization")!);
     let options = {
       headers: headers,
       observe: "response" as "response",

@@ -32,7 +32,7 @@ export class LoginComponent {
       }
       let options= {
         headers: new HttpHeaders({
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json; charset=utf-8'
         }),
         observe: "response" as "response",
         withCredentials: true

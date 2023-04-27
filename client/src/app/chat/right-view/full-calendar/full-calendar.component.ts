@@ -25,8 +25,14 @@ export class FullCalendarComponent {
   rows = new Array(5);
 
   isOnModifyingMode: boolean = false;
+  isOnCreatingMode: boolean = false;
   modifyingEvent: CalendarModel | null = null;
   selDate: string = "";
+  confirmExit: boolean = false;
+
+  readonly_disabled() {
+    return !this.isOnModifyingMode && !this.isOnCreatingMode;
+  }
 
   ngOnInit() {
     this._locale = this.chatSelector.userLang
@@ -46,6 +52,7 @@ export class FullCalendarComponent {
   ]
 
   input: Date = new Date();
+  clickedDate: Date = new Date();
 
   nextMonth() {
     this.chatSelector.selectedMonth++;
@@ -109,13 +116,22 @@ export class FullCalendarComponent {
 
   }
 
-  createEvent(event: MouseEvent) {
+  createEvent(event: MouseEvent, rows: number, cols: number) {
     let elClicked = event.target as HTMLElement;
+    this.confirmExit = false;
     console.log(elClicked.tagName);
     if (elClicked.tagName == "P" || elClicked.tagName == "SPAN") {
       event.stopPropagation();
     }
-    console.log(this.chatSelector.triggerCalendarModal);
+    else {
+      this.today = new Date();
+      this.clickedDate = new Date(this.chatSelector.selectedYear, this.chatSelector.selectedMonth, parseInt(this.chatSelector.selectedDate.split("-")[2]));
+      if (this.clickedDate >= new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate())) {
+        this.chatSelector.triggerCalendarModal = true;
+        this.isOnCreatingMode = true;
+        this.modifyingEvent = new CalendarModel(-1, "", new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes())), true, "");
+      }
+    }
   }
   seeEvent(sel_event: CalendarModel) {
     this.chatSelector.triggerCalendarModal = true;
@@ -143,16 +159,38 @@ export class FullCalendarComponent {
     return false;
   }
   close(event: MouseEvent) {
-    if ((event.target as HTMLElement).classList.contains("cal_modal") && !this.isOnModifyingMode) {
-      this.chatSelector.triggerCalendarModal = false;
-      this.isOnModifyingMode = false;
+    if ((event.target as HTMLElement).classList.contains("cal_modal")) {
+      if (!this.isOnModifyingMode && !this.isOnCreatingMode) {
+        this.chatSelector.triggerCalendarModal = false;
+        this.isOnModifyingMode = false;
+      }
+      else if (this.isOnCreatingMode && !this.confirmExit) {
+        if (confirm("Sei sicuro di voler uscire? I dati inseriti andranno persi")) {
+          this.chatSelector.triggerCalendarModal = false;
+          this.isOnCreatingMode = false;
+        }
+      }
     }
   }
   closeModal() {
-    if (!this.isOnModifyingMode) {
+    if (!this.isOnModifyingMode && !this.isOnCreatingMode) {
       this.chatSelector.triggerCalendarModal = false;
       this.isOnModifyingMode = false;
     }
+    else if (this.isOnCreatingMode) {
+      if (confirm("Sei sicuro di voler uscire? I dati inseriti andranno persi")) {
+        this.chatSelector.triggerCalendarModal = false;
+        this.isOnCreatingMode = false;
+      }
+
+      this.confirmExit = true;
+    }
+  }
+
+  modifyingOrCreation() {
+    if (this.isOnCreatingMode)
+      return "Crea";
+    return "Modifica";
   }
 
   deleteEvent() {
@@ -181,7 +219,7 @@ export class FullCalendarComponent {
   }
 
   checkIfThaEventCanBeModified() {
-    if (this.chatSelector.selectedCalendarEvent?.date! >= (new Date()))
+    if ((this.chatSelector.selectedCalendarEvent?.date! >= (new Date())) || this.isOnCreatingMode)
       return true;
     else
       return false;
@@ -195,7 +233,7 @@ export class FullCalendarComponent {
     this.modifyingEvent!.description = event.target.value;
   }
 
- changeCol(event: any) {
+  changeCol(event: any) {
     this.modifyingEvent!.color = event.target.value;
   }
 
@@ -208,17 +246,24 @@ export class FullCalendarComponent {
 
   modifyEvent(event: MouseEvent) {
     let el = event.target as HTMLElement;
-    if (el.classList.contains("btn-success")) {
-      this.isOnModifyingMode = false;
-      el.innerHTML = "Modifica";
-      this.chatSelector.calendarExample[this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
-      this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
-      this.modifyingEvent = null;
-      this.chatSelector.triggerCalendarModal = false;
+    if (!this.isOnCreatingMode) {
+      if (el.classList.contains("btn-success")) {
+        this.isOnModifyingMode = false;
+        el.innerHTML = "Modifica";
+        this.chatSelector.calendarExample[this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
+        this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+        this.chatSelector.triggerCalendarModal = false;
+      }
+      else {
+        el.innerHTML = "Salva"
+        this.isOnModifyingMode = true;
+      }
     }
     else {
-      el.innerHTML = "Salva"
-      this.isOnModifyingMode = true;
+      this.chatSelector.calendarExample.push(this.modifyingEvent!);
+      this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+      this.chatSelector.triggerCalendarModal = false;
+      this.isOnCreatingMode = false;
     }
   }
 
