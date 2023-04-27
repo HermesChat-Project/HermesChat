@@ -24,17 +24,17 @@ func AddCalendarEvent (c *gin.Context) {
 	utils.AddCalendarEventDB(index.(string), form, c)
 	} 
 	
-	/*
-func DeleteCalendarEvent (c *gin.Context) {
-	var form models.DeleteCalendarEvent;
-	if err := c.ShouldBind(&form); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
+	func DeleteCalendarEvent (c *gin.Context) {
+		var form models.DeleteCalendarEvent;
+		if err := c.ShouldBind(&form); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+		index, _ := c.Get("index")
+		
+		utils.DeleteCalendarEventDB(index.(string), form, c)
 	}
-	index, _ := c.Get("index")
-
-	utils.DeleteCalendarEventDB(index.(string), form, c)
-}
+	/*
 
 func UpdateCalendarEvent (c *gin.Context) {
 	var form models.UpdateCalendarEvent;

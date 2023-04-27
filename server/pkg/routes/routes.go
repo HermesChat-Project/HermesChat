@@ -25,7 +25,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.GET("/getCalendarEvents", controllers.GetCalendarEvents);
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
-	//router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
+	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
 	//router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
 	/*
 	router.POST("/acceptFriend", controllers.AcceptFriend)

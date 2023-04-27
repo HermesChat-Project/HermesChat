@@ -74,3 +74,31 @@ func AddCalendarEventDB (index string, form models.AddCalendarEvent, c *gin.Cont
 		"ris": "event added",
 	})
 }
+
+func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gin.Context) {
+	//delete an event from the calendar
+
+	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	//delete the event from the database
+
+	_, err := collection.DeleteOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index})
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while deleting event",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "event deleted",
+	})
+}
