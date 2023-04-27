@@ -29,3 +29,31 @@ type Friend struct {
 	ID string `json:"idUser"`
 	Image string `json:"image"`
 }
+
+type AddCalendarEvent struct {
+	Title string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	Date string `json:"date" binding:"required"`
+	Type string `json:"type" binding:"required"`
+	IdUser string `json:"idUser" binding:"required"`
+	Notify string `json:"notify" binding:"required"`
+	NotifyTime string `json:"notifyTime" binding:"required"`
+	Color string `json:"color" binding:"required"`
+	IdChats []string `json:"idChats"`
+}
+
+type DeleteCalendarEvent struct {
+	IdEvent string `json:"idEvent" binding:"required"`
+}
+
+type UpdateCalendarEvent struct {
+	IdEvent string `json:"idEvent" binding:"required"`
+	Title string `json:"title"`
+	Description string `json:"description"`
+	Date string `json:"date"`
+	Type string `json:"type"`
+	Notify string `json:"notify"`
+	NotifyTime string `json:"notifyTime"`
+	Color string `json:"color"`
+	IdChats []string `json:"idChats"`
+}

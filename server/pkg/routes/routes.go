@@ -12,7 +12,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(AuthMiddleware())
 
 	router.GET("/socket", controllers.Socket)
-	
+
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
 
@@ -22,6 +22,11 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
 	router.POST("/blockUser", controllers.BlockUser)
+
+	router.GET("/getCalendarEvents", controllers.GetCalendarEvents);
+	//router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
+	//router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
+	//router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
 	/*
 	router.POST("/acceptFriend", controllers.AcceptFriend)
 	router.GET("/getUsers", controllers.SearchUsers)
