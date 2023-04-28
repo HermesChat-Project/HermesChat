@@ -57,3 +57,11 @@ type UpdateCalendarEvent struct {
 	Color string `json:"color"`
 	IdChats []string `json:"idChats"`
 }
+
+type AcceptFriendRequest struct {
+	IdFriend string `json:"idUser" binding:"required"`
+	Nickname string `json:"nickname" binding:"required"`
+	Name string `json:"name" binding:"required"`
+	Surname string `json:"surname" binding:"required"`
+	Image string `json:"image" binding:"required"`
+}

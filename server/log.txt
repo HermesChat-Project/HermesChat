@@ -19,3 +19,18 @@
 
 2023-04-03 21:42:19 error while connecting to database
 2023-04-26 11:58:02 illegal base64 data at input byte 5
+2023-04-28 09:53:12 error while connecting to database
+2023-04-28 09:53:12 error while connecting to database
+2023-04-28 09:54:05 error while connecting to database
+2023-04-28 09:54:05 error while connecting to database
+2023-04-28 09:54:22 error while connecting to database
+2023-04-28 09:54:22 error while connecting to database
+2023-04-28 09:54:56 error while connecting to database
+2023-04-28 10:48:20 error parsing uri: lookup _mongodb._tcp.clusterhermeschat.irp1ier.mongodb.net on [::1]:53: read udp [::1]:64376->[::1]:53: read: connection refused
+2023-04-28 10:56:01 error while connecting to database
+2023-04-28 10:58:04 error while connecting to database
+2023-04-28 11:07:36 error while connecting to database
+2023-04-28 11:17:04 error while connecting to database
+2023-04-28 11:23:41 error while connecting to database
+2023-04-28 11:25:16 error while connecting to database
+2023-04-28 11:26:45 error while connecting to database

@@ -19,6 +19,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
 	router.POST("/getFriends", controllers.GetFriends)
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
+	router.POST("/getRequestSent", controllers.GetRequestSent)
 	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
 	router.POST("/blockUser", controllers.BlockUser)
@@ -27,8 +28,8 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
 	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
 	router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
+	router.POST("/acceptFriend", controllers.AcceptFriendRequest)
 	/*
-	router.POST("/acceptFriend", controllers.AcceptFriend)
 	router.GET("/getUsers", controllers.SearchUsers)
 	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/declineFriend", controllers.DeclineFriend)

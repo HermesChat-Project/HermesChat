@@ -60,3 +60,20 @@ func BlockUser (c *gin.Context) {
 
 	utils.BlockUserDB(index.(string), form.Username, c)
 }
+
+func GetRequestSent (c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetRequestSentDB(index.(string), c)
+}
+
+func AcceptFriendRequest (c *gin.Context) {
+	var form models.AcceptFriendRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+
+	utils.AcceptFriendRequestDB(index.(string), form, c)
+}
