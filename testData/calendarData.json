@@ -36,5 +36,6 @@
   "type": "personal",
   "notify": false,
   "color": "#FF00FF",
-  "idUser": "6401c65c01c6e9458e62ec0a"
+  "idUser": "6401c65c01c6e9458e62ec0a",
+  "notifyTime": "00:00"
 }]
