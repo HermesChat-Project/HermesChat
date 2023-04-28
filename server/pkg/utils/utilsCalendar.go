@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"chat/pkg/config"
 	"chat/pkg/models"
@@ -90,7 +90,16 @@ func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gi
 
 	//delete the event from the database
 
-	_, err := collection.DeleteOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index})
+	objID, err := primitive.ObjectIDFromHex(form.IdEvent)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+
+	_, err = collection.DeleteOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index})
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -116,8 +125,17 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 		return
 	}
 
+	objID, err := primitive.ObjectIDFromHex(form.IdEvent)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+
 	if form.Title != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"title": "form.Title"}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"title": "form.Title"}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -128,7 +146,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Description != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"description": form.Description}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"description": form.Description}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -139,7 +157,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Date != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"dateTime": form.Date}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"dateTime": form.Date}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -150,7 +168,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Type != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"type": form.Type}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"type": form.Type}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -161,7 +179,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Notify != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"notify": form.Notify}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"notify": form.Notify}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -172,7 +190,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.NotifyTime != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"notifyTime": form.NotifyTime}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"notifyTime": form.NotifyTime}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -183,7 +201,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Color != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$set": bson.M{"color": form.Color}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"color": form.Color}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -195,7 +213,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 
 	if form.IdChats != nil {
 		//push the new chats ids in the array of the event
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": form.IdEvent, "idUser" : index}, bson.M{"$push": bson.M{"idChats": form.IdChats}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$push": bson.M{"idChats": form.IdChats}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{

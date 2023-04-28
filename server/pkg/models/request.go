@@ -50,7 +50,7 @@ type UpdateCalendarEvent struct {
 	IdEvent string `json:"idEvent" binding:"required"`
 	Title string `json:"title"`
 	Description string `json:"description"`
-	Date string `json:"date"`
+	Date string `json:"dateTime"`
 	Type string `json:"type"`
 	Notify string `json:"notify"`
 	NotifyTime string `json:"notifyTime"`
