@@ -135,7 +135,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	}
 
 	if form.Title != "" {
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"title": "form.Title"}})
+		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index}, bson.M{"$set": bson.M{"title": form.Title}})
 		if err != nil {
 			errConn();
 			c.JSON(http.StatusInternalServerError, gin.H{
