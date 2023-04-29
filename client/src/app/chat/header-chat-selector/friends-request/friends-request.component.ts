@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { HeaderService } from '../header.service';
 import { ChatSelectorService } from '../../chat.service';
+import { requestModel } from 'model/request.model';
+import { FriendModel } from 'model/friend.model';
 
 @Component({
   selector: 'app-friends-request',
@@ -18,5 +20,16 @@ export class FriendsRequestComponent {
 
   close() {
     this.headerService.generalClosing();
+  }
+
+  denyFriend(request:requestModel){
+    this.chatSelector.receivedList.splice(this.chatSelector.receivedList.indexOf(request),1);
+  }
+
+  addFriend(request:requestModel){
+    this.chatSelector.receivedList.splice(this.chatSelector.receivedList.indexOf(request),1);
+    this.chatSelector.acceptRequest(request);
+    let friend = new FriendModel(request.idUser, request.name, request.surname, request.nickname, request.image);
+    this.chatSelector.friendList.push(friend);
   }
 }

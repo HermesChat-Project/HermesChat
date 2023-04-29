@@ -1,13 +1,22 @@
-.header{
+.friend_requets {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  border-bottom: 1px solid #0b2f5e;
 }
 
-.title{
+.result_request {
+  flex-grow: 1;
+}
+
+.title {
   font-size: 13pt;
   font-weight: bold;
   margin: 0px;
@@ -15,15 +24,15 @@
   margin-left: 10px;
 }
 
-.close{
+.close {
   cursor: pointer;
 }
-.close i{
+.close i {
   font-size: 1.5em;
-    color: #0b2f5e;
-    margin: 0 0.2em;
-    cursor: pointer;
-    text-align: end;
+  color: #0b2f5e;
+  margin: 0 0.2em;
+  cursor: pointer;
+  text-align: end;
 }
 
 .friendRequestType {
@@ -32,7 +41,7 @@
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   position: relative;
   height: 40px;
 }
@@ -62,28 +71,30 @@
 
 .selected {
   font-weight: bold;
+  color: #0b2f5e;
 }
 
-.receivedSelected{
+.receivedSelected {
   left: 0%;
   transition: left 200ms ease-in-out;
 }
 
-.sentSelected{
+.sentSelected {
   left: 50%;
   transition: left 200ms ease-in-out;
 }
 
-.request_user{
+.request_user, .sent_request_user {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 3% 0;
   height: 14.29%;
   border-bottom: 1px solid #ccc;
+  margin: 0;
 }
 
-.request_user_image{
+.request_user_image {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -91,14 +102,25 @@
   margin: 0 10px 0 10px;
 }
 
-.request_user_name{
+.request_user_info {
   flex-grow: 1;
   margin: 0;
-  padding-left: 20px;
-  font-weight: 500;
 }
 
-.request_options{
+.col-sm-3 {
+  padding: 0;
+}
+
+.col-sm-9 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+}
+
+.request_options {
   padding-right: 20px;
   height: 50%;
   display: flex;
@@ -106,20 +128,48 @@
   justify-content: space-between;
 }
 
-.request_options .vr{
+.request_options .vr {
   margin: 0 10px;
 }
 
-.request_options .bi-check-lg{
+.request_options .bi-check-lg {
   color: #0a692d;
   cursor: pointer;
 }
 
-.request_options .bi-x-lg{
+.request_options .bi-x-lg {
   color: #a00;
   cursor: pointer;
 }
 
+.received_user_info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
 
+.received_user_name {
+  font-size: 10pt;
+  color: #999;
+}
 
+.received_user_nickname {
+  margin: 0;
+  font-weight: 500;
+}
 
+.no_request {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.no_request {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #084595;
+}

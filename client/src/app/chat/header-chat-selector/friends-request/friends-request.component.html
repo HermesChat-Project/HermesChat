@@ -1,30 +1,52 @@
+<div class="friend_requets">
 <div class="header">
-  <div class="title">
-    <div class="text">
-      Richieste di amicizia
+    <div class="title">
+      <div class="hedaer_title_text">
+        Richieste di amicizia
+      </div>
+    </div>
+    <div class="close" (click)="close()">
+      <i class="bi bi-x"></i>
     </div>
   </div>
-  <div class="close" (click)="close()">
-    <i class="bi bi-x"></i>
-  </div>
-</div>
-<div class="friendRequestType">
-  <div id="movingDiv" [ngClass]="{'receivedSelected' : receivedRequest, 'sentSelected' : !receivedRequest}"></div>
-  <div class="received" [ngClass]="{'selected' : receivedRequest}" (click)="changeSelection(true)">
-    Ricevuto
-  </div>
-  <div class="sent" [ngClass]="{'selected' : !receivedRequest}" (click)="changeSelection(false)">
-    Inviato
-  </div>
-</div>
-<div class="list-request" *ngIf="receivedRequest">
-  <div class="request_user" *ngFor="let request of chatSelector.requestList">
-    <img class="request_user_image" [src]="request.image">
-    <h5 class="request_user_name text-truncate" title="{{request.nickname}}">{{request.nickname}}</h5>
-    <div class="request_options">
-      <i class="bi bi-check-lg"></i>
-      <div class="vr"></div>
-      <i class="bi bi-x-lg"></i>
+  <div class="friendRequestType">
+    <div id="movingDiv" [ngClass]="{'receivedSelected' : receivedRequest, 'sentSelected' : !receivedRequest}"></div>
+    <div class="received" [ngClass]="{'selected' : receivedRequest}" (click)="changeSelection(true)">
+      Ricevuto
+    </div>
+    <div class="sent" [ngClass]="{'selected' : !receivedRequest}" (click)="changeSelection(false)">
+      Inviato
     </div>
   </div>
-</div>
+  <div class="result_request">
+
+    <div class="list-request" *ngIf="receivedRequest && chatSelector.receivedList.length != 0">
+      <div class="row request_user" *ngFor="let request of chatSelector.receivedList">
+        <div class="col-sm-3">
+          <img class="request_user_image" [src]="request.image">
+        </div>
+        <div class="col-sm-9">
+          <div class="received_user_info">
+            <h5 class="received_user_nickname text-truncate" title="{{request.nickname}}">{{request.nickname}}</h5>
+            <span class="received_user_name text-truncate" title="{{request.name + '' + request.surname}}">{{request.name
+              + ''+ request.surname}}</span>
+          </div>
+          <div class="request_options">
+            <i class="bi bi-check-lg" (click)="addFriend(request)"></i>
+            <div class="vr"></div>
+            <i class="bi bi-x-lg" (click)="denyFriend(request)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-sent" *ngIf="!receivedRequest && chatSelector.sentList.length != 0">
+      <div class="sent_request_user" *ngFor="let sent of chatSelector.sentList">
+        <p>Richiesta di amicizia mandata a <b>{{sent.nickname}}</b></p>
+      </div>
+    </div>
+    <div class="no_request" *ngIf="chatSelector.receivedList.length == 0 && receivedRequest">
+      <p>Nessun risultato</p>
+    </div>
+  </div>
+
+  </div>

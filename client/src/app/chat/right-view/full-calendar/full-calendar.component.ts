@@ -219,7 +219,11 @@ export class FullCalendarComponent {
   }
 
   checkIfThaEventCanBeModified() {
-    if ((this.chatSelector.selectedCalendarEvent?.date! >= (new Date())) || this.isOnCreatingMode)
+    //create date withouth seconds and milliseconds to compare it with the date of the event
+    let date = new Date();
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+
+    if ((this.chatSelector.selectedCalendarEvent?.date! >= date) || this.isOnCreatingMode)
       return true;
     else
       return false;

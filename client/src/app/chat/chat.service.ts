@@ -16,8 +16,8 @@ export class ChatSelectorService {
   PersonalListSearch: chatList[] = [];
   friendList: FriendModel[] = [];
   friendSerachList: FriendModel[] = [];
-  requestList: requestModel[] = [];
-
+  receivedList: requestModel[] = [];
+  sentList: { id: string, image: string, nickname: string }[] = [];
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
       new chatList(0, 0, 'Prova', "ok", "img", [
@@ -96,12 +96,7 @@ export class ChatSelectorService {
       new chatList(10, 24, 'PC', "ok", "img", [
         new messageModel(0, 1, 'Pippo', 'ok', new Date()),
       ], true, [""]),
-    ], [new FriendModel(1, "Pippo", "Pippo", "Pippo"),
-    new FriendModel(2, "Pluto", "Pluto", "Pluto"),
-    new FriendModel(3, "Paperino", "Paperino", "Paperino"),
-    new FriendModel(4, "Paperone", "Paperone", "Paperone"),
-    new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
-    ],
+    ], [],
       [
         new callsModel(0, 0, 0, new Date(), 0),
         new callsModel(1, 0, 2, new Date(), 1),
@@ -113,49 +108,15 @@ export class ChatSelectorService {
         new callsModel(7, 0, 8, new Date(), 1),
         new callsModel(8, 0, 9, new Date(), 0),
         new callsModel(9, 0, 9, new Date(), 0)]),
-    new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], [
-      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
-      new FriendModel(3, "Paperino", "Paperino", "Paperino"),
-      new FriendModel(0, "Username", "Prova", "Prova2")
-    ]),
-    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], [
-      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
-      new FriendModel(3, "Paperino", "Paperino", "Paperino"),
-      new FriendModel(0, "Username", "Prova", "Prova2"),
-      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga")
-    ]),
-    new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], [
-      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
-      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
-      new FriendModel(0, "Username", "Prova", "Prova2")
-    ]),
-    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], [
-      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
-      new FriendModel(2, "Pluto", "Pluto", "Pluto"),
-      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
-      new FriendModel(6, "Paperina", "Paperina", "Paperina")
-    ]),
-    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], [
-      new FriendModel(1, "Pippo", "Pippo", "Pippo"),
-      new FriendModel(4, "Paperone", "Paperone", "Paperone"),
-      new FriendModel(6, "Paperina", "Paperina", "Paperina")
-    ]),
-    new userModel(6, 'Paperina', 'paperina@gmail.com', 'paperina', [], [
-      new FriendModel(4, "Paperone", "Paperone", "Paperone"),
-      new FriendModel(5, "Paperoga", "Paperoga", "Paperoga"),
-    ]),
-    new userModel(7, 'Qui', 'qui@gmail.com', 'qui', [], [
-      new FriendModel(8, "Quo", "Quo", "Quo"),
-      new FriendModel(9, "Qua", "Qua", "Qua")
-    ]),
-    new userModel(8, 'Quo', 'quo@gmail.com', 'quo', [], [
-      new FriendModel(7, "Qui", "Qui", "Qui"),
-      new FriendModel(9, "Qua", "Qua", "Qua")
-    ]),
-    new userModel(9, 'Qua', 'qua@gmail.com', 'qua', [], [
-      new FriendModel(7, "Qui", "Qui", "Qui"),
-      new FriendModel(8, "Quo", "Quo", "Quo")
-    ])
+    new userModel(1, 'Pippo', 'pippo@gmail.com', 'pippo', [], []),
+    new userModel(2, 'Pluto', 'pluto@gmail.com', 'pluto', [], []),
+    new userModel(3, 'Paperino', 'paperino@gmail.com', 'paperino', [], []),
+    new userModel(4, 'Paperone', 'paperone@gmail.com', 'paperone', [], []),
+    new userModel(5, 'Paperoga', 'paperoga@gmail.com', 'paperoga', [], []),
+    new userModel(6, 'Paperina', 'paperina@gmail.com', 'paperina', [], []),
+    new userModel(7, 'Qui', 'qui@gmail.com', 'qui', [], []),
+    new userModel(8, 'Quo', 'quo@gmail.com', 'quo', [], []),
+    new userModel(9, 'Qua', 'qua@gmail.com', 'qua', [], [])
   ];
 
   selectedChat: chatList | null = null;
@@ -171,7 +132,9 @@ export class ChatSelectorService {
 
 
 
-
+  //#region friend
+    selectedFriend: FriendModel | null = null;
+  //#endregion
 
   //#region calendar
 
@@ -366,8 +329,10 @@ export class ChatSelectorService {
   getFriends() {
     this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe(
       (response: any) => {
+        console.log(response);
         this.friendList = response.body.friends;
-        this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
+        if (this.friendList.length > 0)
+          this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
         this.friendSerachList = this.friendList;
       },
       (error: Error) => {
@@ -377,16 +342,42 @@ export class ChatSelectorService {
     );
   }
 
-  getRequestsFriends() {
+  getReceivedRequests() {
     this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe(
       (response: any) => {
         console.log(response);
-        this.requestList = response.body.requests;
+        this.receivedList = response.body.requests;
       },
       (error: Error) => {
         console.log(error);
 
       });
+  }
+
+  getSentRequest() {
+    this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.sentList = response.body.requests;
+
+      },
+      (error: Error) => {
+        console.log(error);
+
+      }
+
+    )
+  }
+
+  acceptRequest(body: any) {
+    this.dataStorage.PostRequestWithHeaders('acceptFriend', body, this.getOptionsForRequest()).subscribe(
+      (response: any) => {
+        console.log(response);
+      },
+      (error: Error) => {
+        console.log(error);
+
+      })
   }
 
   getOptionsForRequest() {
