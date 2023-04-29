@@ -18,4 +18,8 @@ export class RightViewComponent {
       else
         return 0;
   }
+
+  isFriendClicked(){
+    return this.chatSelector.selectedFriend != null;
+  }
 }

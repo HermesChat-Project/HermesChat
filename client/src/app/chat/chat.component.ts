@@ -15,11 +15,12 @@ export class ChatSelectorComponent {
 
 
     this.chatSelector.getFriends();
-    this.chatSelector.getRequestsFriends();
+    this.chatSelector.getReceivedRequests();
+    this.chatSelector.getSentRequest()
   }
 
   checkWhatShouldBeShown() {
-    if(this.chatSelector.selectedChat || this.chatSelector.calendarSectionClicked)
+    if(this.chatSelector.selectedChat || this.chatSelector.calendarSectionClicked || this.chatSelector.selectedFriend)
       return true;
     else
      return false;

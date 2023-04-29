@@ -45,12 +45,28 @@
 
 .reverse-list{
   cursor: pointer;
+  user-select: none;
 }
 
 #div_friendList {
   height: 93%;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.friend_nickname{
+  margin: 0;
+}
+.friend_name{
+  font-size: 10pt;
+  color: #999;
+}
+
+.friend_info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 /*Chat image*/
 
@@ -112,10 +128,11 @@
 
 
 
-.listNotFound h5{
+.listNotFound p{
   font-size: 11pt;
   font-weight: bold;
   color: #084595;
+  margin: 0;
 }
 
 .not_visible{

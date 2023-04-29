@@ -18,6 +18,11 @@ export class HeaderService {
 
   logout() {
     this.typeOfAction = 0;
+    this.chatSelector.friendList = [];
+    this.chatSelector.receivedList = [];
+    this.chatSelector.sentList = [];
+    this.chatSelector.friendSerachList = [];
+    this.chatSelector.calendarSectionClicked = false;
     this.chatSelector.selectedChat = null;
     this.location.back();
   }

@@ -21,7 +21,7 @@ export class FriendsListComponent {
   showFriends() {
     console.log(this.txtSearchFriends);
     if (this.txtSearchFriends != '')
-      this.chatSelector.friendSerachList = this.chatSelector.friendList.filter((friend) => friend.name.toLowerCase().startsWith(this.txtSearchFriends.toLowerCase()));
+      this.chatSelector.friendSerachList = this.chatSelector.friendList.filter((friend) => friend.nickname.toLowerCase().startsWith(this.txtSearchFriends.toLowerCase()));
     else
       this.chatSelector.friendSerachList = this.chatSelector.friendList;
   }
@@ -29,5 +29,11 @@ export class FriendsListComponent {
   reverseList() {
     this.reverse = !this.reverse;
     this.chatSelector.friendSerachList = this.chatSelector.friendSerachList.reverse();//gira l'array
+  }
+
+  seeDetails(friend: FriendModel) {
+    this.chatSelector.selectedChat = null;
+    this.chatSelector.selectedFriend = friend;
+
   }
 }

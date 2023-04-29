@@ -34,6 +34,10 @@ export class ChooseChatComponent {
     else {
       this.chatSelector.calendarSectionClicked = false;
     }
+
+    if (!target.classList.contains("friends")) {
+      this.chatSelector.selectedFriend = null;
+    }
     let keyFrames: Keyframe[] = [
       { left: this.div_selected.nativeElement.offsetLeft + 'px' },
       { left: target.offsetLeft + 'px' }
