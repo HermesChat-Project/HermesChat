@@ -77,3 +77,9 @@ func AcceptFriendRequest (c *gin.Context) {
 
 	utils.AcceptFriendRequestDB(index.(string), form, c)
 }
+
+func GetInfo (c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetInfoDB(index.(string), c)
+}

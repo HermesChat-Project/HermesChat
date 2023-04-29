@@ -12,6 +12,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 
 	"chat/pkg/config"
@@ -760,4 +761,36 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
+}
+
+func GetInfoDB (index string, c *gin.Context){
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	objID, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	opts := options.FindOne().SetProjection(bson.M{"_id": 0, "password":0, "ids":0})
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID}, opts)
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	c.JSON(http.StatusOK, result)
+
 }

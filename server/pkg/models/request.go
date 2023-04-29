@@ -65,3 +65,14 @@ type AcceptFriendRequest struct {
 	Surname string `json:"surname" binding:"required"`
 	Image string `json:"image" binding:"required"`
 }
+
+type CreateChat struct {
+	IdUser string `json:"idUser" binding:"required"`
+	FirstImg string `json:"img" binding:"required"`
+	SecondImg string `json:"friendImg" binding:"required"`
+}
+
+type CreateGroup struct {
+	Name string `json:"name" binding:"required"`
+	Users []string `json:"users" binding:"required"`
+}
