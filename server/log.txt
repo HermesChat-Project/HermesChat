@@ -34,3 +34,5 @@
 2023-04-28 11:23:41 error while connecting to database
 2023-04-28 11:25:16 error while connecting to database
 2023-04-28 11:26:45 error while connecting to database
+2023-05-01 21:55:47 error while connecting to database
+2023-05-01 21:57:50 error while connecting to database
