@@ -2,6 +2,8 @@ import { Component, Input, ViewChild, ElementRef, AfterViewInit } from '@angular
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteMessageComponent } from 'src/app/dialog/delete-message/delete-message.component';
 
 @Component({
   selector: 'app-message',
@@ -17,7 +19,7 @@ export class MessageComponent implements AfterViewInit {
   messageActions: boolean = false;
 
 
-  constructor(public chatSelector: ChatSelectorService) { }
+  constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
@@ -67,6 +69,8 @@ export class MessageComponent implements AfterViewInit {
 
 
 
+
+
   getTimeFormatted(date: Date) {
     let hours = date.getHours().toString();
     let minutes = date.getMinutes().toString();
@@ -91,13 +95,22 @@ export class MessageComponent implements AfterViewInit {
       });
   }
 
-  changeIcon(){
+  openDialog() {
+    this.dialog.open(DeleteMessageComponent, {
+    panelClass: 'custom-dialog-container' }).afterClosed().subscribe((result: boolean) => {if(result){this.deleteMsg()}})
+  }
+
+  deleteMsg(){
+    this.chatSelector.selectedChat?.messages.splice(this.index, 1);
+  }
+
+  changeIcon() {
     this.copy.nativeElement.classList.remove("bi-clipboard-check-fill");
     this.copy.nativeElement.classList.remove("bi-clipboard-x-fill");
     this.copy.nativeElement.classList.add("bi-clipboard-plus-fill");
   }
 
-  hideActions(){
+  hideActions() {
     this.messageActions = false;
   }
 }

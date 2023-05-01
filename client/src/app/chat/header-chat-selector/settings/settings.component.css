@@ -4,6 +4,8 @@
     background-color: inherit;
     padding: 0 !important;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .header{
@@ -41,15 +43,17 @@
 .subText{
   font-size: 0.8em;
   margin: 0 5px;
-  color: #999;
+  color: #555;
 }
 
 .row{
   margin: 0 !important;
+  min-height: 14.2857142%;
 }
 .col-sm-12{
   padding: 0 !important;
   display: flex;
+  align-items: center;
   flex-direction: row;
   cursor: pointer;
 }
@@ -63,7 +67,7 @@
   place-items: center;
   width: 15%;
   height: 100%;
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 .info{
   width: 85%;
@@ -71,4 +75,35 @@
   flex-direction: column;
   padding: 0.5em 0;
 
+}
+
+.user_action{
+  width: 100%;
+  flex-grow: 1;
+}
+
+.logout i, .logout .mainText, .logout .subText{
+  color: #f00 !important;
+}
+
+
+
+.info_of_the_user{
+  display: inline-block;
+  transform: translateX(-100%);
+  width: 350px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 6;
+}
+
+.show_user_action{
+  transform: translateX(0%);
+  transition: transform 0.2s ease-in-out;
+}
+
+.hide_user_action{
+  transform: translateX(-100%);
+  transition: transform 0.2s ease-in-out;
 }

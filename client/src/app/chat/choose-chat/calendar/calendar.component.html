@@ -8,7 +8,7 @@
 </div>
 <div id="calendar_event">
   <div class="events" #events [ngClass]="{'personal' : chatSelector.isPersonalEvent, 'shared': !chatSelector.isPersonalEvent}">
-    <app-personal [ngStyle]="{'left' : 0*width_section + 'px'}" [personal]="PersonalEvents()"></app-personal>
-    <app-group [ngStyle]="{'left' : 1 * width_section + 'px'}" [group]="GroupEvents()"></app-group>
+    <app-personal [ngStyle]="{'left' : 0*100 + '%'}" [personal]="PersonalEvents()"></app-personal>
+    <app-group [ngStyle]="{'left' : 1 * 100 + '%'}" [group]="GroupEvents()"></app-group>
   </div>
 </div>

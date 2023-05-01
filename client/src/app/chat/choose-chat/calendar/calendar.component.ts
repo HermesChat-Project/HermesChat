@@ -15,10 +15,7 @@ export class CalendarComponent {
 
   constructor(public chatSelector: ChatSelectorService) {}
 
-  width_section = 300;
-
-
-
+  width_section = 350;
 
   changeDate() {
     console.log(this.date.nativeElement.value);

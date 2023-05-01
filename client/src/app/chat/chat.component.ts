@@ -13,10 +13,11 @@ export class ChatSelectorComponent {
   ngOnInit() {
     //create a option for a post request and send the cookie to the server
 
-
+    this.chatSelector.getInfo();
     this.chatSelector.getFriends();
     this.chatSelector.getReceivedRequests();
     this.chatSelector.getSentRequest()
+    this.chatSelector.getChats();
   }
 
   checkWhatShouldBeShown() {

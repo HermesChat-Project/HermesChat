@@ -18,7 +18,7 @@ export class ChooseChatComponent {
   constructor(public chatSelector: ChatSelectorService) { }
 
   day = new Date().getDate();
-  width_section = 300;
+  width_section = 350;
   firstCalendarClick: boolean = true;
 
   changeSelection(type: number, event: Event) {

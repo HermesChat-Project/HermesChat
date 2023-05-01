@@ -13,7 +13,7 @@
   </div>
   <hr>
   <div class="friend_action">
-    <div class="friend_action_button">
+    <div class="friend_action_button" (click)="createChat(chatSelector.selectedFriend!)">
       <i class="bi bi-chat-left-text"></i>
       <p>Scrivi a {{chatSelector.selectedFriend?.nickname}}</p>
     </div>

@@ -12,12 +12,13 @@ import { requestModel } from 'model/request.model';
   providedIn: 'root'
 })
 export class ChatSelectorService {
-
   PersonalListSearch: chatList[] = [];
   friendList: FriendModel[] = [];
   friendSerachList: FriendModel[] = [];
   receivedList: requestModel[] = [];
+  infoUser: any
   sentList: { id: string, image: string, nickname: string }[] = [];
+  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
   chatList: userModel[] = [
     new userModel(0, 'Username', 'email', 'password', [
       new chatList(0, 0, 'Prova', "ok", "img", [
@@ -133,7 +134,14 @@ export class ChatSelectorService {
 
 
   //#region friend
-    selectedFriend: FriendModel | null = null;
+  selectedFriend: FriendModel | null = null;
+
+  createChat(friend: FriendModel) {
+    let id = friend.id;
+    let imgUser = this.infoUser.image;
+    let friendImage = friend.image;
+    this.createNewChat(id, imgUser, friendImage);
+  }
   //#endregion
 
   //#region calendar
@@ -325,59 +333,84 @@ export class ChatSelectorService {
 
   //#region server calls
   token: string = '';
+  getInfo() {
+    this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.infoUser = response.body;
+      },
+      error: (error: Error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getChats()
+  {
+    this.dataStorage.PostRequestWithHeaders(`getChats`, {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+
+      },
+      error: (error: Error) => {
+        console.log(error);
+      }
+    });
+
+  }
 
   getFriends() {
-    this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe(
-      (response: any) => {
+    this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
         console.log(response);
         this.friendList = response.body.friends;
         if (this.friendList.length > 0)
           this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
         this.friendSerachList = this.friendList;
       },
-      (error: Error) => {
+      error: (error: Error) => {
         console.log(error);
 
       }
-    );
+    });
   }
 
   getReceivedRequests() {
-    this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe(
-      (response: any) => {
+    this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
         console.log(response);
         this.receivedList = response.body.requests;
       },
-      (error: Error) => {
+      error: (error: Error) => {
         console.log(error);
 
-      });
+      }
+    });
   }
 
   getSentRequest() {
-    this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe(
-      (response: any) => {
+    this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
         console.log(response);
         this.sentList = response.body.requests;
 
       },
-      (error: Error) => {
+      error: (error: Error) => {
         console.log(error);
-
       }
-
-    )
+    })
   }
 
   acceptRequest(body: any) {
-    this.dataStorage.PostRequestWithHeaders('acceptFriend', body, this.getOptionsForRequest()).subscribe(
-      (response: any) => {
+    this.dataStorage.PostRequestWithHeaders('acceptFriend', body, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
         console.log(response);
       },
-      (error: Error) => {
+      error: (error: Error) => {
         console.log(error);
 
-      })
+      }
+    })
   }
 
   getOptionsForRequest() {
@@ -390,6 +423,25 @@ export class ChatSelectorService {
       withCredentials: true
     };
   }
+
+  createNewChat(id: string, img: string, friendImg: string) {
+    let body = {
+      "idUser": id,
+      "img": img,
+      "friendImg": friendImg
+    }
+
+    this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error: Error) => {
+        console.log(error);
+      }
+    })
+  }
+
+
 
   //#endregion
 }
