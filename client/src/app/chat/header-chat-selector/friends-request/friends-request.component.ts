@@ -22,12 +22,12 @@ export class FriendsRequestComponent {
     this.headerService.generalClosing();
   }
 
-  denyFriend(request:requestModel){
-    this.chatSelector.receivedList.splice(this.chatSelector.receivedList.indexOf(request),1);
+  denyFriend(request:requestModel, index: number){
+    this.chatSelector.receivedList.splice(index,1);
   }
 
-  addFriend(request:requestModel){
-    this.chatSelector.receivedList.splice(this.chatSelector.receivedList.indexOf(request),1);
+  addFriend(request:requestModel, index: number){
+    this.chatSelector.receivedList.splice(index, 1);
     this.chatSelector.acceptRequest(request);
     let friend = new FriendModel(request.idUser, request.name, request.surname, request.nickname, request.image);
     this.chatSelector.friendList.push(friend);

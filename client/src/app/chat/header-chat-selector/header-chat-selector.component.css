@@ -22,7 +22,7 @@ i {
   position: relative;
 }
 .chatOptions{
-  width: 300px;
+  width: 350px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -80,7 +80,7 @@ i {
 }
 
 .header-section{
-  width: 300px;
+  width: 350px;
   display: inline-block;
   height: 93%;
   position: absolute;
@@ -99,8 +99,8 @@ i {
 }
 
 .hideHeaderSection{
-  left: -300px;
-  transition: all 200ms ease-out;
+  left: -350px;
+  transition: left 200ms ease-out;
 }
 
 .showSetting{

@@ -26,12 +26,16 @@ import { CameraComponent } from './chat/chat-view/camera/camera.component';
 import { FullCalendarComponent } from './chat/right-view/full-calendar/full-calendar.component';
 import { RightViewComponent } from './chat/right-view/right-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-details.component';
+import { TempChatComponent } from './chat/header-chat-selector/temp-chat/temp-chat.component';
+import { InfoUserComponent } from './chat/header-chat-selector/settings/info-user/info-user.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatSelectModule} from '@angular/material/select';
-import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-details.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DeleteMessageComponent } from './dialog/delete-message/delete-message.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +60,10 @@ import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-
     CameraComponent,
     FullCalendarComponent,
     RightViewComponent,
-    FriendDetailsComponent
+    FriendDetailsComponent,
+    TempChatComponent,
+    InfoUserComponent,
+    DeleteMessageComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +76,8 @@ import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule
   ],
   providers: [
     MatDatepickerModule,

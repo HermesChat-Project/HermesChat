@@ -1,0 +1,28 @@
+<div class="info_user_container">
+  <div class="info_user_header">
+    <i class="bi bi-x-lg" (click)="closeInfoUser()"></i>
+  </div>
+  <div class="info_user_body">
+    <div class="info_user_first-info">
+      <div class="info_user_img">
+        <img [src]="chatSelector.infoUser.image">
+        <i class="bi bi-camera-fill change_photo"></i>
+      </div>
+      <h3 class="info_user_nickname">{{chatSelector.infoUser.nickname}}</h3>
+    </div>
+    <div class="info_user_additional-info">
+      <div class="info_user_name info_user_add">
+        <i class="bi bi-person-fill"></i>
+        <p>{{chatSelector.infoUser.name + ' ' + chatSelector.infoUser.surname}}</p>
+      </div>
+      <div class="info_user_email info_user_add">
+        <i class="bi bi-envelope-at-fill "></i>
+        <p>{{chatSelector.infoUser.email}}</p>
+      </div>
+      <div class="info_user_status info_user_add">
+        <i class="bi bi-info-circle"></i>
+        <p>{{chatSelector.infoUser.info}}</p>
+    </div>
+
+  </div>
+</div>

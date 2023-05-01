@@ -34,4 +34,8 @@ export class HeaderChatSelectorComponent {
     this.headerService.typeOfAction = this.headerService.typeOfAction == 3 ? 0 : 3;
   }
 
+  ToggleTempChat(){
+    this.headerService.typeOfAction = this.headerService.typeOfAction == 4 ? 0 : 4;
+  }
+
 }

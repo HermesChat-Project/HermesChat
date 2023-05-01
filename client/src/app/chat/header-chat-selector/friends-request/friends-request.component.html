@@ -21,20 +21,20 @@
   <div class="result_request">
 
     <div class="list-request" *ngIf="receivedRequest && chatSelector.receivedList.length != 0">
-      <div class="row request_user" *ngFor="let request of chatSelector.receivedList">
+      <div class="row request_user" *ngFor="let request of chatSelector.receivedList; let i = index">
         <div class="col-sm-3">
           <img class="request_user_image" [src]="request.image">
         </div>
         <div class="col-sm-9">
           <div class="received_user_info">
             <h5 class="received_user_nickname text-truncate" title="{{request.nickname}}">{{request.nickname}}</h5>
-            <span class="received_user_name text-truncate" title="{{request.name + '' + request.surname}}">{{request.name
-              + ''+ request.surname}}</span>
+            <span class="received_user_name text-truncate" title="{{request.name + ' ' + request.surname}}">{{request.name
+              + ' '+ request.surname}}</span>
           </div>
           <div class="request_options">
-            <i class="bi bi-check-lg" (click)="addFriend(request)"></i>
+            <i class="bi bi-check-lg" (click)="addFriend(request, i)"></i>
             <div class="vr"></div>
-            <i class="bi bi-x-lg" (click)="denyFriend(request)"></i>
+            <i class="bi bi-x-lg" (click)="denyFriend(request, i)"></i>
           </div>
         </div>
       </div>
