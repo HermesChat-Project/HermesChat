@@ -34,6 +34,8 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/createChat", controllers.CreateChat)
 	router.POST("/getChats", controllers.GetChats)
+
+	router.POST("/getMessages", controllers.GetMessages)
 	/*
 	router.GET("/getUsers", controllers.SearchUsers)
 	router.POST("/removeFriend", controllers.RemoveFriend)

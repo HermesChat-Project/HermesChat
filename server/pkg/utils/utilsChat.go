@@ -165,3 +165,49 @@ func GetChats(index string, c *gin.Context) {
 		"chats": vetChats,
 	})
 }
+
+
+func GetMessages (index string, form models.GetMessages, c *gin.Context) {
+	//get all the messages of a chat
+
+	collection := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collection == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	objID, err := primitive.ObjectIDFromHex(form.IdChat)
+	if err != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID11",
+		})
+		return
+	}
+	fmt.Println(form.Offset)
+	fmt.Println(objID)
+
+	//it returns "messages" which is a field of the chat document. i need to get only 50 messages starting from the bottom of the array of messages without using setSort
+	opt := options.FindOne().SetProjection(bson.M{"messages": bson.M{"$slice": []int{-((form.Offset-1) * 50), 50}}})
+
+
+	var result9 bson.M
+	ris9 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
+
+	ris9.Decode(&result9)
+	if result9 == nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID13",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"messages": result9,
+	})
+
+}

@@ -76,3 +76,8 @@ type CreateGroup struct {
 	Name string `json:"name" binding:"required"`
 	Users []string `json:"users" binding:"required"`
 }
+
+type GetMessages struct{
+	IdChat string `json:"idChat" binding:"required"`
+	Offset int `json:"offset" binding:"required"`
+}

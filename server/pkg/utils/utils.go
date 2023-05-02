@@ -45,8 +45,8 @@ func CreateToken (index string, c *gin.Context) {
 		Path:     "/",
 		Domain:   config.DOMAIN,
 		HttpOnly: true,
-		Secure:   false,
-		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 
 	}
 	http.SetCookie(c.Writer, cookie)
@@ -59,14 +59,10 @@ func CreateToken (index string, c *gin.Context) {
 
 func VerifyToken (c *gin.Context){
 	cookie, err := c.Cookie("token")
-	if err != nil {
-		errr := fmt.Errorf("error while getting cookie")
-		SendError(c, errr)
-	}
 	
 	//print header
 	//check if token is empty or null
-	if cookie == ""{
+	if cookie == "" || err != nil {
 		//redirect to login page
 		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()
@@ -131,7 +127,7 @@ func LoginMongoDB (username string, password string, c *gin.Context) {
 	CreateToken(result["_id"].(primitive.ObjectID).Hex(), c)	
 }
 
-func VerifyPassword(s string, u string, e string,c *gin.Context){
+func VerifyPassword(email string, user string, pwd string,c *gin.Context){
 	//7 or more characters, at least one letter and one number and one special character and one uppercase letter
 		var (
 			hasMinLen  = false
@@ -140,10 +136,10 @@ func VerifyPassword(s string, u string, e string,c *gin.Context){
 			hasNumber  = false
 			hasSpecial = false
 		)
-		if len(s) >= 7 {
+		if len(pwd) >= 7 {
 			hasMinLen = true
 		}
-		for _, char := range s {
+		for _, char := range pwd {
 			switch {
 			case unicode.IsUpper(char):
 				hasUpper = true
@@ -156,7 +152,7 @@ func VerifyPassword(s string, u string, e string,c *gin.Context){
 			}
 		}
 		if hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial{
-			checkEmail(e, u, s, c)
+			checkEmail(email, user, pwd, c)
 		} else {
 			err := fmt.Errorf("password not valid")
 			SendError(c, err)
@@ -794,7 +790,7 @@ func GetInfoDB (index string, c *gin.Context){
 		})
 		return;
 	}
-	opts := options.FindOne().SetProjection(bson.M{"_id": 0, "password":0, "ids":0})
+	opts := options.FindOne().SetProjection(bson.M{"password":0, "ids":0})
 	ris := collection.FindOne(context.Background(), bson.M{"_id": objID}, opts)
 	var result bson.M
 	ris.Decode(&result)
