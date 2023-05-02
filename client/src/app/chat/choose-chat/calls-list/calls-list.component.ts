@@ -8,17 +8,14 @@ import { userModel } from 'model/user.model';
   styleUrls: ['./calls-list.component.css']
 })
 export class CallsListComponent {
-  @Input() userList!: userModel;
-
-  callsList: callsModel[] = []
+  @Input() callsList!: callsModel[];
   name_receivers: any[]=[];
 
   ngOnInit(){
     //get name of the receiver
-    this.callsList = this.userList.calls;
-    let chatList = this.userList.chatList
+
     for (const item of this.callsList) {
-      this.name_receivers.push({'name': chatList[item.id_receiver].name, 'img': chatList[item.id_receiver].img});
+      this.name_receivers.push({'name': this.callsList[item.id_receiver].id_user, 'img': ""});
 
     }
     //add name of the receiver to the callsList

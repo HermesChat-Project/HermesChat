@@ -14,7 +14,7 @@ export class LoginService {
     // this.router.navigate(['/chat']);
     this.dataStorage.PostRequestWithHeaders(`login`, body, options).subscribe(
       (response: any) => {
-        console.log(response.headers.get('Authorization'));
+        console.log(response.headers.get('set-cookie'));
         console.log(response)
         let authorization = response.headers.get('Authorization');
         // this.chatSelector.token = authorization;

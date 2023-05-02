@@ -122,4 +122,5 @@ center{
 .errors{
   color: red;
   font-size: 9pt;
+  margin: 0;
 }

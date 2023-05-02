@@ -48,7 +48,6 @@
 
 .img {
   display: inline-block;
-  margin-right: 10px;
 }
 
 .img img {
@@ -70,7 +69,7 @@
 .div_chat {
   border-bottom: 1px solid #ccc;
   padding: 3% 0px;
-  height: 14.29%;
+  min-height: 14.29%;
   padding-left: 10px;
   align-items: center;
   cursor: pointer;

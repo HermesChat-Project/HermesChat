@@ -121,13 +121,7 @@ export class ChatViewComponent {
 
   sendMsg() {
     let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
-    for (let i = 0; i < imgTags.length; i++) {
-      let imgTag = imgTags[i];
-      let div = document.createElement('div');
-      div.classList.add('img-container');
-      imgTag.parentNode?.insertBefore(div, imgTag);
-      div.appendChild(imgTag);
-    }
+
     this.messageSent = this.textMessage.nativeElement.innerHTML;
     //delete the first <br> tags
     console.log(this.messageSent);
