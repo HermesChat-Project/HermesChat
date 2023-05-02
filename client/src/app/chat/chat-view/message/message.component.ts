@@ -12,7 +12,7 @@ import { DeleteMessageComponent } from 'src/app/dialog/delete-message/delete-mes
   encapsulation: ViewEncapsulation.None
 })
 export class MessageComponent implements AfterViewInit {
-  @Input() chatMessage!: messageModel
+  @Input() chatMessage!: messageModel;
   @Input() index!: number;
   @ViewChild('copy') copy!: ElementRef;
   @ViewChild("text") text!: ElementRef;
@@ -32,7 +32,7 @@ export class MessageComponent implements AfterViewInit {
 
   alreadyTexted(i: number) {
     if (i != 0) {
-      if (this.chatSelector.selectedChat?.messages[i].id_sender == this.chatSelector.selectedChat?.messages[i - 1].id_sender && !this.differentDate(i))
+      if (this.chatMessage.idUser == this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i-1].idUser && !this.differentDate(i))
         return false;
       else
         return true;
@@ -52,28 +52,32 @@ export class MessageComponent implements AfterViewInit {
     return year + "/" + month + "/" + day;
   }
 
-  fullDateView(date: Date) {
+  fullDateView(date: string) {
+    let dateObj = new Date(date);
     //get the string like : thursay, 09 march 2023
-    return date.toLocaleDateString(this.chatSelector.userLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return dateObj.toLocaleDateString(this.chatSelector.userLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
   differentDate(i: number) {
     if (i != 0) {
-      if (this.DateView(this.chatSelector.selectedChat?.messages[i].sentAt as Date) == this.DateView(this.chatSelector.selectedChat?.messages[i - 1].sentAt as Date))
+      if (this.DateView(new Date(this.chatMessage.dateTime)) == this.DateView(new Date(this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i-1].dateTime)))
         return false;
       else
         return true;
     }
     return true;
   }
+  getNameSender(id: string){
+    return this.chatSelector.friendList.find((friend) => friend.id == id)?.nickname;
+  }
 
 
 
 
-
-  getTimeFormatted(date: Date) {
-    let hours = date.getHours().toString();
-    let minutes = date.getMinutes().toString();
+  getTimeFormatted(date: string) {
+    let dateObj = new Date(date);
+    let hours = dateObj.getHours().toString();
+    let minutes = dateObj.getMinutes().toString();
     if (minutes.length == 1)
       minutes = "0" + minutes;
     if (hours.length == 1)
@@ -83,7 +87,7 @@ export class MessageComponent implements AfterViewInit {
 
 
   copyToClipboard() {
-    navigator.clipboard.writeText(this.chatMessage.message).then(() => {
+    navigator.clipboard.writeText(this.chatMessage.content).then(() => {
       console.log("copied");
       this.copy.nativeElement.classList.add("bi-clipboard-check-fill");
       this.copy.nativeElement.classList.remove("bi-clipboard-plus-fill");
@@ -101,7 +105,7 @@ export class MessageComponent implements AfterViewInit {
   }
 
   deleteMsg(){
-    this.chatSelector.selectedChat?.messages.splice(this.index, 1);
+    this.chatSelector.messageList[this.chatSelector.selectedChat!._id].splice(this.index, 1);
   }
 
   changeIcon() {

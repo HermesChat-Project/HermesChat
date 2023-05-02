@@ -1,6 +1,6 @@
 <div id="selectedChat" (mouseup)="getSelection()">
   <div id="listMessage">
-    <app-message *ngFor="let messages of chatSelector.selectedChat?.messages; let i = index" [chatMessage]="messages"
+    <app-message *ngFor="let messages of chatSelector.messageList[this.chatSelector.selectedChat!._id]; let i = index" [chatMessage]="messages"
       [index]="i"></app-message>
   </div>
   <div id="messageSend">

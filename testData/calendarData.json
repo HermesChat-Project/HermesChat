@@ -2,12 +2,12 @@
   "_id": {
     "$oid": "644abcfadbfee59a85613e41"
   },
-  "title": "Evento 1",
+  "title": "form.Title",
   "description": "Descrizione evento 1",
   "dateTime": "2023-04-30T14:00:00+01:00",
   "type": "shared",
-  "notify": true,
-  "notifyTime": "1:00",
+  "notify": "true",
+  "notifyTime": "00:10",
   "color": "#FF0000",
   "idUser": "6401c65c01c6e9458e62ec0a",
   "idChats": [
@@ -23,7 +23,7 @@
   "dateTime": "2023-04-29T12:00:00+01:00",
   "type": "personal",
   "notify": true,
-  "notifyTime": "1:00",
+  "notifyTime": "00:05",
   "color": "#FFFF00",
   "idUser": "6401c65c01c6e9458e62ec0a"
 },{
@@ -38,4 +38,59 @@
   "color": "#FF00FF",
   "idUser": "6401c65c01c6e9458e62ec0a",
   "notifyTime": "00:00"
+},{
+  "_id": {
+    "$oid": "644abcfadbfee59a85613e44"
+  },
+  "title": "Evento 4",
+  "description": "Descrizione evento 4",
+  "dateTime": "2023-06-01T12:00:00+01:00",
+  "type": "personal",
+  "notify": true,
+  "notifyTime": "01:00",
+  "color": "#00FF00",
+  "idUser": "6401c65c01c6e9458e62ec0b"
+},{
+  "_id": {
+    "$oid": "644abcfadbfee59a85613e45"
+  },
+  "title": "Evento 5",
+  "description": "Descrizione evento 5",
+  "dateTime": "2023-06-01T12:00:00+01:00",
+  "type": "shared",
+  "notify": true,
+  "notifyTime": "01:00",
+  "color": "#00FFFF",
+  "idUser": "6401c65c01c6e9458e62ec0c",
+  "idChats": [
+    "63ee875e5f8af6bbe5d63acc"
+  ]
+},{
+  "_id": {
+    "$oid": "644abcfadbfee59a85613e46"
+  },
+  "title": "Evento 6",
+  "description": "Descrizione evento 6",
+  "dateTime": "2023-07-01T12:00:00+01:00",
+  "type": "personal",
+  "notify": false,
+  "notifyTime": "00:00",
+  "color": "#0000FF",
+  "idUser": "6401c65c01c6e9458e62ec0b"
+},{
+  "_id": {
+    "$oid": "644abcfadbfee59a85613e47"
+  },
+  "title": "Evento 7",
+  "description": "Descrizione evento 7",
+  "dateTime": "2023-07-01T12:00:00+01:00",
+  "type": "shared",
+  "notify": true,
+  "notifyTime": "01:00",
+  "color": "#000000",
+  "idUser": "6401c65c01c6e9458e62ec0b",
+  "idChats": [
+    "63ee875e5f8af6bbe5d63acb",
+    "63ee875e5f8af6bbe5d63acc"
+  ]
 }]

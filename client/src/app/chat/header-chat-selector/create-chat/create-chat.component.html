@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="group-creation">
-    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.chatList[0].friends">
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">
       <div class="col-sm-3">
         <div class="img">
           <img [src]="friend.image" class="img-fluid">
@@ -30,7 +30,7 @@
       </div>
       <div class="col-sm-9">
         <div class="friendName">
-          <h5 class="friend-name">{{friend.name}}</h5>
+          <h5 class="friend-name">{{friend.nickname}}</h5>
         </div>
       </div>
     </div>

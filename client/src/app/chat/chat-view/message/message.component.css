@@ -59,7 +59,9 @@
   display: grid;
   justify-content: center;
 }
-
+.message-action-container{
+  min-width: 210px;
+}
 /*message action section*/
 .message-actions{
   height: 40px;

@@ -4,6 +4,7 @@ import { SearchModel } from 'model/search.model';
 import { userModel } from 'model/user.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
+import { Chat } from 'model/chat.model';
 
 @Component({
   selector: 'app-all-chats',
@@ -54,8 +55,8 @@ export class AllChatsComponent {
 
 
   ngOnInit() {
-    this.chatListUser.chatList.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
-    this.chatSelector.PersonalListSearch = this.chatListUser.chatList;
+    this.chatSelector.chatExampleList.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime())
+    this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
   }
 
   DateAdjustment(date: Date) {
@@ -91,32 +92,53 @@ export class AllChatsComponent {
 
   showChats() {
     if (this.txtSearchChat.length < 3) {
-      this.chatSelector.PersonalListSearch = this.chatListUser.chatList;
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
       this.OtherListSerach = [];
     }
     else {
-      this.chatSelector.PersonalListSearch = this.chatListUser.chatList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a).getTime() - this.getLastMessageTime(b).getTime());
-      this.chatSelector.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b).getTime() - this.getLastMessageTime(a).getTime());
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList.filter((chat) => chat.groupName.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a.last).getTime() - this.getLastMessageTime(b.last).getTime());
+      this.chatSelector.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime());
       this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
-      this.OtherListSerach = this.OtherListSerach.filter((chat) => !this.chatSelector.PersonalListSearch.some((chat2) => chat2.global_id_chat == chat._id)).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+
     }
   }
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
 
-  getLastMessage(chat: chatList) {
-    return chat.messages[chat.messages.length - 1].message;
+
+
+  getLastMessageTime(last: string): Date {
+    return new Date(last);
   }
 
-  getLastMessageTime(chat: chatList): Date {
-    return chat.messages[chat.messages.length - 1].sentAt;
-  }
-
-  showEntireChat(selected : chatList){
+  showEntireChat(selected : Chat){
     this.chatSelector.selectedChat = selected;
-    setTimeout(() => {
-    this.chatSelector.bottomScroll()
-    }, 0);//to improve
+    let body = {
+      idChat: selected._id,
+      offset: 1
+    }
+
+    this.chatSelector.getChatMessages(body, selected._id);
+    // this.chatSelector.getChatMessages(selected);
+    // setTimeout(() => {
+    // this.chatSelector.bottomScroll()
+    // }, 0);//to improve
+  }
+
+  getSingleChatImg(users: {_id: string;  nickname: string, image: string }[]): string {
+    let control = this.chatSelector.friendList.filter((user) => user.id == users[0]._id);
+    if(control.length > 0)
+      return users[0].image;
+    else
+      return users[1].image;
+  }
+
+  getSingleChatname(users: {_id: string;  nickname: string, image: string }[]): string {
+    let control = this.chatSelector.friendList.filter((user) => user.id == users[0]._id);
+    if(control.length > 0)
+      return users[0].nickname;
+    else
+      return users[1].nickname;
   }
 }
