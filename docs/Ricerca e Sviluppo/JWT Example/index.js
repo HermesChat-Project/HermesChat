@@ -1,7 +1,10 @@
 
 //sull'onload della pagina
 window.onload = async function () {
-  let response = await fetch('https://87.14.170.24/login', {
+  let token;
+  //set interval
+  //setInterval(async function () { 
+  let response = await fetch('https://api.hermeschat.it:8090/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -21,8 +24,9 @@ window.onload = async function () {
     }
   }
   console.log(token)
+   
 
-  let response2 = await fetch('https://87.14.170.24/getFriends', {
+  let response2 = await fetch('https://api.hermeschat.it:8090/getFriends', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -38,7 +42,7 @@ window.onload = async function () {
   for (let [key, value] of response2.headers) {
     console.log(`${key} = ${value}`);
   }
-
+  //}, 10);
   
   
   /*let res = inviaRichiesta2("POST", "https://87.14.170.24/login", {

@@ -33,6 +33,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/acceptFriend", controllers.AcceptFriendRequest)
 
 	router.POST("/createChat", controllers.CreateChat)
+	router.POST("/getChats", controllers.GetChats)
 	/*
 	router.GET("/getUsers", controllers.SearchUsers)
 	router.POST("/removeFriend", controllers.RemoveFriend)

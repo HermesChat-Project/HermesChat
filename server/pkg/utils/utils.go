@@ -36,11 +36,20 @@ func CreateToken (index string, c *gin.Context) {
 		go config.WriteFileLog(err)
 		return
 	}
-	c.Header("Authorization", tokenString)
-	//c.Header("Set-Cookie", "token="+tokenString+"; Path=/; HttpOnly");
 	c.Header("Access-Control-Allow-Credentials", "true")
 	c.Header("Access-Control-Expose-Headers", "Authorization")
-	c.SetCookie("token", tokenString, 3600, "/", "localhost", false, true)
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(1 * time.Hour),
+		Path:     "/",
+		Domain:   config.DOMAIN,
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+
+	}
+	http.SetCookie(c.Writer, cookie)
 	c.Header("Access-Control-Allow-Origin", c.Request.Header.Get("Origin"))
 
 	c.JSON(http.StatusOK, gin.H{
@@ -49,10 +58,15 @@ func CreateToken (index string, c *gin.Context) {
 }
 
 func VerifyToken (c *gin.Context){
+	cookie, err := c.Cookie("token")
+	if err != nil {
+		errr := fmt.Errorf("error while getting cookie")
+		SendError(c, errr)
+	}
+	
 	//print header
-	cookie := c.Request.Header.Get("Authorization")
-	//check if token is empty
-	if (cookie == "") {
+	//check if token is empty or null
+	if cookie == ""{
 		//redirect to login page
 		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
 			c.Next()

@@ -17,3 +17,9 @@ func CreateChat (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.CreateChat(index.(string), form, c)
 }
+
+func GetChats (c *gin.Context) {
+	//get a value added with c.Set
+	index, _ := c.Get("index")
+	utils.GetChats(index.(string), c)
+}
