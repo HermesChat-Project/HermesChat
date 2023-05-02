@@ -19,6 +19,7 @@ import (
 var PORT int; 
 var CONNECTION_STRING_MONGODB string;
 var SECRET string;
+var DOMAIN string;
 var ClientMongoDB *mongo.Client
 
 func LoadConfig() {
@@ -32,6 +33,7 @@ func LoadConfig() {
 	}
 	CONNECTION_STRING_MONGODB = os.Getenv("connectionString")
 	SECRET = os.Getenv("SECRET")
+	DOMAIN = os.Getenv("DOMAIN")
 	go CreateFileLog()
 }
 
