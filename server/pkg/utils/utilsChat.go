@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	
 
 	"chat/pkg/config"
 	"chat/pkg/models"
@@ -190,24 +191,62 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 	fmt.Println(form.Offset)
 	fmt.Println(objID)
 
-	//it returns "messages" which is a field of the chat document. i need to get only 50 messages starting from the bottom of the array of messages without using setSort
-	opt := options.FindOne().SetProjection(bson.M{"messages": bson.M{"$slice": []int{-((form.Offset-1) * 50), 50}}})
+		pipeline := bson.A{
+			bson.M{
+				"$match": bson.M{
+					"_id": objID,
+				},
+			},
+			bson.M{
+				"$project": bson.M{
+					"messages": 1,
+					"_id":      0,
+				},
+			},
+			bson.M{
+				"$unwind": bson.M{
+					"path": "$messages",
+				},
+			},
+			bson.M{
+				"$sort": bson.M{
+					"messages.dateTime": -1,
+				},
+			},
+			bson.M{
+				"$skip": 0,
+			},
+			bson.M{
+				"$limit": 50,
+			},
+		}
+		
+		cursor, err := collection.Aggregate(context.Background(), pipeline)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer cursor.Close(context.Background())
 
-
-	var result9 bson.M
-	ris9 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
-
-	ris9.Decode(&result9)
-	if result9 == nil {
-		errConn()
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID13",
+		var messages []bson.M
+		
+		for cursor.Next(context.Background()) {
+			var result bson.M
+			err := cursor.Decode(&result)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(result)
+			//push the messages in the array
+			messages = append(messages, result)
+			
+		}
+		if err := cursor.Err(); err != nil {
+			fmt.Println(err)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"messages": messages,
 		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"messages": result9,
-	})
+		//send the messages to the client
+		
 
 }
