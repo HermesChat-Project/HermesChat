@@ -1,26 +1,26 @@
 <div class="message" (mouseleave)="hideActions()">
   <div class="date" *ngIf="differentDate(index)">
-    <span>{{fullDateView(chatMessage.dateTime)}}</span>
+    <span>{{fullDateView(chatMessage.messages.dateTime)}}</span>
     <hr>
   </div>
   <div class="message-wrapper">
     <div class="message-info">
       <div class="sender" *ngIf="alreadyTexted(index)">
-        <span>{{getNameSender(chatMessage.idUser)}}</span>
+        <span>{{getNameSender(chatMessage.messages.idUser)}}</span>
       </div>
       <div class="message-get">
-        <div class="text" [innerHTML]="chatMessage.content" #text></div>
-        <span class="time">{{getTimeFormatted(chatMessage.dateTime)}}</span>
+        <div class="text" [innerHTML]="chatMessage.messages.content" #text></div>
+        <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
       </div>
     </div>
     <div class="message-action-container">
       <div class="message-actions" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
         <div class="all-actions">
           <button class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></button>
-          <button class="bi bi-pen-fill" *ngIf="chatMessage.idUser== '0'"></button>
+          <button class="bi bi-pen-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id"></button>
           <button class="bi bi-clipboard-plus-fill" (click)="copyToClipboard()" (blur)="changeIcon()" #copy></button>
           <button class="bi bi-share-fill"></button>
-          <button class="bi bi-trash-fill" *ngIf="chatMessage.idUser == '0'" (click)="openDialog()"></button>
+          <button class="bi bi-trash-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id" (click)="openDialog()"></button>
         </div>
       </div>
     </div>

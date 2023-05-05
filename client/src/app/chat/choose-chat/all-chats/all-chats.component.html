@@ -47,22 +47,22 @@
       <div id="personal" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <!-- <div class="row div_chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
+          <div class="row div_chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
             <div class="col-sm-3">
               <div class="img img-fluid">
-                <img [src]="personalChatSearch.img" class="avatar">
+                <img [src]="personalChatSearch.groupImage" class="avatar">
               </div>
             </div>
             <div class="col-sm-9">
               <div class="chatName">
-                <h5 class="chat-name">{{personalChatSearch.name}}</h5>
+                <h5 class="chat-name">{{personalChatSearch.groupName}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message" [innerHTML]="getLastMessage(personalChatSearch)"></span>
-                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch))}}</span>
+                <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.last)"></span>
+                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.last))}}</span>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

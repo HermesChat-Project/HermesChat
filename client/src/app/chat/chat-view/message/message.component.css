@@ -18,6 +18,10 @@
   margin: 0;
 }
 
+.message{
+  width: 100%;
+}
+
 .message-wrapper{
   display: flex;
   flex-direction: row;
@@ -60,7 +64,7 @@
   justify-content: center;
 }
 .message-action-container{
-  min-width: 210px;
+  min-width: fit-content;
 }
 /*message action section*/
 .message-actions{

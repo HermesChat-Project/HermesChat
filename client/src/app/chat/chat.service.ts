@@ -214,8 +214,8 @@ export class ChatSelectorService {
 
   sortChats() {
     this.messageList[this.selectedChat!._id].sort((a, b) => {
-      let aDate = new Date(a.dateTime);
-      let bDate = new Date(b.dateTime);
+      let aDate = new Date(a.messages.dateTime);
+      let bDate = new Date(b.messages.dateTime);
       return aDate.getTime() - bDate.getTime();
     });
     this.PersonalListSearch = this.chatExampleList
@@ -224,7 +224,7 @@ export class ChatSelectorService {
   sendMessage(message: string, type: string = 'text') {
     if (this.selectedChat) {
       let i = 0
-      this.messageList[this.selectedChat._id].push(new messageModel("0", message, new Date().toISOString(), type));
+      this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type }));
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
@@ -269,10 +269,10 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         if (this.messageList[id]) {
-          this.messageList[id].push(...response.body.messages.messages);
+          this.messageList[id].push(...response.body.messages);
         }
         else
-          this.messageList[id] = response.body.messages.messages;
+          this.messageList[id] = response.body.messages;
           console.log(this.messageList);
           this.sortChats();
       },
