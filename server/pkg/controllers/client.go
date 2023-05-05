@@ -15,6 +15,7 @@ type Client struct {
 
 	// manager is the manager used to manage the client
 	manager *Manager
+	egress chan []byte
 }
 
 // NewClient is used to initialize a new Client with all required values initialized
@@ -22,6 +23,7 @@ func NewClient(conn *websocket.Conn, manager *Manager) *Client {
 	return &Client{
 		connection: conn,
 		manager:    manager,
+		egress:     make(chan []byte),
 	}
 }
 
@@ -47,5 +49,37 @@ func (c *Client) ReadMessages() {
 		}
 		fmt.Println("MessageType: ", messageType)
 		fmt.Println("Payload: ", string(payload))
+
+		for wsclient := range c.manager.clients {
+			wsclient.egress <- payload
+		}
+	}
+}
+func (c *Client) WriteMessages() {
+	defer func() {
+		// Graceful close if this triggers a closing
+		c.manager.removeClient(c)
+	}()
+
+	for {
+		select {
+		case message, ok := <-c.egress:
+			// Ok will be false Incase the egress channel is closed
+			if !ok {
+				// Manager has closed this connection channel, so communicate that to frontend
+				if err := c.connection.WriteMessage(websocket.CloseMessage, nil); err != nil {
+					// Log that the connection is closed and the reason
+					fmt.Println("connection closed: ", err)
+				}
+				// Return to close the goroutine
+				return
+			}
+			// Write a Regular text message to the connection
+			if err := c.connection.WriteMessage(websocket.TextMessage, message); err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println("sent message")
+		}
+
 	}
 }

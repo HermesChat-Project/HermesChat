@@ -49,7 +49,7 @@ func (m *Manager) ServeWS(c *gin.Context) {
 	// Add the newly created client to the manager
 	m.addClient(client)
     go client.ReadMessages()
-    //go client.WriteMessages()
+    go client.WriteMessages()
 }
 
 // addClient will add clients to our clientList
