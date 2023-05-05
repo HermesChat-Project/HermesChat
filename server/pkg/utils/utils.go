@@ -41,7 +41,7 @@ func CreateToken (index string, c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
-		Expires:  time.Now().Add(1 * time.Hour),
+		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
 		Domain:   config.DOMAIN,
 		HttpOnly: true,
