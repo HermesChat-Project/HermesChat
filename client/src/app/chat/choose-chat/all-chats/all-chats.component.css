@@ -116,9 +116,9 @@
 
 .chatFound button {
   color: #084595;
-  background-color: inherit;
+  background-color: inherit !important;
   padding: 0;
-  box-shadow: none;
+  box-shadow: none !important;
   font-size: 9pt;
   font-weight: bold;
 }
@@ -148,3 +148,5 @@
 .accordion-body {
   padding: 0px;
 }
+
+

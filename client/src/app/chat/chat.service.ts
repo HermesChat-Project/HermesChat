@@ -22,6 +22,7 @@ export class ChatSelectorService {
   infoUser: any
   sentList: { id: string, image: string, nickname: string }[] = [];
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
+  offsetChat: number = 1
 
   callList: callsModel[] = [
     new callsModel(0, 1, 2, new Date(), 0),
@@ -200,25 +201,36 @@ export class ChatSelectorService {
   //#endregion
 
   //#region  Chat
-  bottomScroll() {
+  bottomScroll(to: number = -1) {
     let chat = document.getElementById('listMessage');
     console.log(chat);
     if (chat) {
-      chat.scrollTop = chat.scrollHeight - chat.clientHeight;
-      // console.log(chat.scrollTop);
+      if (to != -1)
+        chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+      else
+        chat.scrollTop = chat.scrollHeight/this.offsetChat;
+      console.log(chat.scrollTop);
     }
   }
 
 
 
 
-  sortChats() {
-    this.messageList[this.selectedChat!._id].sort((a, b) => {
-      let aDate = new Date(a.messages.dateTime);
-      let bDate = new Date(b.messages.dateTime);
-      return aDate.getTime() - bDate.getTime();
-    });
-    this.PersonalListSearch = this.chatExampleList
+  sortChats(list: messageModel[] | null = null) {
+    if (!list) {
+      this.messageList[this.selectedChat!._id].sort((a, b) => {
+        let aDate = new Date(a.messages.dateTime);
+        let bDate = new Date(b.messages.dateTime);
+        return aDate.getTime() - bDate.getTime();
+      });
+    }
+    else {
+      list.sort((a: messageModel, b: messageModel) => {
+        let aDate = new Date(a.messages.dateTime);
+        let bDate = new Date(b.messages.dateTime);
+        return aDate.getTime() - bDate.getTime();
+      });
+    }
   }
 
   sendMessage(message: string, type: string = 'text') {
@@ -255,7 +267,7 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         this.chatExampleList = response.body.chats;
-
+        this.changeName(response.body.chats);
       },
       error: (error: Error) => {
         console.log(error);
@@ -264,22 +276,28 @@ export class ChatSelectorService {
 
   }
 
-  getChatMessages(body: any, id: string) {
-    this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        if (this.messageList[id]) {
-          this.messageList[id].push(...response.body.messages);
+  getChatMessages(body: any, id: string, newMsg: boolean = false) {
+    if ((!this.messageList[id] || this.messageList[id].length == 0) || newMsg) {
+      this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
+        next: (response: any) => {
+          if (this.messageList[id]) {
+
+            this.sortChats(response.body.messages)
+            let array = response.body.messages.concat(this.messageList[id]);
+            this.messageList[id] = array;
+          }
+          else {
+            this.messageList[id] = response.body.messages;
+            this.sortChats();
+          }
+
+          this.messageFeature(newMsg);
+        },
+        error: (error: Error) => {
+          console.log(error);
         }
-        else
-          this.messageList[id] = response.body.messages;
-          console.log(this.messageList);
-          this.sortChats();
-      },
-      error: (error: Error) => {
-        console.log(error);
-      }
-    });
+      });
+    }
 
   }
 
@@ -337,16 +355,7 @@ export class ChatSelectorService {
     })
   }
 
-  getOptionsForRequest() {
-    return {
-      observe: 'response',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': localStorage.getItem("Authorization")
-      },
-      withCredentials: true
-    };
-  }
+
 
   createNewChat(id: string, img: string, friendImg: string) {
     let body = {
@@ -365,7 +374,65 @@ export class ChatSelectorService {
     })
   }
 
+  getOptionsForRequest() {
+    return {
+      observe: 'response',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': localStorage.getItem("Authorization")
+      },
+      withCredentials: true
+    };
+  }
 
 
+
+  //#endregion
+
+  //#region funcion
+  changeName(chatList: any[]) {
+
+    for (const [index, chat] of chatList.entries()) {
+      if (chat.flagGroup) {
+        this.chatExampleList[index].name = chat.groupName;
+        this.chatExampleList[index].image = chat.groupImage;
+      }
+      else {
+        this.chatExampleList[index].name = this.getSingleChatname(chat.users);
+        this.chatExampleList[index].image = this.getSingleChatImg(chat.users);
+      }
+    }
+  }
+
+  getSingleChatname(users: { _id: string; nickname: string, image: string }[]): string {
+    let control = this.friendList.filter((user) => user.id == users[0]._id);
+    if (control.length > 0)
+      return users[0].nickname;
+    else
+      return users[1].nickname;
+  }
+
+  getSingleChatImg(users: { _id: string; nickname: string, image: string }[]): string {
+    let control = this.friendList.filter((user) => user.id == users[0]._id);
+    if (control.length > 0)
+      return users[0].image;
+    else
+      return users[1].image;
+  }
+
+  messageFeature(newMsg: boolean) {
+    if (!newMsg) {
+      this.offsetChat = 1;
+      setTimeout(() => {
+        this.bottomScroll();
+      }, 0);//to improve
+    }
+    else {
+      this.offsetChat++;
+      setTimeout(() => {
+        this.bottomScroll(-1);
+      }, 0);//to improve
+    }
+  }
   //#endregion
 }

@@ -13,14 +13,12 @@
 
       <div class="col-sm-3">
         <div class="img img-fluid">
-          <img [src]="chat.groupImage" class="avatar" *ngIf="chat.flagGroup">
-          <img [src]="getSingleChatImg(chat.users)" alt="" *ngIf="!chat.flagGroup">
+          <img [src]="chat.image" class="avatar">
         </div>
       </div>
       <div class="col-sm-9">
         <div class="chatName">
-          <h5 class="chat-name" *ngIf="chat.groupName">{{chat.groupName}}</h5>
-          <h5 class="chat-name" *ngIf="!chat.groupName">{{getSingleChatname(chat.users)}}</h5>
+          <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
           <span class="text-truncate last-message" [innerHTML]="chat.last"></span>
@@ -50,12 +48,12 @@
           <div class="row div_chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
             <div class="col-sm-3">
               <div class="img img-fluid">
-                <img [src]="personalChatSearch.groupImage" class="avatar">
+                <img [src]="personalChatSearch.image" class="avatar">
               </div>
             </div>
             <div class="col-sm-9">
               <div class="chatName">
-                <h5 class="chat-name">{{personalChatSearch.groupName}}</h5>
+                <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
                 <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.last)"></span>

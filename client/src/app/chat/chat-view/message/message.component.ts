@@ -69,7 +69,6 @@ export class MessageComponent implements AfterViewInit {
   }
   getNameSender(id: string) {
     let nickname = this.chatSelector.friendList.find((friend) => friend.id == id)?.nickname;
-    console.log(nickname);
     if (nickname == undefined)
       nickname = this.chatSelector.infoUser.nickname;
     return nickname;
@@ -121,5 +120,9 @@ export class MessageComponent implements AfterViewInit {
 
   hideActions() {
     this.messageActions = false;
+  }
+
+  scrollMsg(event: any) {
+
   }
 }
