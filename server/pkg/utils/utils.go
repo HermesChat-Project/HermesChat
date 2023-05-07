@@ -2,7 +2,9 @@ package utils
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strings"
 	"time"
@@ -14,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/gomail.v2"
 
 	"chat/pkg/config"
 	"chat/pkg/models"
@@ -217,6 +220,12 @@ func checkUsername (username string, password string, email string, c *gin.Conte
 		errConn();
 		return
 	}
+	
+	//generate OTP and send email
+	otp := generateOTP()
+
+	go sendEmail(email, otp)
+
 	collection.InsertOne(
 		context.Background(), 
 		bson.M{
@@ -226,10 +235,58 @@ func checkUsername (username string, password string, email string, c *gin.Conte
 			"visible": true,
 			"info": infoUser,
 			"language": "it",
+			"otp" : otp,
+			"flagOtp": false,
+			"otpExpire": time.Now().Add(time.Minute * 10),
 		},
 	)
+
 }
 
+func generateOTP() string {
+	//generate random 6 digit number and letters
+	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, 6)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func sendEmail(dest string, otp string) {
+	from := "g.marello.1757@vallauri.edu"
+	pwd := config.PWDGMAIL
+
+	m := gomail.NewMessage()
+
+	// Set E-Mail sender
+	m.SetHeader("From", from)
+
+	// Set E-Mail receivers
+	m.SetHeader("To", dest)
+
+	// Set E-Mail subject
+	m.SetHeader("Subject", "OTP codice per la registrazione")
+
+	// Set E-Mail body. You can set plain text or html with text/html
+	m.SetBody("text/plain", otp)
+
+	// Settings for SMTP server
+	d := gomail.NewDialer("smtp.gmail.com", 587, from, pwd)
+
+	// This is only needed when SSL/TLS certificate is not valid on server.
+	// In production this should be set to false.
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Now send E-Mail
+	if err := d.DialAndSend(m); err != nil {
+	 	fmt.Println(err)
+	 	panic(err)
+	 }
+
+	fmt.Println("Email Inviata Correttamente!")
+}
 func searchUser (username string) bool {
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
