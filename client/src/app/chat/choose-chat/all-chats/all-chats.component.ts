@@ -96,10 +96,9 @@ export class AllChatsComponent {
       this.OtherListSerach = [];
     }
     else {
-      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList.filter((chat) => chat.groupName.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a.last).getTime() - this.getLastMessageTime(b.last).getTime());
-      this.chatSelector.PersonalListSearch.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime());
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a.last).getTime() - this.getLastMessageTime(b.last).getTime());
       this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
-
+      console.log(this.chatSelector.PersonalListSearch)
     }
   }
   GetDateWithoutTime(date: Date) {
@@ -126,19 +125,7 @@ export class AllChatsComponent {
     // }, 0);//to improve
   }
 
-  getSingleChatImg(users: {_id: string;  nickname: string, image: string }[]): string {
-    let control = this.chatSelector.friendList.filter((user) => user.id == users[0]._id);
-    if(control.length > 0)
-      return users[0].image;
-    else
-      return users[1].image;
-  }
 
-  getSingleChatname(users: {_id: string;  nickname: string, image: string }[]): string {
-    let control = this.chatSelector.friendList.filter((user) => user.id == users[0]._id);
-    if(control.length > 0)
-      return users[0].nickname;
-    else
-      return users[1].nickname;
-  }
+
+
 }

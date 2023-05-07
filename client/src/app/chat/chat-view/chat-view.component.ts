@@ -12,6 +12,7 @@ import { ViewEncapsulation } from '@angular/core';
 export class ChatViewComponent {
   @ViewChild('textMessage') textMessage!: ElementRef;
   @ViewChild('fontStyling') fontStyling!: ElementRef;
+  @ViewChild("messages") messages!: ElementRef;
   showChatActions: boolean = false;
   messageSent: string = '';
   selectedText: string = '';
@@ -190,6 +191,19 @@ export class ChatViewComponent {
     }
     this.hideFontStyling();
   }
+
+  scrollMsg(event: any) {
+    if(event.target.scrollTop == 0){
+      console.log(this.chatSelector.offsetChat);
+      let body = {
+        idChat: this.chatSelector.selectedChat!._id,
+        offset: this.chatSelector.offsetChat
+      }
+      this.chatSelector.getChatMessages(body, this.chatSelector.selectedChat!._id, true);
+    }
+  }
+
+  //#region font style
   /*FONT STYLE SECTION (DANGER)*/
 
   toggleSelect(fonttype: string, showFontStyling: boolean = true) {
@@ -656,5 +670,7 @@ export class ChatViewComponent {
     this.selection?.getRangeAt(0).insertNode(style);
     this.contents = this.selection?.getRangeAt(0).cloneContents();
   }
+
+  //#endregion
 
 }

@@ -1,5 +1,5 @@
 <div id="selectedChat" (mouseup)="getSelection()">
-  <div id="listMessage">
+  <div id="listMessage" #messages (scroll)="scrollMsg($event)">
     <app-message *ngFor="let messages of chatSelector.messageList[this.chatSelector.selectedChat!._id]; let i = index" [chatMessage]="messages"
       [index]="i"></app-message>
   </div>

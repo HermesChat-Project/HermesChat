@@ -3,8 +3,8 @@ export class Chat {
   public users: { _id: string; image: string; nickname: string; }[];
   public flagGroup: boolean;
   //group properties (if flagGroup is true)
-  public groupName: string;
-  public groupImage: string;
+  public name: string;
+  public image: string;
   public description: string;
   public creationDate: string;
   public last: string;
@@ -14,8 +14,8 @@ export class Chat {
     this._id = id;
     this.users = users;
     this.flagGroup = flagGroup;
-    this.groupName = groupName;
-    this.groupImage = groupImage;
+    this.name = groupName;
+    this.image = groupImage;
     this.description = description;
     this.creationDate = creationDate;
     this.last = last;

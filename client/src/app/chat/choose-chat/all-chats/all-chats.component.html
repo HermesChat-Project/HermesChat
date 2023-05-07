@@ -13,14 +13,12 @@
 
       <div class="col-sm-3">
         <div class="img img-fluid">
-          <img [src]="chat.groupImage" class="avatar" *ngIf="chat.flagGroup">
-          <img [src]="getSingleChatImg(chat.users)" alt="" *ngIf="!chat.flagGroup">
+          <img [src]="chat.image" class="avatar">
         </div>
       </div>
       <div class="col-sm-9">
         <div class="chatName">
-          <h5 class="chat-name" *ngIf="chat.groupName">{{chat.groupName}}</h5>
-          <h5 class="chat-name" *ngIf="!chat.groupName">{{getSingleChatname(chat.users)}}</h5>
+          <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
           <span class="text-truncate last-message" [innerHTML]="chat.last"></span>
@@ -47,10 +45,10 @@
       <div id="personal" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <!-- <div class="row div_chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
+          <div class="row div_chat" *ngFor="let personalChatSearch of chatSelector.PersonalListSearch" (click)="showEntireChat(personalChatSearch)">
             <div class="col-sm-3">
               <div class="img img-fluid">
-                <img [src]="personalChatSearch.img" class="avatar">
+                <img [src]="personalChatSearch.image" class="avatar">
               </div>
             </div>
             <div class="col-sm-9">
@@ -58,11 +56,11 @@
                 <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message" [innerHTML]="getLastMessage(personalChatSearch)"></span>
-                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch))}}</span>
+                <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.last)"></span>
+                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.last))}}</span>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

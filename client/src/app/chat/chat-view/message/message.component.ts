@@ -32,7 +32,7 @@ export class MessageComponent implements AfterViewInit {
 
   alreadyTexted(i: number) {
     if (i != 0) {
-      if (this.chatMessage.idUser == this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i-1].idUser && !this.differentDate(i))
+      if (this.chatMessage.messages.idUser == this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i - 1].messages.idUser && !this.differentDate(i))
         return false;
       else
         return true;
@@ -60,15 +60,18 @@ export class MessageComponent implements AfterViewInit {
 
   differentDate(i: number) {
     if (i != 0) {
-      if (this.DateView(new Date(this.chatMessage.dateTime)) == this.DateView(new Date(this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i-1].dateTime)))
+      if (this.DateView(new Date(this.chatMessage.messages.dateTime)) == this.DateView(new Date(this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i - 1].messages.dateTime)))
         return false;
       else
         return true;
     }
     return true;
   }
-  getNameSender(id: string){
-    return this.chatSelector.friendList.find((friend) => friend.id == id)?.nickname;
+  getNameSender(id: string) {
+    let nickname = this.chatSelector.friendList.find((friend) => friend.id == id)?.nickname;
+    if (nickname == undefined)
+      nickname = this.chatSelector.infoUser.nickname;
+    return nickname;
   }
 
 
@@ -87,7 +90,7 @@ export class MessageComponent implements AfterViewInit {
 
 
   copyToClipboard() {
-    navigator.clipboard.writeText(this.chatMessage.content).then(() => {
+    navigator.clipboard.writeText(this.chatMessage.messages.content).then(() => {
       console.log("copied");
       this.copy.nativeElement.classList.add("bi-clipboard-check-fill");
       this.copy.nativeElement.classList.remove("bi-clipboard-plus-fill");
@@ -101,10 +104,11 @@ export class MessageComponent implements AfterViewInit {
 
   openDialog() {
     this.dialog.open(DeleteMessageComponent, {
-    panelClass: 'custom-dialog-container' }).afterClosed().subscribe((result: boolean) => {if(result){this.deleteMsg()}})
+      panelClass: 'custom-dialog-container'
+    }).afterClosed().subscribe((result: boolean) => { if (result) { this.deleteMsg() } })
   }
 
-  deleteMsg(){
+  deleteMsg() {
     this.chatSelector.messageList[this.chatSelector.selectedChat!._id].splice(this.index, 1);
   }
 
@@ -116,5 +120,9 @@ export class MessageComponent implements AfterViewInit {
 
   hideActions() {
     this.messageActions = false;
+  }
+
+  scrollMsg(event: any) {
+
   }
 }
