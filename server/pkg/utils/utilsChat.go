@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -248,5 +250,85 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 		})
 		//send the messages to the client
 		
+
+}
+
+
+func GetUsersFromGroup (idGroup string) [] string{
+	//get all the users from a group
+
+	collection := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collection == nil {
+		errConn()
+		return nil
+	}
+
+	objID, err := primitive.ObjectIDFromHex(idGroup)
+	if err != nil {
+		errConn()
+		return nil
+	}
+
+	opt := options.FindOne().SetProjection(bson.M{"users": 1})
+
+	var result7 bson.M
+	ris7 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
+	ris7.Decode(&result7)
+	if result7 == nil {
+		errConn()
+		return nil
+	}
+	// Extract the "chat" array from the result7
+	utenti := result7["users"].(primitive.A)
+	//convert to string array
+	users := make([]string, len(utenti))
+
+	for i, elem := range utenti {
+		users[i] = fmt.Sprintf("%v", elem)
+	}
+
+	//each users contains image, name and id. We need only the id
+	for i, elem := range users {
+		users[i] = strings.Split(elem, " ")[0]
+	}
+
+	//rn is an array of map with idUser:id. i just want an array of id like ["id1", "id2", "id3"]
+	for i, elem := range users {
+		users[i] = strings.Split(elem, ":")[1]
+	}
+
+	fmt.Println(users)
+	return users
+}
+
+func SaveMessage(request models.Request) {
+	//save the message in the database
+
+	collection := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collection == nil {
+		errConn()
+		return
+	}
+
+	objID, err := primitive.ObjectIDFromHex(request.IdDest)
+	if err != nil {
+		errConn()
+		return
+	}
+
+	//create the message
+	message := bson.M{
+		"dateTime": time.Now(),
+		"message":  request.Payload,
+		"idUser":   request.Index,
+		"type" : "text",
+	}
+
+	//update the chat
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objID}, bson.M{"$push": bson.M{"messages": message}})
+	if err != nil {
+		errConn()
+		return
+	}
 
 }

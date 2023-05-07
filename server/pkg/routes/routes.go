@@ -11,9 +11,8 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(CORSMiddleware())
 	router.Use(AuthMiddleware())
 
-	manager := controllers.NewManager()
 
-	router.GET("/socket", manager.ServeWS)
+	router.GET("/socket", controllers.SocketConnection)
 
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)

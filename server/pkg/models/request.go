@@ -81,3 +81,14 @@ type GetMessages struct{
 	IdChat string `json:"idChat" binding:"required"`
 	Offset int `json:"offset" binding:"required"`
 }
+
+
+
+//Socket
+type Request struct {
+	Type string `json:"type"`
+	FlagGroup bool `json:"flagGroup"`
+	IdDest string `json:"idDest"`
+	Payload string `json:"payload"`
+	Index string `json:"index"`
+}
