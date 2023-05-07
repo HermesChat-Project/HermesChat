@@ -216,7 +216,7 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 				},
 			},
 			bson.M{
-				"$skip": 0,
+				"$skip": (form.Offset -1) * 50,
 			},
 			bson.M{
 				"$limit": 50,

@@ -35,6 +35,10 @@ func SocketConnection (c *gin.Context) {
 		err = conn.ReadJSON(&request);
 		if err != nil {
 			fmt.Println("error:", err)
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				delete(conns, index.(string))
+				fmt.Println("connection closed")
+			}
 			return
 		}
 		
