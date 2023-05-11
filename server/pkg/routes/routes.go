@@ -16,6 +16,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
+	router.POST("/checkOtp", controllers.CheckOtp)
 	router.POST("/getInfoUser", controllers.GetInfo)
 
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
