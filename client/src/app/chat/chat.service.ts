@@ -8,17 +8,22 @@ import { FriendModel } from 'model/friend.model';
 import { CalendarModel } from 'model/calendar.model';
 import { requestModel } from 'model/request.model';
 import { Chat } from 'model/chat.model';
+import {webSocket} from 'rxjs/webSocket'
+import { Conditional } from '@angular/compiler';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatSelectorService {
+  progress: number = 0;
   PersonalListSearch: Chat[] = [];
   friendList: FriendModel[] = [];
   friendSerachList: FriendModel[] = [];
   receivedList: requestModel[] = [];
   chatExampleList: Chat[] = [];
   messageList: { [key: string]: messageModel[] } = {};
+  socketMessageList: { [key: string]: messageModel[] } = {};
   infoUser: any
   sentList: { id: string, image: string, nickname: string }[] = [];
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
@@ -112,7 +117,6 @@ export class ChatSelectorService {
       date.setDate(date.getDate() + 1);
     }
     //sort them based on the first day of the week
-    console.log(index);
     let firstDays = days.splice(0, index);
     days = days.concat(firstDays);
     return days;
@@ -137,7 +141,6 @@ export class ChatSelectorService {
     let dateIndex = new Date(year, month, 1).getDay();
     if (dateIndex == 0) dateIndex = 7;
     dateIndex--;
-    console.log(dateIndex);
     return dateIndex;
   }
 
@@ -194,22 +197,19 @@ export class ChatSelectorService {
         eventsPerDay[day.toString()] = [event];
       }
     });
-    console.log(eventsPerDay);
     return eventsPerDay;
   }
 
   //#endregion
 
   //#region  Chat
-  bottomScroll(to: number = -1) {
+  bottomScroll(to: number = 0) {
     let chat = document.getElementById('listMessage');
-    console.log(chat);
     if (chat) {
       if (to != -1)
         chat.scrollTop = chat.scrollHeight - chat.clientHeight;
       else
-        chat.scrollTop = chat.scrollHeight/this.offsetChat;
-      console.log(chat.scrollTop);
+        chat.scrollTop = chat.scrollHeight / (this.offsetChat - 1);
     }
   }
 
@@ -237,24 +237,26 @@ export class ChatSelectorService {
     if (this.selectedChat) {
       let i = 0
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type }));
+      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
 
-
-      console.log(this.messageList[this.selectedChat._id]);
     }
   }
 
   //#endregion
 
   //#region server calls
+
   token: string = '';
   getInfo() {
     this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
         this.infoUser = response.body;
+        this.progress++;
+        this.waitProgress();
       },
       error: (error: Error) => {
         console.log(error);
@@ -268,6 +270,14 @@ export class ChatSelectorService {
         console.log(response);
         this.chatExampleList = response.body.chats;
         this.changeName(response.body.chats);
+        for(const chat of this.chatExampleList){
+          if(this.messageList[chat._id] == undefined)
+            this.messageList[chat._id] = [];
+          if(this.socketMessageList[chat._id] == undefined)
+            this.socketMessageList[chat._id] = [];
+        this.progress++;
+        this.waitProgress();
+        }
       },
       error: (error: Error) => {
         console.log(error);
@@ -280,23 +290,29 @@ export class ChatSelectorService {
     if ((!this.messageList[id] || this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-          if (this.messageList[id]) {
+          console.log(response);
+          if (response.body.messages) {
+            if (this.messageList[id]) {
+              console.log("concat");
+              this.sortChats(response.body.messages)
+              let array = response.body.messages.concat(this.messageList[id]);
+              this.messageList[id] = array;
+            }
+            else {
+              this.messageList[id] = response.body.messages;
+              this.sortChats();
+            }
 
-            this.sortChats(response.body.messages)
-            let array = response.body.messages.concat(this.messageList[id]);
-            this.messageList[id] = array;
+            this.messageFeature(newMsg, id);
           }
-          else {
-            this.messageList[id] = response.body.messages;
-            this.sortChats();
-          }
-
-          this.messageFeature(newMsg);
         },
         error: (error: Error) => {
           console.log(error);
         }
       });
+    }
+    else {
+      this.messageFeature(newMsg, id);
     }
 
   }
@@ -309,6 +325,9 @@ export class ChatSelectorService {
         if (this.friendList.length > 0)
           this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
         this.friendSerachList = this.friendList;
+        this.progress++;
+        this.waitProgress();
+        this.getChats();
       },
       error: (error: Error) => {
         console.log(error);
@@ -322,6 +341,8 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         this.receivedList = response.body.requests;
+        this.progress++;
+        this.waitProgress();
       },
       error: (error: Error) => {
         console.log(error);
@@ -335,7 +356,8 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         this.sentList = response.body.requests;
-
+        this.progress++;
+        this.waitProgress();
       },
       error: (error: Error) => {
         console.log(error);
@@ -387,9 +409,54 @@ export class ChatSelectorService {
 
 
 
+
+
+  //#endregion
+
+  //#region socket
+
+  socket: WebSocket | null = null;
+  startSocket() {
+    this.socket = new WebSocket('wss://10.88.232.79:8090/socket');
+    this.socket.addEventListener("open",  () => {
+      console.log("socket open");
+      this.progress++;
+      this.waitProgress();
+    });
+    this.socket.addEventListener("message",  (event) => {
+      let data = JSON.parse(event.data);
+      if (data.type == "MSG") {
+        if(this.selectedChat?._id == data.idDest)
+        {
+          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
+          setTimeout(() => {
+            this.bottomScroll(-1);
+          }, 0);//to improve
+        }
+        else
+        {
+          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
+        }
+      }
+    })
+    this.socket.addEventListener("close",  () => {
+      console.log("socket close");
+    })
+  }
   //#endregion
 
   //#region funcion
+  seeMain: boolean = false;
+  waitProgress(){
+
+    if(this.progress == 5)
+    {
+      setTimeout(() => {
+        this.seeMain = true;
+      }, 200);
+    }
+  }
+
   changeName(chatList: any[]) {
 
     for (const [index, chat] of chatList.entries()) {
@@ -399,30 +466,36 @@ export class ChatSelectorService {
       }
       else {
         this.chatExampleList[index].name = this.getSingleChatname(chat.users);
+
         this.chatExampleList[index].image = this.getSingleChatImg(chat.users);
+        console.log(this.chatExampleList[index].name);
       }
     }
   }
 
-  getSingleChatname(users: { _id: string; nickname: string, image: string }[]): string {
-    let control = this.friendList.filter((user) => user.id == users[0]._id);
+  getSingleChatname(users: { idUser: string; nickname: string, image: string }[]): string {
+    let control = this.friendList.filter((user) => user.id == users[0].idUser);
+    console.log(this.friendList)
+    console.log(control.length);
+    console.log(users);
     if (control.length > 0)
       return users[0].nickname;
     else
       return users[1].nickname;
   }
 
-  getSingleChatImg(users: { _id: string; nickname: string, image: string }[]): string {
-    let control = this.friendList.filter((user) => user.id == users[0]._id);
+  getSingleChatImg(users: { idUser: string; nickname: string, image: string }[]): string {
+    let control = this.friendList.filter((user) => user.id == users[0].idUser);
     if (control.length > 0)
       return users[0].image;
     else
       return users[1].image;
   }
 
-  messageFeature(newMsg: boolean) {
+  messageFeature(newMsg: boolean, id: string="") {
     if (!newMsg) {
-      this.offsetChat = 1;
+      this.offsetChat = Math.floor(this.messageList[id].length / 50) + 1;
+      console.log(this.offsetChat);
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve

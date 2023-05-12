@@ -17,7 +17,8 @@ export class ChatSelectorComponent {
     this.chatSelector.getFriends();
     this.chatSelector.getReceivedRequests();
     this.chatSelector.getSentRequest()
-    this.chatSelector.getChats();
+    // this.chatSelector.getChats();
+    this.chatSelector.startSocket();
   }
 
   checkWhatShouldBeShown() {

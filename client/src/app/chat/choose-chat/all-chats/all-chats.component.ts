@@ -115,7 +115,7 @@ export class AllChatsComponent {
     this.chatSelector.selectedChat = selected;
     let body = {
       idChat: selected._id,
-      offset: 1
+      offset: 1,
     }
 
     this.chatSelector.getChatMessages(body, selected._id);

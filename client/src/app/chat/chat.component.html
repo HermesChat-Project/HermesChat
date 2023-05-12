@@ -1,6 +1,11 @@
-<app-header-chat-selector></app-header-chat-selector>
-<div class="chat">
-  <app-choose-chat></app-choose-chat>
-  <app-right-view *ngIf="checkWhatShouldBeShown()"></app-right-view>
+<div class="loaded" *ngIf="chatSelector.seeMain">
+  <app-header-chat-selector></app-header-chat-selector>
+  <div class="chat">
+    <app-choose-chat></app-choose-chat>
+    <app-right-view *ngIf="checkWhatShouldBeShown()"></app-right-view>
+  </div>
+</div>
+<div class="load" *ngIf="!chatSelector.seeMain">
+  <app-progress-bar></app-progress-bar>
 </div>
 

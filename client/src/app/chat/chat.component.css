@@ -19,11 +19,22 @@ app-right-view {
   width: 20px;
 }
 
+app-progress-bar {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
+
 .chat{
   height: 93%;
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+
+.load, .loaded{
+  width: 100%;
+  height: 100%;
 }
 
 

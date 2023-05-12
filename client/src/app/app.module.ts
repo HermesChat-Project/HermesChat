@@ -2,6 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
+
 import { ChatSelectorComponent } from './chat/chat.component';
 import { HeaderChatSelectorComponent } from './chat/header-chat-selector/header-chat-selector.component';
 import { ChooseChatComponent } from './chat/choose-chat/choose-chat.component';
@@ -14,7 +19,6 @@ import { GroupComponent } from './chat/choose-chat/calendar/group/group.componen
 import { PersonalEventComponent } from './chat/choose-chat/calendar/personal/personal-event/personal-event.component';
 import { GroupEventComponent } from './chat/choose-chat/calendar/group/group-event/group-event.component';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '@angular/forms';
 import { SettingsComponent } from './chat/header-chat-selector/settings/settings.component';
 import { CreateChatComponent } from './chat/header-chat-selector/create-chat/create-chat.component';
 import { FriendsRequestComponent } from './chat/header-chat-selector/friends-request/friends-request.component';
@@ -25,7 +29,6 @@ import { WebcamModule } from 'ngx-webcam';
 import { CameraComponent } from './chat/chat-view/camera/camera.component';
 import { FullCalendarComponent } from './chat/right-view/full-calendar/full-calendar.component';
 import { RightViewComponent } from './chat/right-view/right-view.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-details.component';
 import { TempChatComponent } from './chat/header-chat-selector/temp-chat/temp-chat.component';
 import { InfoUserComponent } from './chat/header-chat-selector/settings/info-user/info-user.component';
@@ -36,6 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DeleteMessageComponent } from './dialog/delete-message/delete-message.component';
+import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +67,8 @@ import { DeleteMessageComponent } from './dialog/delete-message/delete-message.c
     FriendDetailsComponent,
     TempChatComponent,
     InfoUserComponent,
-    DeleteMessageComponent
+    DeleteMessageComponent,
+    ProgressBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +82,8 @@ import { DeleteMessageComponent } from './dialog/delete-message/delete-message.c
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+
   ],
   providers: [
     MatDatepickerModule,
