@@ -59,6 +59,8 @@ func handleTypes(request models.Request, conn *websocket.Conn) {
 	switch request.Type {
 	case "MSG":
 		handleMessage(request, conn)
+	case "FRE":
+		handleFriendRequest(request, conn)
 	}
 }
 
@@ -70,8 +72,16 @@ func handleMessage(request models.Request, conn *websocket.Conn) {
 			write(connDest, request)
 		}
 	}
-
 	go utils.SaveMessage(request)
+}
+func handleFriendRequest(request models.Request, conn *websocket.Conn) {
+	var utente = request.IdDest
+	utils.SendFriendRequestDB(request.Index, utente, conn)
+	connDest := conns[request.IdDest]
+	if connDest != conn {
+		write(connDest, request)
+	}
+	//go utils.SaveFriendRequest(reques	t)
 }
 
 func write(conn *websocket.Conn, request models.Request) {

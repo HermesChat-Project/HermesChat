@@ -319,7 +319,7 @@ func SaveMessage(request models.Request) {
 	//create the message
 	message := bson.M{
 		"dateTime": time.Now(),
-		"message":  request.Payload,
+		"content":  request.Payload,
 		"idUser":   request.Index,
 		"type" : "text",
 	}

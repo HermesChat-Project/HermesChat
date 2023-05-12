@@ -8,17 +8,6 @@ import (
 )
 	
 
-func SendFriendRequest (c *gin.Context) {
-	var form models.SendFriendRequest;
-	if err := c.ShouldBind(&form); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}	
-	index, _ := c.Get("index")
-
-	utils.SendFriendRequestDB(index.(string), form.Username, c)
-	
-}
 
 func UpdateInfo (c *gin.Context) {	
 	var form models.UpdateInfo;

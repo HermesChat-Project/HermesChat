@@ -12,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -46,7 +47,7 @@ func CreateToken (index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   config.DOMAIN,
+		Domain:   "10.88.232.79",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -522,24 +523,21 @@ func GetBlockedDB(i string, c *gin.Context){
 	})
 }
 
-func SendFriendRequestDB(i string, username string, c *gin.Context){
+func SendFriendRequestDB(i string, username string, conn *websocket.Conn){
 
 	var friend models.Friend;
 
 	collectionFriend := config.ClientMongoDB.Database("user").Collection("user")
 	if collectionFriend == nil {
 		errConn();
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
-		})
+		conn.WriteJSON("error while connecting to database")
 		return;
 	}
 	objID, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
+		conn.WriteJSON("invalid objectID")
+
 		return;
 	}
 	ris := collectionFriend.FindOne(context.Background(), bson.M{"_id": objID})
@@ -547,9 +545,7 @@ func SendFriendRequestDB(i string, username string, c *gin.Context){
 	ris.Decode(&result)
 	if result == nil {
 		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
+		conn.WriteJSON("invalid objectID")
 		return;
 	}
 
@@ -558,21 +554,18 @@ func SendFriendRequestDB(i string, username string, c *gin.Context){
 	friend.Image = result["image"].(string);
 
 	idUsr := GetId(username);
-	idToAccept := getIDS("toAccept", idUsr, c);
+	idToAccept := getIDS("toAccept", idUsr, conn);
 	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
 	if collection == nil {
 		errConn();
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
-		})
+		conn.WriteJSON("error while connecting to database")
 		return
 	}
 	objID2, err := primitive.ObjectIDFromHex(idToAccept)
 	if err != nil {
 		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
+		conn.WriteJSON("invalid objectID")
+
 		return
 	}
 	
@@ -581,14 +574,12 @@ func SendFriendRequestDB(i string, username string, c *gin.Context){
 	ris2.Decode(&result)
 	if result == nil {
 		errConn();
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
-		})
+		conn.WriteJSON("invalid objectID")
+
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "friend request sent",
-	})
+	conn.WriteJSON("successfull")
+
 }
 
 func BlockUserDB(i string, username string, c *gin.Context){

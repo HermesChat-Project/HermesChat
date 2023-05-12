@@ -24,7 +24,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getFriendRequests", controllers.GetFriendRequests)
 	router.POST("/getRequestSent", controllers.GetRequestSent)
 	router.POST("/getBlocked", controllers.GetBlocked)
-	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
+	//router.POST("/sendFriendRequest", controllers.SendFriendRequest)
 	router.POST("/blockUser", controllers.BlockUser)
 
 	router.GET("/getCalendarEvents", controllers.GetCalendarEvents);
