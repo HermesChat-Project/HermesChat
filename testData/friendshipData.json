@@ -1,9 +1,8 @@
 [
   {
     "_id": {
-      "$oid": "6401bdf701c6e9458e62ec05"
+      "$oid": "6401c65c01c6e9458e62ec0a"
     },
-    "idUser": "6401c65c01c6e9458e62ec0a",
     "friends": [
       {
         "idUser": "6401c65c01c6e9458e62ec0b",
@@ -25,9 +24,8 @@
   },
   {
     "_id": {
-      "$oid": "6401bdf701c6e9458e62ec06"
+      "$oid": "6401c65c01c6e9458e62ec0b"
     },
-    "idUser": "6401c65c01c6e9458e62ec0b",
     "friends": [
       {
         "idUser": "6401c65c01c6e9458e62ec0c",
@@ -47,9 +45,8 @@
   },
   {
     "_id": {
-      "$oid": "6401bdf701c6e9458e62ec07"
+      "$oid": "6401c65c01c6e9458e62ec0c"
     },
-    "idUser": "6401c65c01c6e9458e62ec0c",
     "friends": [
       {
         "idUser": "6401c65c01c6e9458e62ec0a",
@@ -69,72 +66,62 @@
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9a"
+      "$oid": "6401c65c01c6e9458e62ec13"
     },
-    "idUser": "6401c65c01c6e9458e62ec13",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9b"
+      "$oid": "6401c65c01c6e9458e62ec14"
     },
-    "idUser": "6401c65c01c6e9458e62ec14",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9c"
+      "$oid": "6401c65c01c6e9458e62ec12"
     },
-    "idUser": "6401c65c01c6e9458e62ec12",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9d"
+      "$oid": "6401c65c01c6e9458e62ec11"
     },
-    "idUser": "6401c65c01c6e9458e62ec11",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9e"
+      "$oid": "6401c65c01c6e9458e62ec10"
     },
-    "idUser": "6401c65c01c6e9458e62ec10",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fb9f"
+      "$oid": "6401c65c01c6e9458e62ec0f"
     },
-    "idUser": "6401c65c01c6e9458e62ec0f",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fbaf"
+      "$oid": "6401c65c01c6e9458e62ec0e"
     },
-    "idUser": "6401c65c01c6e9458e62ec0e",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fbaa"
+      "$oid": "6401c65c01c6e9458e62ec0d"
     },
-    "idUser": "6401c65c01c6e9458e62ec0d",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fbab"
+      "$oid": "6401c65c01c6e9458e62ec15"
     },
-    "idUser": "6401c65c01c6e9458e62ec15",
     "friends": []
   },
   {
     "_id": {
-      "$oid": "644b8b28241fa66b9853fbac"
+      "$oid": "6401c65c01c6e9458e62ec16"
     },
-    "idUser": "6401c65c01c6e9458e62ec16",
     "friends": []
   }
 ]

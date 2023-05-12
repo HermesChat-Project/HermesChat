@@ -1,9 +1,8 @@
 [
   {
     "_id": {
-      "$oid": "6403194deda06b1f0210e997"
+      "$oid": "6401c65c01c6e9458e62ec0a"
     },
-    "idUser": "6401c65c01c6e9458e62ec0a",
     "pending": [
       {
         "idUser": "6401c65c01c6e9458e62ec14",
@@ -44,9 +43,8 @@
   },
   {
     "_id": {
-      "$oid": "6403194deda06b1f0210e998"
+      "$oid": "6401c65c01c6e9458e62ec0c"
     },
-    "idUser": "6401c65c01c6e9458e62ec0c",
     "pending": [
       {
         "idUser": "6401c65c01c6e9458e62ec11",
