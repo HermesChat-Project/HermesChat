@@ -83,3 +83,13 @@ func GetInfo (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.GetInfoDB(index.(string), c)
 }
+
+func CheckOtp (c *gin.Context) {
+	var form models.CheckOtp;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	utils.CheckOtpDB(form, c)
+}

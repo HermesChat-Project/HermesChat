@@ -92,3 +92,9 @@ type Request struct {
 	Payload string `json:"payload"`
 	Index string `json:"index"`
 }
+
+type CheckOtp struct {
+	ID string `json:"id" binding:"required"`
+	Otp string `json:"otp" binding:"required"`
+}
+

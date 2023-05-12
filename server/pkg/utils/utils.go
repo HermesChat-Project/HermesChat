@@ -67,7 +67,7 @@ func VerifyToken (c *gin.Context){
 	//check if token is empty or null
 	if cookie == "" || err != nil {
 		//redirect to login page
-		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico") {
+		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp") {
 			c.Next()
 		}else{
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -126,6 +126,12 @@ func LoginMongoDB (username string, password string, c *gin.Context) {
 		errr := fmt.Errorf("wrong password")
 		SendError(c, errr)
 		return
+	}
+
+	if result["flagOtp"] == false {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"ris": "check otp",
+		})
 	}
 	CreateToken(result["_id"].(primitive.ObjectID).Hex(), c)	
 }
@@ -860,4 +866,51 @@ func GetInfoDB (index string, c *gin.Context){
 	}
 	c.JSON(http.StatusOK, result)
 
+}
+
+func CheckOtpDB (form models.CheckOtp, c *gin.Context){
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	objID, err := primitive.ObjectIDFromHex(form.ID)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID})
+	var result bson.M
+	ris.Decode(&result)
+	if result == nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return;
+	}
+	if result["otpDate"].(string) < time.Now().Format("2020-05-28T15:00:00.000+00:00") {
+		//delete
+		collection.FindOneAndDelete(context.Background(), bson.M{"_id": objID})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "otp expired",
+		})
+		return;
+	}
+	if result["otp"] == form.Otp {
+		collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID}, bson.M{"$set": bson.M{"otp": "", "otpDate": "", "flagOtp": true}})
+		c.JSON(http.StatusOK, gin.H{
+			"message": "otp correct",
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "otp incorrect",
+		})
+	}
 }
