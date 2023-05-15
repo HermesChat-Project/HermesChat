@@ -368,7 +368,6 @@ func UpdateInfoDB(i string, inf string, c *gin.Context){
 }
 
 func GetFriendsDB(i string, c *gin.Context){
-	idFriendship := getIDS("friendship", i, c);
 	collection := config.ClientMongoDB.Database("user").Collection("friendship")
 	if collection == nil {
 		errConn();
@@ -377,7 +376,7 @@ func GetFriendsDB(i string, c *gin.Context){
 		})
 		return
 	}
-	objID2, err := primitive.ObjectIDFromHex(idFriendship)
+	objID2, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -421,7 +420,6 @@ func GetFriendsDB(i string, c *gin.Context){
 }
 
 func GetFriendRequestsDB(i string, c *gin.Context){
-	idRequests := getIDS("toAccept", i, c);
 	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
 	if collection == nil {
 		errConn();
@@ -430,7 +428,7 @@ func GetFriendRequestsDB(i string, c *gin.Context){
 		})
 		return
 	}
-	objID2, err := primitive.ObjectIDFromHex(idRequests)
+	objID2, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -455,7 +453,6 @@ func GetFriendRequestsDB(i string, c *gin.Context){
 }
 
 func GetRequestSentDB(i string, c *gin.Context){
-	idRequests := getIDS("sent", i, c);
 	collection := config.ClientMongoDB.Database("user").Collection("sentFriendship")
 	if collection == nil {
 		errConn();
@@ -464,7 +461,7 @@ func GetRequestSentDB(i string, c *gin.Context){
 		})
 		return
 	}
-	objID2, err := primitive.ObjectIDFromHex(idRequests)
+	objID2, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -489,7 +486,6 @@ func GetRequestSentDB(i string, c *gin.Context){
 
 
 func GetBlockedDB(i string, c *gin.Context){
-	idBlocked := getIDS("blocked", i, c);
 
 	collection := config.ClientMongoDB.Database("user").Collection("blocked")
 	if collection == nil {
@@ -499,7 +495,7 @@ func GetBlockedDB(i string, c *gin.Context){
 		})
 		return
 	}
-	objID2, err := primitive.ObjectIDFromHex(idBlocked)
+	objID2, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -523,62 +519,106 @@ func GetBlockedDB(i string, c *gin.Context){
 	})
 }
 
-func SendFriendRequestDB(i string, username string, conn *websocket.Conn){
+func SendFriendRequestDB(i string, username string, conn *websocket.Conn) bool {
+
+	//check if there is already a friendship
+
+	collection3 := config.ClientMongoDB.Database("user").Collection("friendship")
+	if collection3 == nil {
+		errConn();
+		conn.WriteJSON("error while connecting to database")
+		return false;
+	}
+	fmt.Println(username)
+	objCheck, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		return false;
+	}
+	risCheck := collection3.FindOne(context.Background(), bson.M{"_id": objCheck, "friends.idUser": username})
+	var resultCheck bson.M
+	risCheck.Decode(&resultCheck)
+	if resultCheck != nil {
+		conn.WriteJSON("already friends")
+		return false;
+	}
 
 	var friend models.Friend;
 
 	collectionFriend := config.ClientMongoDB.Database("user").Collection("user")
 	if collectionFriend == nil {
-		errConn();
 		conn.WriteJSON("error while connecting to database")
-		return;
+		return false;
 	}
 	objID, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
-		conn.WriteJSON("invalid objectID")
+		conn.WriteJSON("invalid objectID 1")
 
-		return;
+		return false;
 	}
 	ris := collectionFriend.FindOne(context.Background(), bson.M{"_id": objID})
 	var result bson.M
 	ris.Decode(&result)
 	if result == nil {
 		errConn();
-		conn.WriteJSON("invalid objectID")
-		return;
+		conn.WriteJSON("invalid objectID 2")
+		return false;
 	}
 
 	friend.Nickname = result["nickname"].(string);
 	friend.ID = i;
 	friend.Image = result["image"].(string);
 
-	idUsr := GetId(username);
-	idToAccept := getIDS("toAccept", idUsr, conn);
+	
+	objID2, err := primitive.ObjectIDFromHex(username)
+	if err != nil {
+		errConn();
+		conn.WriteJSON("invalid objectID 3")
+
+		return false;
+	}
+	//add to sentFriendship
+	collection2 := config.ClientMongoDB.Database("user").Collection("sentFriendship")
+	if collection2 == nil {
+		errConn();
+		conn.WriteJSON("error while connecting to database")
+		return false;
+	}
+	objID3, err := primitive.ObjectIDFromHex(i)
+	if err != nil {
+		errConn();
+		conn.WriteJSON("invalid objectID 5")
+
+		return false;
+	}
+	ris3:= collection2.FindOneAndUpdate(context.Background(), bson.M{"_id": objID3}, bson.M{"$push": bson.M{"sentTo": friend}})
+	var result3 bson.M
+	ris3.Decode(&result3)
+	if result3 == nil {
+		errConn();
+		conn.WriteJSON("invalid objectID 6")
+
+		return false;
+	}
 	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
 	if collection == nil {
 		errConn();
 		conn.WriteJSON("error while connecting to database")
-		return
+		return false;
 	}
-	objID2, err := primitive.ObjectIDFromHex(idToAccept)
-	if err != nil {
-		errConn();
-		conn.WriteJSON("invalid objectID")
-
-		return
-	}
-	
 	// update the pending array
 	ris2 := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$push": bson.M{"pending": friend}})
 	ris2.Decode(&result)
 	if result == nil {
 		errConn();
-		conn.WriteJSON("invalid objectID")
+		conn.WriteJSON("invalid objectID 4")
 
-		return
+		return false;
 	}
-	conn.WriteJSON("successfull")
+
+	conn.WriteJSON("Friend request sent")
+	return true;
 
 }
 
@@ -588,7 +628,6 @@ func BlockUserDB(i string, username string, c *gin.Context){
 	friend.Nickname = username;
 	friend.ID = GetId(username);
 
-	idBlocked := getIDS("blocked", i, c);
 	collection := config.ClientMongoDB.Database("user").Collection("blocked")
 	if collection == nil {
 		errConn();
@@ -597,7 +636,7 @@ func BlockUserDB(i string, username string, c *gin.Context){
 		})
 		return
 	}
-	objID2, err := primitive.ObjectIDFromHex(idBlocked)
+	objID2, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -622,7 +661,7 @@ func BlockUserDB(i string, username string, c *gin.Context){
 	})
 }
 
-func getIDS(res string, i string, c *gin.Context) (string) {
+/* func getIDS(res string, i string, c *gin.Context) (string) {
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
 		errConn();
@@ -654,13 +693,12 @@ func getIDS(res string, i string, c *gin.Context) (string) {
 	id = id.(primitive.A)[0];
 
 	return id.(primitive.M)[res].(string);
-}
+} */
 
 func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gin.Context){
 	
 
 	//add to friends array
-	idFriendship := getIDS("friendship", index, c);
 	collectionFriendship := config.ClientMongoDB.Database("user").Collection("friendship")
 	if collectionFriendship == nil {
 		errConn();
@@ -669,7 +707,7 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
-	objID3, err := primitive.ObjectIDFromHex(idFriendship)
+	objID3, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -705,7 +743,6 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 	}
 
 	//add to friend's friends array
-	idFriendship2 := getIDS("friendship", form.IdFriend, c);
 	collectionFriendship2 := config.ClientMongoDB.Database("user").Collection("friendship")
 	if collectionFriendship2 == nil {
 		errConn();
@@ -714,7 +751,7 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
-	objID4, err := primitive.ObjectIDFromHex(idFriendship2)
+	objID4, err := primitive.ObjectIDFromHex(form.IdFriend)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -770,7 +807,6 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 	}
 
 	//remove from sent array
-	idSentTo := getIDS("sent", form.IdFriend, c);
 	collectionSentTo := config.ClientMongoDB.Database("user").Collection("sentFriendship")
 	if collectionSentTo == nil {
 		errConn();
@@ -779,7 +815,7 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
-	objID6, err := primitive.ObjectIDFromHex(idSentTo)
+	objID6, err := primitive.ObjectIDFromHex(form.IdFriend)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -798,7 +834,6 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		return;
 	}
 
-	idToAccept := getIDS("toAccept", index, c);
 	collection := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
 	if collection == nil {
 		errConn();
@@ -807,7 +842,7 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
-	objID2, err := primitive.ObjectIDFromHex(idToAccept)
+	objID2, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -904,4 +939,25 @@ func CheckOtpDB (form models.CheckOtp, c *gin.Context){
 			"message": "otp incorrect",
 		})
 	}
+}
+
+func GetInfoUsr (index string) (models.Info, string){
+
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		return models.Info{}, "error while connecting to database"
+	}
+	objID, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		return models.Info{}, "invalid ObjectID"
+	}
+	opts := options.FindOne().SetProjection(bson.M{"_id" : 1, "name" : 1, "surname" : 1, "image" : 1, "nickname" : 1})
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID}, opts)
+	var result models.Info
+	ris.Decode(&result)
+	
+	if result == (models.Info{}) {
+		return models.Info{}, "invalid ObjectID"
+	}
+	return result, ""
 }

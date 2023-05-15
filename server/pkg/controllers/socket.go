@@ -20,7 +20,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var conns = make(map[string]*websocket.Conn)
+var Conns = make(map[string]*websocket.Conn)
 
 func SocketConnection(c *gin.Context) {
 
@@ -31,7 +31,7 @@ func SocketConnection(c *gin.Context) {
 	}
 	index, _ := c.Get("index")
 	fmt.Println("index:", index)
-	conns[index.(string)] = conn
+	Conns[index.(string)] = conn
 
 	go func() {
 		for {
@@ -40,14 +40,14 @@ func SocketConnection(c *gin.Context) {
 			if err != nil {
 				fmt.Println("error:", err)
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					delete(conns, index.(string))
+					delete(Conns, index.(string))
 					fmt.Println("connection closed")
 				}
 				return
 			}
 
 			fmt.Println("request:", request)
-			conns[index.(string)] = conn
+			Conns[index.(string)] = conn
 			request.Index = index.(string)
 			go handleTypes(request, conn)
 		}
@@ -67,7 +67,7 @@ func handleTypes(request models.Request, conn *websocket.Conn) {
 func handleMessage(request models.Request, conn *websocket.Conn) {
 	var users []string = utils.GetUsersFromGroup(request.IdDest)
 	for _, user := range users {
-		connDest := conns[user]
+		connDest := Conns[user]
 		if connDest != conn {
 			write(connDest, request)
 		}
@@ -76,12 +76,14 @@ func handleMessage(request models.Request, conn *websocket.Conn) {
 }
 func handleFriendRequest(request models.Request, conn *websocket.Conn) {
 	var utente = request.IdDest
-	utils.SendFriendRequestDB(request.Index, utente, conn)
-	connDest := conns[request.IdDest]
-	if connDest != conn {
-		write(connDest, request)
+	if utils.SendFriendRequestDB(request.Index, utente, conn){
+		connDest := Conns[utente]
+		if connDest != conn {
+			write(connDest, request)
+		}
+	}else{
+		conn.WriteJSON("error")
 	}
-	//go utils.SaveFriendRequest(reques	t)
 }
 
 func write(conn *websocket.Conn, request models.Request) {

@@ -82,9 +82,14 @@ type GetMessages struct{
 	Offset int `json:"offset" binding:"required"`
 }
 
+type CheckOtp struct {
+	ID string `json:"id" binding:"required"`
+	Otp string `json:"otp" binding:"required"`
+}
 
 
 //Socket
+
 type Request struct {
 	Type string `json:"type"`
 	FlagGroup bool `json:"flagGroup"`
@@ -93,8 +98,11 @@ type Request struct {
 	Index string `json:"index"`
 }
 
-type CheckOtp struct {
-	ID string `json:"id" binding:"required"`
-	Otp string `json:"otp" binding:"required"`
-}
 
+type Info struct {
+	Index string `json:"idUser"`
+	Nickname string `json:"nickname"`
+	Name string `json:"name"`
+	Surname string `json:"surname"`
+	Image string `json:"image"`
+}
