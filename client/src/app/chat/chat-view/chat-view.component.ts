@@ -136,7 +136,7 @@ export class ChatViewComponent {
 
     if (this.messageSent.length > 0) {
       //for every img tag add a div tag with the class img-container
-      this.chatSelector.sendMessage(this.messageSent);
+      this.chatSelector.sendMessage(this.messageSent, "text");
       this.fontStyling.nativeElement.style.display = 'none';
       this.textMessage.nativeElement.innerHTML = '';
       this.textMessage.nativeElement.focus();
@@ -194,7 +194,6 @@ export class ChatViewComponent {
 
   scrollMsg(event: any) {
     if(event.target.scrollTop == 0){
-      console.log(this.chatSelector.offsetChat);
       let body = {
         idChat: this.chatSelector.selectedChat!._id,
         offset: this.chatSelector.offsetChat
