@@ -8,8 +8,12 @@ import { FriendModel } from 'model/friend.model';
 import { CalendarModel } from 'model/calendar.model';
 import { requestModel } from 'model/request.model';
 import { Chat } from 'model/chat.model';
-import {webSocket} from 'rxjs/webSocket'
+import { webSocket } from 'rxjs/webSocket'
 import { Conditional } from '@angular/compiler';
+import { MatDialog } from '@angular/material/dialog';
+import { SurveyComponent } from '../dialog/survey/survey.component';
+import { ChartComponent } from '../dialog/chart/chart.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable({
@@ -45,7 +49,7 @@ export class ChatSelectorService {
   src: string = "";
   flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
   stream: MediaStream | null = null;
-  constructor(private dataStorage: DataStorageService) { }
+  constructor(private dataStorage: DataStorageService, private dialog:MatDialog) { }
 
 
 
@@ -61,36 +65,8 @@ export class ChatSelectorService {
   //#endregion
 
   //#region calendar
+  calendarList: CalendarModel[] = []
 
-  calendarExample: CalendarModel[] = [
-    new CalendarModel(1, 'Birthday aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', new Date(2023, 2, 18, 12, 5), true, 'My birthday aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-    new CalendarModel(2, 'Meeting', new Date(2023, 2, 18, 11, 3), false, 'Meeting with the team'),
-    new CalendarModel(3, 'Remember', new Date(2023, 2, 18, 11, 23), true, 'Remember to buy the milk aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-    new CalendarModel(4, 'Meeting', new Date(2023, 2, 21, 11, 56), false, 'Meeting with the team aaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-    new CalendarModel(5, 'Meeting', new Date(2023, 2, 21, 14), false, 'Meeting with the team'),
-    new CalendarModel(6, 'Grocery', new Date(2023, 2, 22, 16, 30), true, 'Buy the groceries'),
-    new CalendarModel(7, 'Friends', new Date(2023, 2, 22, 12, 34), true, 'Go to the cinema with friends'),
-    new CalendarModel(8, 'Meeting', new Date(2023, 2, 23, 17), false, 'Meeting with the team'),
-    new CalendarModel(9, 'Dog', new Date(2023, 2, 24, 18), true, 'Take the dog for a walk'),
-    new CalendarModel(10, 'Gym', new Date(2023, 2, 25, 10, 23), true, 'Go to the gym'),
-    new CalendarModel(11, 'Meeting', new Date(2023, 2, 25, 9, 30), false, 'Meeting with the team'),
-    new CalendarModel(12, 'School', new Date(2023, 2, 26, 9), true, 'Go to school'),
-    new CalendarModel(13, 'Exam', new Date(2023, 2, 27, 9), true, 'Study for the exam'),
-    new CalendarModel(14, 'Grocery', new Date(2023, 2, 28, 7), true, 'Buy the groceries'),
-    //meeting with the team alwanys in the same day
-    new CalendarModel(15, 'Meeting', new Date(2023, 2, 18, 11, 3), false, 'Meeting with the team'),
-    new CalendarModel(16, 'Meeting', new Date(2023, 2, 18, 12, 3), false, 'Meeting with the team'),
-    new CalendarModel(17, 'Meeting', new Date(2023, 2, 18, 13, 3), false, 'Meeting with the team'),
-    new CalendarModel(18, 'Meeting', new Date(2023, 2, 18, 14, 3), false, 'Meeting with the team'),
-    new CalendarModel(19, 'Meeting', new Date(2023, 2, 18, 15, 3), false, 'Meeting with the team'),
-    new CalendarModel(20, 'Meeting', new Date(2023, 2, 18, 16, 3), false, 'Meeting with the team'),
-    new CalendarModel(21, 'Meeting', new Date(2023, 2, 18, 17, 3), false, 'Meeting with the team'),
-    new CalendarModel(22, 'Meeting', new Date(2023, 2, 18, 18, 3), false, 'Meeting with the team'),
-    new CalendarModel(23, 'Meeting', new Date(2023, 2, 18, 19, 3), false, 'Meeting with the team'),
-    new CalendarModel(24, 'Meeting', new Date(2023, 3, 18, 20, 3), true, 'Meeting with the team'),
-    new CalendarModel(25, 'Meeting', new Date(2023, 3, 30, 21, 3), true, 'Meeting with the team', "#777777", false, "00:00"),
-
-  ]
   /*variables for the calendar modal*/
   triggerCalendarModal: boolean = false;
   selectedCalendarEvent: CalendarModel | null = null;
@@ -182,7 +158,7 @@ export class ChatSelectorService {
     let month = this.selectedMonth + 1;
     let year = this.selectedYear;
     let events: CalendarModel[] = [];
-    this.calendarExample.forEach((event: CalendarModel) => {
+    this.calendarList.forEach((event: CalendarModel) => {
       if (event.date.getFullYear() == year && event.date.getMonth() + 1 == month) {
         events.push(event);
       }
@@ -190,15 +166,38 @@ export class ChatSelectorService {
 
     let eventsPerDay: { [key: string]: CalendarModel[] } = {};
     events.forEach((event: CalendarModel) => {
-      let day = event.date.getDate();
-      if (eventsPerDay[day.toString()]) {
-        eventsPerDay[day.toString()].push(event);
+      let day = event.date.getDate().toString();
+      if(day.length < 2)
+        day = '0' + day;
+      if (eventsPerDay[day]) {
+        eventsPerDay[day].push(event);
       } else {
-        eventsPerDay[day.toString()] = [event];
+        eventsPerDay[day] = [event];
       }
     });
+    console.log(eventsPerDay);
     return eventsPerDay;
   }
+
+  //#endregion
+
+  //#region toggle dialogs
+  openDeleteMessgeDialog() {
+
+  }
+  openSurveyDialog() {
+    this.dialog.open(SurveyComponent, {
+      panelClass: 'custom-dialog-container'
+    }).afterClosed().subscribe((result: boolean) => { if (result) { this.sendMessage("Ciao", "survey") } })
+  }
+
+  openChartDialog() {
+    this.dialog.open(ChartComponent, {
+      panelClass: 'custom-dialog-container'
+    }).afterClosed().subscribe((result: boolean) => { if (result) { this.sendMessage("Ciao", "chart") } })
+  }
+
+
 
   //#endregion
 
@@ -233,7 +232,7 @@ export class ChatSelectorService {
     }
   }
 
-  sendMessage(message: string, type: string = 'text') {
+  sendMessage(message: string, type: string = 'text', options: any = null) {
     if (this.selectedChat) {
       let i = 0
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type }));
@@ -258,8 +257,10 @@ export class ChatSelectorService {
         this.progress++;
         this.waitProgress();
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
+        if(error.status == 401)
+          this.logout();
       }
     });
   }
@@ -270,17 +271,19 @@ export class ChatSelectorService {
         console.log(response);
         this.chatExampleList = response.body.chats;
         this.changeName(response.body.chats);
-        for(const chat of this.chatExampleList){
-          if(this.messageList[chat._id] == undefined)
+        for (const chat of this.chatExampleList) {
+          if (this.messageList[chat._id] == undefined)
             this.messageList[chat._id] = [];
-          if(this.socketMessageList[chat._id] == undefined)
+          if (this.socketMessageList[chat._id] == undefined)
             this.socketMessageList[chat._id] = [];
-        this.progress++;
-        this.waitProgress();
+          this.progress++;
+          this.waitProgress();
         }
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
+        if(error.status == 401)
+          this.logout();
       }
     });
 
@@ -306,8 +309,10 @@ export class ChatSelectorService {
             this.messageFeature(newMsg, id);
           }
         },
-        error: (error: Error) => {
+        error: (error: HttpErrorResponse) => {
           console.log(error);
+          if(error.status == 401)
+            this.logout();
         }
       });
     }
@@ -329,9 +334,10 @@ export class ChatSelectorService {
         this.waitProgress();
         this.getChats();
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
-
+        if(error.status == 401)
+          this.logout();
       }
     });
   }
@@ -344,9 +350,10 @@ export class ChatSelectorService {
         this.progress++;
         this.waitProgress();
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
-
+        if(error.status == 401)
+          this.logout();
       }
     });
   }
@@ -359,8 +366,10 @@ export class ChatSelectorService {
         this.progress++;
         this.waitProgress();
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
+        if(error.status == 401)
+          this.logout();
       }
     })
   }
@@ -370,9 +379,10 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
-
+        if(error.status == 401)
+          this.logout();
       }
     })
   }
@@ -390,8 +400,27 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
       },
-      error: (error: Error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
+        if(error.status == 401)
+          this.logout();
+      }
+    })
+  }
+  getCalendarEvents() {
+    this.dataStorage.PostRequestWithHeaders('getCalendarEvents', {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.calendarList = response.body.events;
+        this.calendarList.forEach((event: CalendarModel) => {
+          event.date = new Date(event.dateTime);
+        })
+        this.EventsPerMonth = this.getCalendarEventsByMonth();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if(error.status == 401)
+          this.logout();
       }
     })
   }
@@ -408,6 +437,11 @@ export class ChatSelectorService {
   }
 
 
+  logout() {
+
+  }
+
+
 
 
 
@@ -417,29 +451,28 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://10.88.232.79:8090/socket');
-    this.socket.addEventListener("open",  () => {
+    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
+    this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
       this.waitProgress();
     });
-    this.socket.addEventListener("message",  (event) => {
+    this.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
+      console.log(data);
       if (data.type == "MSG") {
-        if(this.selectedChat?._id == data.idDest)
-        {
+        if (this.selectedChat?._id == data.idDest) {
           this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
           setTimeout(() => {
             this.bottomScroll(-1);
           }, 0);//to improve
         }
-        else
-        {
+        else {
           this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
         }
       }
     })
-    this.socket.addEventListener("close",  () => {
+    this.socket.addEventListener("close", () => {
       console.log("socket close");
     })
   }
@@ -447,10 +480,9 @@ export class ChatSelectorService {
 
   //#region funcion
   seeMain: boolean = false;
-  waitProgress(){
+  waitProgress() {
 
-    if(this.progress == 5)
-    {
+    if (this.progress == 5) {
       setTimeout(() => {
         this.seeMain = true;
       }, 200);
@@ -492,7 +524,7 @@ export class ChatSelectorService {
       return users[1].image;
   }
 
-  messageFeature(newMsg: boolean, id: string="") {
+  messageFeature(newMsg: boolean, id: string = "") {
     if (!newMsg) {
       this.offsetChat = Math.floor(this.messageList[id].length / 50) + 1;
       console.log(this.offsetChat);

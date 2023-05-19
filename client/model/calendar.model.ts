@@ -1,22 +1,27 @@
 export class CalendarModel{
-  _id: number;
+  _id: string;
   title : string;
-  date : Date;
-  isPersonal : boolean;
+  dateTime : string;
+  date: Date = new Date();
+  type : string;
   description: string;
   color: string;
   notify: boolean;
   notifyTime: string
+  idUser: string;
+  idChat: string|Array<string>|null;
 
-  constructor(_id: number, title: string, date: Date, isPersonal: boolean, description: string, color: string = "#1B7AF7", notify: boolean = true, notifyTime: string = "00:10") {
+  constructor(_id: string, title: string, description: string, idUser: string,  date: string, type: string,  color: string = "#1B7AF7", notify: boolean = true, notifyTime: string = "00:10", idChat: string|Array<string>|null = null) {
     this._id = _id;
     this.title = title;
-    this.date = date;
-    this.isPersonal = isPersonal;
     this.description = description;
+    this.idUser = idUser;
+    this.dateTime = date;
+    this.type = type;
     this.color = color;
     this.notify = notify;
     this.notifyTime = notifyTime;
+    this.idChat = idChat;
   }
 
 }

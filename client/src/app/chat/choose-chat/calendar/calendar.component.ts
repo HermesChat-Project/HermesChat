@@ -26,9 +26,9 @@ export class CalendarComponent {
   }
 
   PersonalEvents() {
-    let filter: CalendarModel[] =  this.chatSelector.calendarExample.filter((event) => {
+    let filter: CalendarModel[] =  this.chatSelector.calendarList.filter((event) => {
       // console.log(event.date.getFullYear() + '-' + (this.returnMonth(event.date, false)) + '-' + this.returnDay(event.date), this.selected_day);
-      return event.isPersonal && this.chatSelector.selectedDate == event.date.getFullYear() + '-' + (this.chatSelector.returnMonth(event.date)) + '-' + this.chatSelector.returnDay(event.date);
+      return event.type == "personal" && this.chatSelector.selectedDate == event.date.getFullYear() + '-' + (this.chatSelector.returnMonth(event.date)) + '-' + this.chatSelector.returnDay(event.date);
     })
     // sort by hour and minutes
     filter.sort((a, b) => {
@@ -38,8 +38,8 @@ export class CalendarComponent {
   }
 
   GroupEvents() {
-    let filter: CalendarModel[] =  this.chatSelector.calendarExample.filter((event) => {
-      return !event.isPersonal && this.chatSelector.selectedDate == event.date.getFullYear() + '-' + (this.chatSelector.returnMonth(event.date)) + '-' + this.chatSelector.returnDay(event.date);
+    let filter: CalendarModel[] =  this.chatSelector.calendarList.filter((event) => {
+      return !(event.type == "personal") && this.chatSelector.selectedDate == event.date.getFullYear() + '-' + (this.chatSelector.returnMonth(event.date)) + '-' + this.chatSelector.returnDay(event.date);
     })
     filter.sort((a, b) => {
       return a.date.getHours() - b.date.getHours() || a.date.getMinutes() - b.date.getMinutes();//order the array bi hour and if the hour is the same order by minutes

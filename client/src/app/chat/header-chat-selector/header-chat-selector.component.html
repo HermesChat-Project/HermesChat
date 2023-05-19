@@ -15,7 +15,15 @@
         </button>
 
       </div>
-      <i class="bi bi-person-heart" (click)="ToggleFriendRequest()"></i>
+      <div id="requests">
+        <i class="bi bi-person-heart" (click)="ToggleFriendRequest()"></i>
+        <div class="notify-request" *ngIf="chatSelector.receivedList.length != 0">
+          <div class="triangle"></div>
+          <div class="rectangle">
+            {{chatSelector.receivedList.length}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div id="secret-chat-options" class="chatOptions">
@@ -26,6 +34,9 @@
 
 <app-settings class="header-section"
   [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 1, 'hideHeaderSection' : headerService.typeOfAction != 1}"></app-settings>
-<app-create-chat class="header-section" [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 2, 'hideHeaderSection' : headerService.typeOfAction != 2}"></app-create-chat>
-<app-friends-request class="header-section" [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 3, 'hideHeaderSection' : headerService.typeOfAction != 3}" ></app-friends-request>
-<app-temp-chat class="header-section" [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 4, 'hideHeaderSection' : headerService.typeOfAction != 4}"></app-temp-chat>
+<app-create-chat class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 2, 'hideHeaderSection' : headerService.typeOfAction != 2}"></app-create-chat>
+<app-friends-request class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 3, 'hideHeaderSection' : headerService.typeOfAction != 3}"></app-friends-request>
+<app-temp-chat class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 4, 'hideHeaderSection' : headerService.typeOfAction != 4}"></app-temp-chat>

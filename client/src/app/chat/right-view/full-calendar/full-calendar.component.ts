@@ -97,8 +97,17 @@ export class FullCalendarComponent {
     let day = (row * 7) + col - this.chatSelector.firstDayOfMonth + 1;
     if (day < 10)
       return "0" + day;
+
     return day;
   }
+
+  getContrastYIQ(hexcolor: string){
+    var r = parseInt(hexcolor.substring(1,3),16);
+    var g = parseInt(hexcolor.substring(3,5),16);
+    var b = parseInt(hexcolor.substring(5,7),16);
+    var yiq = ((r*299)+(g*587)+(b*114))/1000;
+    return (yiq >= 128) ? 'black' : 'white';
+}
 
   goToDate(row: number, col: number, event: MouseEvent) {
     let day = (row * 7) + col - this.chatSelector.firstDayOfMonth + 1;
@@ -129,7 +138,7 @@ export class FullCalendarComponent {
       if (this.clickedDate >= new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate())) {
         this.chatSelector.triggerCalendarModal = true;
         this.isOnCreatingMode = true;
-        this.modifyingEvent = new CalendarModel(-1, "", new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes())), true, "");
+        this.modifyingEvent = new CalendarModel("-1", "",  "", this.chatSelector.infoUser._id, new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes())).toISOString(), "personal");
       }
     }
   }
@@ -142,7 +151,7 @@ export class FullCalendarComponent {
   }
 
   checkIfIsPersonalOrShared(event: CalendarModel) {
-    if (event.isPersonal)
+    if (event.type == "personal")
       return "[P]";
     else
       return "[S]";
@@ -194,7 +203,7 @@ export class FullCalendarComponent {
   }
 
   deleteEvent() {
-    this.chatSelector.calendarExample.splice(this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!), 1);
+    this.chatSelector.calendarList.splice(this.chatSelector.calendarList.indexOf(this.chatSelector.selectedCalendarEvent!), 1);
     this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
     this.chatSelector.triggerCalendarModal = false;
   }
@@ -254,7 +263,7 @@ export class FullCalendarComponent {
       if (el.classList.contains("btn-success")) {
         this.isOnModifyingMode = false;
         el.innerHTML = "Modifica";
-        this.chatSelector.calendarExample[this.chatSelector.calendarExample.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
+        this.chatSelector.calendarList[this.chatSelector.calendarList.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
         this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
         this.chatSelector.triggerCalendarModal = false;
       }
@@ -264,7 +273,7 @@ export class FullCalendarComponent {
       }
     }
     else {
-      this.chatSelector.calendarExample.push(this.modifyingEvent!);
+      this.chatSelector.calendarList.push(this.modifyingEvent!);
       this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
       this.chatSelector.triggerCalendarModal = false;
       this.isOnCreatingMode = false;

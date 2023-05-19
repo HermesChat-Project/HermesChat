@@ -8,7 +8,7 @@
       <div class="sender" *ngIf="alreadyTexted(index)">
         <span>{{getNameSender(chatMessage.messages.idUser)}}</span>
       </div>
-      <div class="message-get">
+      <div class="message-get" *ngIf="chatMessage.messages.type == 'text'">
         <div class="text" [innerHTML]="chatMessage.messages.content" #text></div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
       </div>

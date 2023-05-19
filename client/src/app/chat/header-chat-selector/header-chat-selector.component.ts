@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HeaderService } from './header.service';
+import { ChatSelectorService } from '../chat.service';
 
 @Component({
   selector: 'app-header-chat-selector',
@@ -10,7 +11,7 @@ export class HeaderChatSelectorComponent {
   showOptions:boolean = false;
 
 
-  constructor(public headerService : HeaderService) { }
+  constructor(public headerService : HeaderService, public chatSelector: ChatSelectorService) { }
   /*chat creation options events*/
   ToggleNewChatOptions(){
     this.showOptions = !this.showOptions;
