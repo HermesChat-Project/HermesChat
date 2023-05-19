@@ -1,0 +1,102 @@
+basePath: /
+host: api.hermeschat.it:8090
+info:
+  contact: {}
+  description: Server API e Websocket per il progetto HermesChat. Il server è stato
+    sviluppato in Go con il framework Gin e utilizza MongoDB come database.
+  title: HermesChat API
+  version: "1.0"
+paths:
+  /getFriendRequests:
+    post:
+      description: Restituisce tutti le richieste di amicizia dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca richieste di amicizia utente
+  /getFriends:
+    post:
+      description: Restituisce tutti gli amici dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca amici utente
+  /searchUsers:
+    get:
+      description: Cerca fino a 100 utenti con username che inizia con la stringa
+        passata come parametro
+      parameters:
+      - description: Caratteri con cui inizia l'username
+        in: header
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca utenti
+  /socket:
+    get:
+      description: Permette di connettersi al socket realizzato con libreria Gorilla
+        Websocket
+      parameters:
+      - description: Indice dell'utente
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Connessione al socket
+swagger: "2.0"

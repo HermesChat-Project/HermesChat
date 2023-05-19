@@ -8,8 +8,14 @@ import (
 
 	"chat/pkg/config"
 	"chat/pkg/routes"
+	_ "chat/docs"
 )
 
+// @title HermesChat API 
+// @version 1.0
+// @description Server API e Websocket per il progetto HermesChat. Il server è stato sviluppato in Go con il framework Gin e utilizza MongoDB come database.
+// @host api.hermeschat.it:8090
+// @BasePath /
 
 func main() {
 	config.LoadConfig()

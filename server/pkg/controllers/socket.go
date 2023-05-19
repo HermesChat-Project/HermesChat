@@ -21,6 +21,13 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+// Connect to socket	godoc
+// @Summary 			Connessione al socket
+// @Description 		Permette di connettersi al socket realizzato con libreria Gorilla Websocket
+// @Param 			    index header string true "Indice dell'utente"
+// @Produce 		    json
+// @Success 		    200
+// @Router 		        /socket [get]
 func SocketConnection(c *gin.Context) {
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)

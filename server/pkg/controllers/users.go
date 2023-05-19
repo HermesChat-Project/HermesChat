@@ -21,18 +21,45 @@ func UpdateInfo (c *gin.Context) {
 
 }
 
+// Search users	godoc
+// @Summary 			Ricerca utenti
+// @Description 		Cerca fino a 100 utenti con username che inizia con la stringa passata come parametro
+// @Param 			    username header string true "Caratteri con cui inizia l'username"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /searchUsers [get]
 func SearchUsers (c *gin.Context) {
 	//get parameters from get request
 	var usr = c.Query("username")
 	utils.SearchUsersDB(usr, c)
 }
 
+// GetFriends	godoc
+// @Summary 			Ricerca amici utente
+// @Description 		Restituisce tutti gli amici dell'utente loggato
+// @Param 			    index header string true "Indice dell'utente loggato"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /getFriends [post]
 func GetFriends (c *gin.Context) {
 	//get a value added with c.Set
 	index, _ := c.Get("index")
 	utils.GetFriendsDB(index.(string), c)
 }
 
+// GetFriendRequest	godoc
+// @Summary 			Ricerca richieste di amicizia utente
+// @Description 		Restituisce tutti le richieste di amicizia dell'utente loggato
+// @Param 			    index header string true "Indice dell'utente loggato"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /getFriendRequests [post]
 func GetFriendRequests (c *gin.Context) {
 	//get a value added with c.Set
 	index, _ := c.Get("index")

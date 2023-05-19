@@ -67,9 +67,11 @@ func VerifyToken (c *gin.Context){
 	//check if token is empty or null
 	if cookie == "" || err != nil {
 		//redirect to login page
-		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp") {
+		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs")) {
 			c.Next()
 		}else{
+			//if the url starts with /docs skip the check
+			
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"ris": "Unauthorized",
 			})

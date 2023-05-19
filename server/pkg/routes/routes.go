@@ -5,14 +5,17 @@ import (
 	//add folder local called controllers
 	"chat/pkg/controllers"
 	"chat/pkg/utils"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRoutes(router *gin.Engine) {
 	router.Use(CORSMiddleware())
 	router.Use(AuthMiddleware())
 
-	router.GET("/socket", controllers.SocketConnection)
-	router.GET("/search", controllers.SearchUsers)
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/socket", controllers.SocketConnection) //swagger added
+	router.GET("/search", controllers.SearchUsers) //swagger added
 
 	router.POST("/login", controllers.Login)
 	router.POST("/signup", controllers.SignUp)
@@ -20,8 +23,8 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getInfoUser", controllers.GetInfo)
 
 	router.PATCH("/updateInfo", controllers.UpdateInfo)
-	router.POST("/getFriends", controllers.GetFriends)
-	router.POST("/getFriendRequests", controllers.GetFriendRequests)
+	router.POST("/getFriends", controllers.GetFriends) //swagger added
+	router.POST("/getFriendRequests", controllers.GetFriendRequests) //swagger added
 	router.POST("/getRequestSent", controllers.GetRequestSent)
 	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
