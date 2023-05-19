@@ -697,7 +697,16 @@ func SendFriendRequestDB(i string, username string, c *gin.Context) bool {
 
 	//send to the username socket conn
 
-	config.Conns[id].WriteJSON("ciao");
+	type Message struct {
+		Type string `json:"type"`
+		Username string `json:"username"`
+		Friend models.Friend `json:"friend"`
+	}
+	msg := Message{Type: "FRR", Username: friend.Nickname, Friend: friend}
+	fmt.Println(msg)
+	if config.Conns[id] != nil {
+		config.Conns[id].WriteJSON(msg);
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "friend request sent",

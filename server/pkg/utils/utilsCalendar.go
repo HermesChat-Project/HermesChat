@@ -1,11 +1,14 @@
 package utils
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"chat/pkg/config"
 	"chat/pkg/models"
@@ -41,6 +44,105 @@ func GetCalendarEvents(index string, c *gin.Context) {
 		})
 		return
 	}
+
+	//get user's chats
+
+	collection2 := config.ClientMongoDB.Database("user").Collection("user")
+	if collection2 == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	objID, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID7",
+		})
+		return
+	}
+
+	opt := options.FindOne().SetProjection(bson.M{"ids": 1})
+	collection4 := config.ClientMongoDB.Database("user").Collection("user")
+	var result7 bson.M
+	ris7 := collection4.FindOne(context.Background(), bson.M{"_id": objID}, opt)
+	ris7.Decode(&result7)
+	if result7 == nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID8",
+		})
+		return
+	}
+	// Extract the "chat" array from the result7
+	ids := result7["ids"].(primitive.A)
+	chatJSON := ids[0].(primitive.M)
+
+	vetChats := chatJSON["chats"].(primitive.A)
+	fmt.Println("vetChats:", vetChats)
+
+	i := 0
+
+	for _, elem := range vetChats {
+		//use elem to search in the collection user.calendar that has in the vet idChats the elem
+		collection3 := config.ClientMongoDB.Database("chat").Collection("calendar")
+		if collection3 == nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
+			})
+			return
+		}
+		fmt.Println("elem:", elem)
+		pipeline := bson.A{
+			bson.M{
+				"$match" : bson.M{
+					"type" : "shared",
+				},
+			},
+    		bson.M{
+				"$unwind" : bson.M{
+					"path" : "$idChats",
+				},
+			},
+			bson.M{
+				"$match" : bson.M{
+					"idChats" : elem,
+				},
+			},
+		}
+		cursor, err := collection3.Aggregate(context.Background(), pipeline)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while getting events",
+			})
+			return
+		}
+		var result []bson.M
+		if err = cursor.All(context.Background(), &result); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while getting events",
+			})
+			return
+		}
+		fmt.Println("result:", result)
+		for _, elem2 := range result {
+			check := false
+			for _, elem3 := range events {
+				if elem2["_id"] == elem3["_id"] {
+					check = true
+				}
+			}
+			if !check{
+				events = append(events, elem2)
+			}
+		}
+
+		i++
+	}
+	fmt.Println(events)
 
 	c.JSON(http.StatusOK, gin.H{
 		"events": events,
