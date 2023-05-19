@@ -26,8 +26,10 @@ type BlockUser struct {
 
 type Friend struct {
 	Nickname string `json:"nickname"`
-	ID string `json:"idUser"`
+	IDUser string `json:"idUser"`
 	Image string `json:"image"`
+	Name string `json:"name"`
+	Surname string `json:"surname"`
 }
 
 type AddCalendarEvent struct {

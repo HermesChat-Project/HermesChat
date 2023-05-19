@@ -21,6 +21,12 @@ func UpdateInfo (c *gin.Context) {
 
 }
 
+func SearchUsers (c *gin.Context) {
+	//get parameters from get request
+	var usr = c.Query("username")
+	utils.SearchUsersDB(usr, c)
+}
+
 func GetFriends (c *gin.Context) {
 	//get a value added with c.Set
 	index, _ := c.Get("index")

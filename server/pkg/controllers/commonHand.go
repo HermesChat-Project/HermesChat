@@ -27,3 +27,15 @@ func SignUp (c *gin.Context) {
 	//check if password respect requirements
 	utils.VerifyPassword(form.Email, form.Username, form.Password, c)
 }
+
+func SendFriendRequest (c *gin.Context) {
+	var form models.SendFriendRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}	
+	index, _ := c.Get("index")
+
+	utils.SendFriendRequestDB(index.(string), form.Username, c)
+	
+}

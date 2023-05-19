@@ -9,6 +9,7 @@ import (
 
 	"chat/pkg/models"
 	"chat/pkg/utils"
+	"chat/pkg/config"
 )
 
 var upgrader = websocket.Upgrader{
@@ -20,8 +21,6 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var Conns = make(map[string]*websocket.Conn)
-
 func SocketConnection(c *gin.Context) {
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
@@ -31,7 +30,7 @@ func SocketConnection(c *gin.Context) {
 	}
 	index, _ := c.Get("index")
 	fmt.Println("index:", index)
-	Conns[index.(string)] = conn
+	config.Conns[index.(string)] = conn
 
 	go func() {
 		for {
@@ -40,14 +39,14 @@ func SocketConnection(c *gin.Context) {
 			if err != nil {
 				fmt.Println("error:", err)
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					delete(Conns, index.(string))
+					delete(config.Conns, index.(string))
 					fmt.Println("connection closed")
 				}
 				return
 			}
 
 			fmt.Println("request:", request)
-			Conns[index.(string)] = conn
+			config.Conns[index.(string)] = conn
 			request.Index = index.(string)
 			go handleTypes(request, conn)
 		}
@@ -59,31 +58,18 @@ func handleTypes(request models.Request, conn *websocket.Conn) {
 	switch request.Type {
 	case "MSG":
 		handleMessage(request, conn)
-	case "FRE":
-		handleFriendRequest(request, conn)
 	}
 }
 
 func handleMessage(request models.Request, conn *websocket.Conn) {
 	var users []string = utils.GetUsersFromGroup(request.IdDest)
 	for _, user := range users {
-		connDest := Conns[user]
+		connDest := config.Conns[user]
 		if connDest != conn {
 			write(connDest, request)
 		}
 	}
 	go utils.SaveMessage(request)
-}
-func handleFriendRequest(request models.Request, conn *websocket.Conn) {
-	var utente = request.IdDest
-	if utils.SendFriendRequestDB(request.Index, utente, conn){
-		connDest := Conns[utente]
-		if connDest != conn {
-			write(connDest, request)
-		}
-	}else{
-		conn.WriteJSON("error")
-	}
 }
 
 func write(conn *websocket.Conn, request models.Request) {

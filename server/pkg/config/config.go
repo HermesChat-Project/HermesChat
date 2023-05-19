@@ -3,17 +3,18 @@ package config
 //load vars from .env file
 
 import (
-	"github.com/joho/godotenv"
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"net"
 	"os"
 	"strconv"
 	"time"
-	"net"
 
+	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var PORT int; 
@@ -21,7 +22,9 @@ var CONNECTION_STRING_MONGODB string;
 var SECRET string;
 var DOMAIN string;
 var PWDGMAIL string;
-var ClientMongoDB *mongo.Client
+var ClientMongoDB *mongo.Client;
+var Conns = make(map[string]*websocket.Conn);
+
 
 func LoadConfig() {
 	err := godotenv.Load()
