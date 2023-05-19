@@ -46,7 +46,7 @@ func CreateToken (index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "10.88.251.84",
+		Domain:   "api.hermeschat.it",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -953,6 +953,65 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
+}
+
+func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
+	//if someone sent a friend request to me, I have to remove it from my sentTo array and from his pending array
+	collectionSentTo := config.ClientMongoDB.Database("user").Collection("sentFriendship")
+	if collectionSentTo == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	objID, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		errConn();
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID9",
+		})
+		return;
+	}
+	ris := collectionSentTo.FindOneAndUpdate(context.Background(), bson.M{"_id": objID}, bson.M{"$pull": bson.M{"sentTo": bson.M{"idUser": idUser}}})
+	var result bson.M
+	ris.Decode(&result)
+	fmt.Println("result: ", result)
+
+	objID2, err := primitive.ObjectIDFromHex(idUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID10",
+		})
+		return;
+	}
+	collectionPending := config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
+	if collectionPending == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return;
+	}
+	ris2 := collectionPending.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$pull": bson.M{"pending": bson.M{"idUser": index}}})
+	var result2 bson.M
+	ris2.Decode(&result2)
+	fmt.Println("result2: ", result2)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "friend request declined",
+	})
+
+	type Message struct {
+		Type string `json:"type"`
+		Username string `json:"idUser"`
+	}
+	msg := Message{Type: "FRD", Username: idUser}
+	fmt.Println(msg)
+	if config.Conns[idUser] != nil {
+		config.Conns[idUser].WriteJSON(msg);
+	}
+
 }
 
 func GetInfoDB (index string, c *gin.Context){

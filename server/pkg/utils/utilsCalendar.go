@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -82,9 +81,6 @@ func GetCalendarEvents(index string, c *gin.Context) {
 	chatJSON := ids[0].(primitive.M)
 
 	vetChats := chatJSON["chats"].(primitive.A)
-	fmt.Println("vetChats:", vetChats)
-
-	i := 0
 
 	for _, elem := range vetChats {
 		//use elem to search in the collection user.calendar that has in the vet idChats the elem
@@ -95,7 +91,6 @@ func GetCalendarEvents(index string, c *gin.Context) {
 			})
 			return
 		}
-		fmt.Println("elem:", elem)
 		pipeline := bson.A{
 			bson.M{
 				"$match" : bson.M{
@@ -127,7 +122,6 @@ func GetCalendarEvents(index string, c *gin.Context) {
 			})
 			return
 		}
-		fmt.Println("result:", result)
 		for _, elem2 := range result {
 			check := false
 			for _, elem3 := range events {
@@ -139,10 +133,7 @@ func GetCalendarEvents(index string, c *gin.Context) {
 				events = append(events, elem2)
 			}
 		}
-
-		i++
 	}
-	fmt.Println(events)
 
 	c.JSON(http.StatusOK, gin.H{
 		"events": events,

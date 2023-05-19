@@ -67,6 +67,9 @@ type AcceptFriendRequest struct {
 	Surname string `json:"surname" binding:"required"`
 	Image string `json:"image" binding:"required"`
 }
+type RefuseFriendRequest struct {
+	IdFriend string `json:"idUser" binding:"required"`
+}
 
 type CreateChat struct {
 	IdUser string `json:"idUser" binding:"required"`

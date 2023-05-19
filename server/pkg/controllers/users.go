@@ -72,6 +72,16 @@ func AcceptFriendRequest (c *gin.Context) {
 
 	utils.AcceptFriendRequestDB(index.(string), form, c)
 }
+func DeclineFriendRequest (c *gin.Context) {
+	var form models.RefuseFriendRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+
+	utils.DeclineFriendRequestDB(index.(string), form.IdFriend, c)
+}
 
 func GetInfo (c *gin.Context) {
 	//get a value added with c.Set

@@ -26,13 +26,15 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getRequestSent", controllers.GetRequestSent)
 	router.POST("/getBlocked", controllers.GetBlocked)
 	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
+	router.POST("/acceptFriend", controllers.AcceptFriendRequest)
+	router.POST("/declineFriend", controllers.DeclineFriendRequest)
 	router.POST("/blockUser", controllers.BlockUser)
 
 	router.POST("/getCalendarEvents", controllers.GetCalendarEvents);
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
 	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
 	router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
-	router.POST("/acceptFriend", controllers.AcceptFriendRequest)
+	
 
 	router.POST("/createChat", controllers.CreateChat)
 	router.POST("/getChats", controllers.GetChats)
