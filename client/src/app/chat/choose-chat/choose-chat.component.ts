@@ -26,7 +26,7 @@ export class ChooseChatComponent {
     if (target.classList.contains("calendar")) {
       this.chatSelector.calendarSectionClicked = true;
       if (this.firstCalendarClick) {
-        this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+        this.chatSelector.getCalendarEvents();
         this.firstCalendarClick = false;
       }
 

@@ -40,6 +40,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DeleteMessageComponent } from './dialog/delete-message/delete-message.component';
 import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component';
+import { SurveyComponent } from './dialog/survey/survey.component';
+import { ChartComponent } from './dialog/chart/chart.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component
     InfoUserComponent,
     DeleteMessageComponent,
     ProgressBarComponent,
+    SurveyComponent,
+    ChartComponent,
   ],
   imports: [
     BrowserModule,

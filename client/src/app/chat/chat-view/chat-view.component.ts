@@ -38,6 +38,7 @@ export class ChatViewComponent {
 
   constructor(public chatSelector: ChatSelectorService) { }
 
+  //#region messages type
   showCamera(type: number) {
     //check if the camera is permitted
     if (navigator.mediaDevices) {
@@ -60,6 +61,18 @@ export class ChatViewComponent {
     // this.chatSelector.flagCamera = type;
 
   }
+
+  createSurvey()
+  {
+    this.chatSelector.openSurveyDialog();
+  }
+
+  createChart()
+  {
+    this.chatSelector.openChartDialog();
+  }
+
+  //#endregion
 
   toggleShowChatActions() {
     this.showChatActions = !this.showChatActions;

@@ -41,6 +41,8 @@ export class CameraComponent {
 
   seeMedia : string = "none";
 
+  showMediaList: boolean = false;
+
   @HostListener('window:resize', ['$event'])
   onResize(event?: Event) {
     const win = !!event ? (event.target as Window) : window;
@@ -75,6 +77,8 @@ export class CameraComponent {
         this.video.ondataavailable = (event) => {
           let recordedBlob: Blob = new Blob([event.data], { type: "video/webm" });
           let recordedSrc = URL.createObjectURL(recordedBlob);
+          this.showMediaList = true;
+
           this.media.push({ src: recordedSrc, type: "video" });
           console.log("Video saved");
           console.log(this.media);
@@ -141,8 +145,8 @@ export class CameraComponent {
 
   /*PHOTO*/
   getImage(event: WebcamImage) {
+    this.showMediaList = true;
     this.media.push({ src: event.imageAsDataUrl, type: "img" });
-    console.log(this.media);
     this.showAllMedia();
   }
 
@@ -175,12 +179,23 @@ export class CameraComponent {
     return time;
   }
 
+  addPhoto()
+  {
+    this.showMediaList = false;
+  }
+
   CheckIfShouldBeShown() {
-    this.seeMedia = this.media.length != 0 ? "flex" : "none";
+
+    if(this.showMediaList){
+      this.seeMedia = "flex";
+    }
+    else
+    {
+      this.seeMedia = "none";
+    }
     if(this.media.length != 0){
-      console.log(this.chatSelector.stream)
       this.chatSelector.stream?.getTracks().forEach(track => track.stop());
-      this.container_webcam.nativeElement.style.display = "none";
+
     }
     return { "display": this.seeMedia };
   }

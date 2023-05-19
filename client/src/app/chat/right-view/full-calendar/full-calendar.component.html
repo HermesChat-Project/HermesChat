@@ -24,16 +24,14 @@
             <div class="date_month">{{getThisDate(0, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(0,i)]"
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
                   class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
               </div>
             </div>
-            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(0, i)">
-              ...
-            </div>
+            <div class="calendar_day_more_events" *ngIf="checkIfThereAreManyEvents(0, i)"></div>
           </div>
         </td>
       </tr>
@@ -146,7 +144,7 @@
     </div>
     <div class="cal_modal_body">
       <div class="cal_modal_body_container">
-        <div class="cal_modal_datetime">
+        <div class="cal_modal_date">
           <i class="bi bi-clock"></i>
           <div class="cal_modal_date">
             <input matInput [matDatepicker]="datepicker" [value]="modifyingEvent?.date || clickedDate" readonly
