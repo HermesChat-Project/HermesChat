@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -167,6 +168,57 @@ func AddCalendarEventDB (index string, form models.AddCalendarEvent, c *gin.Cont
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "event added",
 	})
+
+	if (form.Type == "shared") {
+		//for each chat get users, if they are not who added the event, send them a notification via websocket
+		for _, elem := range form.IdChats {
+			collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
+			if collection2 == nil {
+				errConn();
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": "error while connecting to database",
+				})
+				return
+			}
+
+			objID, err := primitive.ObjectIDFromHex(elem)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"message": "invalid ObjectID",
+				})
+				return
+			}
+
+			
+			ris := collection2.FindOne(context.Background(), bson.M{"_id": objID})
+			if ris == nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"message": "invalid ObjectID",
+				})
+				return
+			}
+			var result bson.M
+			ris.Decode(&result)
+
+
+			for _, elem2 := range result["users"].(primitive.A) {
+				idel := elem2.(primitive.M)["idUser"].(string)
+				if idel != index {
+					type Message struct {
+						Type string `json:"type"`
+						Username string `json:"username"`
+						Event models.AddCalendarEvent `json:"event"`
+					}
+					
+					msg := Message{Type: "CEA", Username: index, Event: form}
+					fmt.Println(msg)
+					if config.Conns[idel] != nil {
+						config.Conns[idel].WriteJSON(msg);
+					}
+				}
+			}
+		}
+	}
 }
 
 func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gin.Context) {
@@ -191,6 +243,16 @@ func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gi
 		})
 		return
 	}
+	//get the event for sending notifications
+	ris := collection.FindOne(context.Background(), bson.M{"_id": objID})
+	if ris == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	var resultA bson.M
+	ris.Decode(&resultA)
 
 	_, err = collection.DeleteOne(c.Request.Context(), bson.M{"_id": objID, "idUser" : index})
 	if err != nil {
@@ -204,6 +266,56 @@ func DeleteCalendarEventDB (index string, form models.DeleteCalendarEvent, c *gi
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "event deleted",
 	})
+
+	if (resultA["type"] == "shared") {
+		//for each chat get users, if they are not who added the event, send them a notification via websocket
+		for _, elem := range resultA["idChats"].(primitive.A) {
+			collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
+			if collection2 == nil {
+				errConn();
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": "error while connecting to database",
+				})
+				return
+			}
+
+			objID, err := primitive.ObjectIDFromHex(elem.(string))
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"message": "invalid ObjectID",
+				})
+				return
+			}
+
+			
+			ris := collection2.FindOne(context.Background(), bson.M{"_id": objID})
+			if ris == nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"message": "invalid ObjectID",
+				})
+				return
+			}
+			var result bson.M
+			ris.Decode(&result)
+
+			for _, elem2 := range result["users"].(primitive.A) {
+				idel := elem2.(primitive.M)["idUser"].(string)
+				if idel != index {
+					type Message struct {
+						Type string `json:"type"`
+						Username string `json:"username"`
+						IdEvent string `json:"idEvent"`
+					}
+					
+					msg := Message{Type: "CED", Username: index, IdEvent: resultA["_id"].(string)}
+					fmt.Println(msg)
+					if config.Conns[idel] != nil {
+						config.Conns[idel].WriteJSON(msg);
+					}
+				}
+			}
+		}
+	}
 }
 
 func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin.Context){

@@ -404,6 +404,36 @@ func UpdateInfoDB(i string, inf string, c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"message": "info updated",
 	})
+
+	collFriendship := config.ClientMongoDB.Database("user").Collection("friendship")
+	if collFriendship == nil {
+		errConn();
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	res := collFriendship.FindOne(context.Background(), bson.M{"id": objID})
+	var result bson.M
+	res.Decode(&result)
+
+	//for each friend of the user, send socket message
+	for _, friend := range result["friends"].([]interface{}) {
+
+		//get idUser which is a field of the friend
+		idUser := friend.(primitive.M)["idUser"].(string)
+		type Message struct {
+			Type string `json:"type"`
+			Username string `json:"username"`
+			Info string `json:"info"`
+		}
+		
+		msg := Message{Type: "CUI", Username: i, Info: inf}
+		fmt.Println(msg)
+		if config.Conns[idUser] != nil {
+			config.Conns[idUser].WriteJSON(msg);
+		}
+	}
 }
 
 func GetFriendsDB(i string, c *gin.Context){
@@ -952,6 +982,26 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 			"message": "invalid ObjectID8",
 		})
 		return;
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "friendship accepted",
+	})
+
+	//socket
+
+
+
+	type Message struct {
+		Type string `json:"type"`
+		Username string `json:"username"`
+		Friend Friend `json:"friend"`
+	}
+	
+	msg := Message{Type: "FRA", Username: friend2.Nickname, Friend: friend}
+	fmt.Println(msg)
+	if config.Conns[friend.ID] != nil {
+		config.Conns[friend.ID].WriteJSON(msg);
 	}
 }
 

@@ -11,7 +11,6 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(CORSMiddleware())
 	router.Use(AuthMiddleware())
 
-
 	router.GET("/socket", controllers.SocketConnection)
 	router.GET("/search", controllers.SearchUsers)
 
@@ -35,24 +34,15 @@ func SetupRoutes(router *gin.Engine) {
 	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
 	router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
 	
-
 	router.POST("/createChat", controllers.CreateChat)
 	router.POST("/getChats", controllers.GetChats)
 
 	router.POST("/getMessages", controllers.GetMessages)
 	/*
-	router.GET("/getUsers", controllers.SearchUsers)
 	router.POST("/removeFriend", controllers.RemoveFriend)
-	router.POST("/declineFriend", controllers.DeclineFriend)
 	router.POST("/createGroup", controllers.CreateGroup)
 	router.POST("/addUserToGroup", controllers.AddUserToGroup)
 	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)
-	router.POST("/sendMessage", controllers.SendMessage)
-	router.POST("/sendGroupMessage", controllers.SendGroupMessage)
-	router.POST("/getMessages", controllers.GetMessages)
-	router.POST("/getGroupMessages", controllers.GetGroupMessages)
-	router.POST("/getGroups", controllers.GetGroups)
-	router.POST("/getGroupUsers", controllers.GetGroupUsers)
 	*/
 }
 
