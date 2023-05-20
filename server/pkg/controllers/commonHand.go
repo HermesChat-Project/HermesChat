@@ -1,10 +1,11 @@
-package controllers 
+package controllers
 
 import (
+
 	"github.com/gin-gonic/gin"
 
-	"chat/pkg/utils"
 	"chat/pkg/models"
+	"chat/pkg/utils"
 )
 
 // Login	godoc
@@ -71,5 +72,35 @@ func SendFriendRequest (c *gin.Context) {
 	index, _ := c.Get("index")
 
 	utils.SendFriendRequestDB(index.(string), form.Username, c)
+	
+}
+
+//SendFile	godoc
+// @Summary 			Invia un file
+// @Description 		Salva il file nella cartella del server dell'utente loggato e invia il file all'utente specificato
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    username formData string true "Username dell'utente a cui inviare il file"
+// @Param 			    file formData file true "File da inviare"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /sendFile [post]
+func SendFile (c *gin.Context) {
+	//get all files from request
+	form, _ := c.MultipartForm()
+	files := form.File["file"]
+	index, _ := c.Get("index")
+	chatId := c.PostForm("chatId")
+
+	if len(files) == 0 {
+		c.JSON(400, gin.H{"error": "No file found"})
+		return
+	}
+	if chatId == "" {
+		c.JSON(400, gin.H{"error": "No chatId found"})
+	}
+
+	utils.UploadFile(index.(string), chatId, files, c)
 	
 }
