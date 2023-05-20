@@ -39,4 +39,11 @@ export class HeaderChatSelectorComponent {
     this.headerService.typeOfAction = this.headerService.typeOfAction == 4 ? 0 : 4;
   }
 
+  requestNumber(){
+    if(this.chatSelector.receivedList.length > 9)
+      return "9+";
+    else
+      return this.chatSelector.receivedList.length;
+  }
+
 }

@@ -451,7 +451,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
+    this.socket = new WebSocket('wss://192.168.1.43:8080/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
