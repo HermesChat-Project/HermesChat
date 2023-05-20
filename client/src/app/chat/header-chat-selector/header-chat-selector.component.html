@@ -18,9 +18,9 @@
       <div id="requests">
         <i class="bi bi-person-heart" (click)="ToggleFriendRequest()"></i>
         <div class="notify-request" *ngIf="chatSelector.receivedList.length != 0">
-          <div class="triangle"></div>
-          <div class="rectangle">
-            {{chatSelector.receivedList.length}}
+          <div class="notif">
+            <p class="notifItem bi bi-person-heart"></p>
+            <p class="notifItem">{{requestNumber()}}</p>
           </div>
         </div>
       </div>
