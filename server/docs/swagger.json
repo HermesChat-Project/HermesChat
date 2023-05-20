@@ -82,6 +82,110 @@
                 }
             }
         },
+        "/addCalendarEvent": {
+            "post": {
+                "description": "Aggiunge un evento al calendario dell'utente loggato (nel caso di evento condiviso, aggiunge anche l'evento al calendario degli utenti con cui è condiviso)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Aggiunge un evento al calendario",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Titolo dell'evento",
+                        "name": "title",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Descrizione dell'evento",
+                        "name": "description",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Data dell'evento",
+                        "name": "date",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'utente che ha creato l'evento",
+                        "name": "idUser",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Notifica dell'evento",
+                        "name": "notify",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Shared or Personal",
+                        "name": "type",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tempo di notifica",
+                        "name": "notifyTime",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Colore dell'evento",
+                        "name": "color",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Id delle chat con cui è condiviso l'evento (se type è Shared)",
+                        "name": "idChats",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/blockUser": {
             "post": {
                 "description": "Blocca l'utente passato come parametro dall'utente loggato",
@@ -172,6 +276,65 @@
                 }
             }
         },
+        "/createChat": {
+            "post": {
+                "description": "Crea una chat tra due utenti",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Crea una chat",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'utente con cui creare la chat",
+                        "name": "idUser",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Immagine dell'utente loggato",
+                        "name": "img",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Immagine dell'utente con cui creare la chat",
+                        "name": "friendImg",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/declineFriend": {
             "post": {
                 "description": "Rifiuta la richiesta di amicizia dell'utente loggato con l'utente passato come parametro",
@@ -230,6 +393,82 @@
                         "description": "Indice dell'utente loggato",
                         "name": "index",
                         "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getCalendarEvents": {
+            "post": {
+                "description": "Restituisce tutti gli eventi del calendario dell'utente loggato (sia personali che condivisi)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ottiene eventi del calendario",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getChats": {
+            "post": {
+                "description": "Restituisce tutte le chat dell'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ottieni chat",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -344,6 +583,58 @@
                         "description": "Indice dell'utente loggato",
                         "name": "index",
                         "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getMessages": {
+            "post": {
+                "description": "Restituisce offset * 50 messaggi della chat selezionata",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ottieni messaggi",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id della chat selezionata",
+                        "name": "idChat",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Offset dei messaggi da restituire",
+                        "name": "offset",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -496,6 +787,58 @@
                 }
             }
         },
+        "/sendFile": {
+            "post": {
+                "description": "Salva il file nella cartella del server dell'utente loggato e invia il file all'utente specificato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Invia un file",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username dell'utente a cui inviare il file",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File da inviare",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/sendFriendRequest": {
             "post": {
                 "description": "Invia una richiesta di amicizia all'utente specificato dall'utente loggato",
@@ -612,6 +955,103 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            }
+        },
+        "/updateCalendarEvent": {
+            "patch": {
+                "description": "Modifica un evento del calendario dell'utente loggato (nel caso di evento condiviso, modifica anche l'evento al calendario degli utenti con cui è condiviso)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Modifica un evento del calendario",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'evento da modificare",
+                        "name": "idEvent",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Titolo dell'evento",
+                        "name": "title",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Descrizione dell'evento",
+                        "name": "description",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Data dell'evento",
+                        "name": "date",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Notifica dell'evento",
+                        "name": "notify",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Shared or Personal",
+                        "name": "type",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tempo di notifica",
+                        "name": "notifyTime",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Colore dell'evento",
+                        "name": "color",
+                        "in": "header"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Id delle chat con cui è condiviso l'evento (se type è Shared)",
+                        "name": "idChats",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }

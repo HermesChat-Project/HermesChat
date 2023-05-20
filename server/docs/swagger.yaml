@@ -58,6 +58,80 @@ paths:
           schema:
             type: string
       summary: Accetta richiesta di amicizia
+  /addCalendarEvent:
+    post:
+      description: Aggiunge un evento al calendario dell'utente loggato (nel caso
+        di evento condiviso, aggiunge anche l'evento al calendario degli utenti con
+        cui è condiviso)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Titolo dell'evento
+        in: header
+        name: title
+        required: true
+        type: string
+      - description: Descrizione dell'evento
+        in: header
+        name: description
+        required: true
+        type: string
+      - description: Data dell'evento
+        in: header
+        name: date
+        required: true
+        type: string
+      - description: Id dell'utente che ha creato l'evento
+        in: header
+        name: idUser
+        required: true
+        type: string
+      - description: Notifica dell'evento
+        in: header
+        name: notify
+        required: true
+        type: string
+      - description: Shared or Personal
+        in: header
+        name: type
+        required: true
+        type: string
+      - description: Tempo di notifica
+        in: header
+        name: notifyTime
+        required: true
+        type: string
+      - description: Colore dell'evento
+        in: header
+        name: color
+        required: true
+        type: string
+      - collectionFormat: csv
+        description: Id delle chat con cui è condiviso l'evento (se type è Shared)
+        in: header
+        items:
+          type: string
+        name: idChats
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Aggiunge un evento al calendario
   /blockUser:
     post:
       description: Blocca l'utente passato come parametro dall'utente loggato
@@ -119,6 +193,46 @@ paths:
           schema:
             type: string
       summary: Verifica OTP
+  /createChat:
+    post:
+      description: Crea una chat tra due utenti
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id dell'utente con cui creare la chat
+        in: formData
+        name: idUser
+        required: true
+        type: string
+      - description: Immagine dell'utente loggato
+        in: formData
+        name: img
+        required: true
+        type: file
+      - description: Immagine dell'utente con cui creare la chat
+        in: formData
+        name: friendImg
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Crea una chat
   /declineFriend:
     post:
       description: Rifiuta la richiesta di amicizia dell'utente loggato con l'utente
@@ -175,6 +289,57 @@ paths:
           schema:
             type: string
       summary: Ricerca utenti bloccati
+  /getCalendarEvents:
+    post:
+      description: Restituisce tutti gli eventi del calendario dell'utente loggato
+        (sia personali che condivisi)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottiene eventi del calendario
+  /getChats:
+    post:
+      description: Restituisce tutte le chat dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottieni chat
   /getFriendRequests:
     post:
       description: Restituisce tutti le richieste di amicizia dell'utente loggato
@@ -250,6 +415,41 @@ paths:
           schema:
             type: string
       summary: Informazioni utente
+  /getMessages:
+    post:
+      description: Restituisce offset * 50 messaggi della chat selezionata
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id della chat selezionata
+        in: formData
+        name: idChat
+        required: true
+        type: string
+      - description: Offset dei messaggi da restituire
+        in: formData
+        name: offset
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottieni messaggi
   /getRequestSent:
     post:
       description: Restituisce tutti le richieste di amicizia inviate dell'utente
@@ -337,6 +537,42 @@ paths:
           schema:
             type: string
       summary: Ricerca utenti
+  /sendFile:
+    post:
+      description: Salva il file nella cartella del server dell'utente loggato e invia
+        il file all'utente specificato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente a cui inviare il file
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: File da inviare
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Invia un file
   /sendFriendRequest:
     post:
       description: Invia una richiesta di amicizia all'utente specificato dall'utente
@@ -420,6 +656,73 @@ paths:
         "200":
           description: OK
       summary: Connessione al socket
+  /updateCalendarEvent:
+    patch:
+      description: Modifica un evento del calendario dell'utente loggato (nel caso
+        di evento condiviso, modifica anche l'evento al calendario degli utenti con
+        cui è condiviso)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Id dell'evento da modificare
+        in: header
+        name: idEvent
+        required: true
+        type: string
+      - description: Titolo dell'evento
+        in: header
+        name: title
+        type: string
+      - description: Descrizione dell'evento
+        in: header
+        name: description
+        type: string
+      - description: Data dell'evento
+        in: header
+        name: date
+        type: string
+      - description: Notifica dell'evento
+        in: header
+        name: notify
+        type: string
+      - description: Shared or Personal
+        in: header
+        name: type
+        type: string
+      - description: Tempo di notifica
+        in: header
+        name: notifyTime
+        type: string
+      - description: Colore dell'evento
+        in: header
+        name: color
+        type: string
+      - collectionFormat: csv
+        description: Id delle chat con cui è condiviso l'evento (se type è Shared)
+        in: header
+        items:
+          type: string
+        name: idChats
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Modifica un evento del calendario
   /updateInfo:
     patch:
       description: Aggiorna lo "stato" dell'utente loggato

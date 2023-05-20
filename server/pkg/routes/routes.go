@@ -2,7 +2,6 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	//add folder local called controllers
 	"chat/pkg/controllers"
 	"chat/pkg/utils"
 	swaggerFiles "github.com/swaggo/files"
@@ -14,33 +13,35 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(AuthMiddleware())
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.GET("/socket", controllers.SocketConnection) //swagger added
-	router.GET("/search", controllers.SearchUsers) //swagger added
+	router.GET("/socket", controllers.SocketConnection) 
+	router.GET("/search", controllers.SearchUsers) 
 
-	router.POST("/login", controllers.Login) //swagger added
-	router.POST("/signup", controllers.SignUp) //swagger added
-	router.POST("/checkOtp", controllers.CheckOtp) //swagger added
-	router.POST("/getInfoUser", controllers.GetInfo) //swagger added
+	router.POST("/login", controllers.Login) 
+	router.POST("/signup", controllers.SignUp) 
+	router.POST("/checkOtp", controllers.CheckOtp) 
+	router.POST("/getInfoUser", controllers.GetInfo) 
 
-	router.PATCH("/updateInfo", controllers.UpdateInfo) //swagger added
-	router.POST("/getFriends", controllers.GetFriends) //swagger added
-	router.POST("/getFriendRequests", controllers.GetFriendRequests) //swagger added
-	router.POST("/getRequestSent", controllers.GetRequestSent) //swagger added
-	router.POST("/getBlocked", controllers.GetBlocked) //swagger added
-	router.POST("/sendFriendRequest", controllers.SendFriendRequest) //swagger added
-	router.POST("/acceptFriend", controllers.AcceptFriendRequest) //swagger added
-	router.POST("/declineFriend", controllers.DeclineFriendRequest) //swagger added
-	router.POST("/blockUser", controllers.BlockUser) //swagger added
+	router.PATCH("/updateInfo", controllers.UpdateInfo) 
+	router.POST("/getFriends", controllers.GetFriends) 
+	router.POST("/getFriendRequests", controllers.GetFriendRequests) 
+	router.POST("/getRequestSent", controllers.GetRequestSent) 
+	router.POST("/getBlocked", controllers.GetBlocked) 
+	router.POST("/sendFriendRequest", controllers.SendFriendRequest) 
+	router.POST("/acceptFriend", controllers.AcceptFriendRequest) 
+	router.POST("/declineFriend", controllers.DeclineFriendRequest) 
+	router.POST("/blockUser", controllers.BlockUser) 
 
-	router.POST("/getCalendarEvents", controllers.GetCalendarEvents);
-	router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
-	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent);
-	router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent);
+	router.POST("/getCalendarEvents", controllers.GetCalendarEvents); 
+	router.POST("/addCalendarEvent", controllers.AddCalendarEvent); 
+	router.DELETE("/deleteCalendarEvent", controllers.DeleteCalendarEvent); 
+	router.PATCH("/updateCalendarEvent", controllers.UpdateCalendarEvent); 
 	
-	router.POST("/createChat", controllers.CreateChat)
-	router.POST("/getChats", controllers.GetChats)
+	router.POST("/createChat", controllers.CreateChat) 
+	router.POST("/getChats", controllers.GetChats) 
 
-	router.POST("/getMessages", controllers.GetMessages)
+	router.POST("/getMessages", controllers.GetMessages) 
+
+	router.POST("/sendFile", controllers.SendFile) 
 	/*
 	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/createGroup", controllers.CreateGroup)
