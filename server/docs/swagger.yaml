@@ -7,6 +7,174 @@ info:
   title: HermesChat API
   version: "1.0"
 paths:
+  /acceptFriend:
+    post:
+      description: Accetta la richiesta di amicizia dell'utente loggato con l'utente
+        passato come parametro
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Indice dell'utente da accettare
+        in: header
+        name: idUser
+        required: true
+        type: string
+      - description: Nickname dell'utente da accettare
+        in: header
+        name: nickname
+        required: true
+        type: string
+      - description: Nome dell'utente da accettare
+        in: header
+        name: name
+        required: true
+        type: string
+      - description: Cognome dell'utente da accettare
+        in: header
+        name: surname
+        required: true
+        type: string
+      - description: Immagine dell'utente da accettare
+        in: header
+        name: image
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Accetta richiesta di amicizia
+  /blockUser:
+    post:
+      description: Blocca l'utente passato come parametro dall'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente da bloccare
+        in: header
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Blocca utente
+  /checkOtp:
+    post:
+      description: Verifica che l'OTP inserito dall'utente sia lo stesso generato
+        dal server e inviato via email
+      parameters:
+      - description: Indice dell'utente da verificare
+        in: header
+        name: id
+        required: true
+        type: string
+      - description: OTP inserito dall'utente
+        in: header
+        name: otp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Verifica OTP
+  /declineFriend:
+    post:
+      description: Rifiuta la richiesta di amicizia dell'utente loggato con l'utente
+        passato come parametro
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Indice dell'utente da rifiutare
+        in: header
+        name: idUser
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rifiuta richiesta di amicizia
+  /getBlocked:
+    post:
+      description: Restituisce tutti gli utenti bloccati dall'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca utenti bloccati
   /getFriendRequests:
     post:
       description: Restituisce tutti le richieste di amicizia dell'utente loggato
@@ -57,6 +225,92 @@ paths:
           schema:
             type: string
       summary: Ricerca amici utente
+  /getInfoUser:
+    post:
+      description: Restituisce le informazioni dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Informazioni utente
+  /getRequestSent:
+    post:
+      description: Restituisce tutti le richieste di amicizia inviate dell'utente
+        loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca richieste di amicizia inviate
+  /login:
+    post:
+      description: Effettua il login di un utente e crea un token JWT salvato in un
+        cookie http-only
+      parameters:
+      - description: Username dell'utente
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: Password dell'utente
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Login utente
   /searchUsers:
     get:
       description: Cerca fino a 100 utenti con username che inizia con la stringa
@@ -83,6 +337,73 @@ paths:
           schema:
             type: string
       summary: Ricerca utenti
+  /sendFriendRequest:
+    post:
+      description: Invia una richiesta di amicizia all'utente specificato dall'utente
+        loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente a cui inviare la richiesta di amicizia
+        in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Invia richiesta di amicizia
+  /signup:
+    post:
+      description: Effettua la registrazione di un utente e crea un codice OTP che
+        verrà inviato via email
+      parameters:
+      - description: Username dell'utente
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: Password dell'utente
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Email dell'utente
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Registrazione di un utente
   /socket:
     get:
       description: Permette di connettersi al socket realizzato con libreria Gorilla
@@ -99,4 +420,34 @@ paths:
         "200":
           description: OK
       summary: Connessione al socket
+  /updateInfo:
+    patch:
+      description: Aggiorna lo "stato" dell'utente loggato
+      parameters:
+      - description: Nuove informazioni da aggiornare
+        in: header
+        name: newInfo
+        required: true
+        type: string
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Aggiorna informazioni utente
 swagger: "2.0"

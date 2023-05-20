@@ -9,6 +9,252 @@
     "host": "api.hermeschat.it:8090",
     "basePath": "/",
     "paths": {
+        "/acceptFriend": {
+            "post": {
+                "description": "Accetta la richiesta di amicizia dell'utente loggato con l'utente passato come parametro",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Accetta richiesta di amicizia",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente da accettare",
+                        "name": "idUser",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nickname dell'utente da accettare",
+                        "name": "nickname",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nome dell'utente da accettare",
+                        "name": "name",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cognome dell'utente da accettare",
+                        "name": "surname",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Immagine dell'utente da accettare",
+                        "name": "image",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/blockUser": {
+            "post": {
+                "description": "Blocca l'utente passato come parametro dall'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Blocca utente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username dell'utente da bloccare",
+                        "name": "username",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/checkOtp": {
+            "post": {
+                "description": "Verifica che l'OTP inserito dall'utente sia lo stesso generato dal server e inviato via email",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Verifica OTP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente da verificare",
+                        "name": "id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OTP inserito dall'utente",
+                        "name": "otp",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/declineFriend": {
+            "post": {
+                "description": "Rifiuta la richiesta di amicizia dell'utente loggato con l'utente passato come parametro",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Rifiuta richiesta di amicizia",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente da rifiutare",
+                        "name": "idUser",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getBlocked": {
+            "post": {
+                "description": "Restituisce tutti gli utenti bloccati dall'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ricerca utenti bloccati",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/getFriendRequests": {
             "post": {
                 "description": "Restituisce tutti le richieste di amicizia dell'utente loggato",
@@ -85,6 +331,133 @@
                 }
             }
         },
+        "/getInfoUser": {
+            "post": {
+                "description": "Restituisce le informazioni dell'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Informazioni utente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getRequestSent": {
+            "post": {
+                "description": "Restituisce tutti le richieste di amicizia inviate dell'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ricerca richieste di amicizia inviate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Effettua il login di un utente e crea un token JWT salvato in un cookie http-only",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Login utente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username dell'utente",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password dell'utente",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/searchUsers": {
             "get": {
                 "description": "Cerca fino a 100 utenti con username che inizia con la stringa passata come parametro",
@@ -98,6 +471,103 @@
                         "description": "Caratteri con cui inizia l'username",
                         "name": "username",
                         "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sendFriendRequest": {
+            "post": {
+                "description": "Invia una richiesta di amicizia all'utente specificato dall'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Invia richiesta di amicizia",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username dell'utente a cui inviare la richiesta di amicizia",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "description": "Effettua la registrazione di un utente e crea un codice OTP che verrà inviato via email",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Registrazione di un utente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username dell'utente",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password dell'utente",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email dell'utente",
+                        "name": "email",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -142,6 +612,51 @@
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            }
+        },
+        "/updateInfo": {
+            "patch": {
+                "description": "Aggiorna lo \"stato\" dell'utente loggato",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Aggiorna informazioni utente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nuove informazioni da aggiornare",
+                        "name": "newInfo",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }

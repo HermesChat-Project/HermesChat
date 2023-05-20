@@ -17,20 +17,20 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/socket", controllers.SocketConnection) //swagger added
 	router.GET("/search", controllers.SearchUsers) //swagger added
 
-	router.POST("/login", controllers.Login)
-	router.POST("/signup", controllers.SignUp)
-	router.POST("/checkOtp", controllers.CheckOtp)
-	router.POST("/getInfoUser", controllers.GetInfo)
+	router.POST("/login", controllers.Login) //swagger added
+	router.POST("/signup", controllers.SignUp) //swagger added
+	router.POST("/checkOtp", controllers.CheckOtp) //swagger added
+	router.POST("/getInfoUser", controllers.GetInfo) //swagger added
 
-	router.PATCH("/updateInfo", controllers.UpdateInfo)
+	router.PATCH("/updateInfo", controllers.UpdateInfo) //swagger added
 	router.POST("/getFriends", controllers.GetFriends) //swagger added
 	router.POST("/getFriendRequests", controllers.GetFriendRequests) //swagger added
-	router.POST("/getRequestSent", controllers.GetRequestSent)
-	router.POST("/getBlocked", controllers.GetBlocked)
-	router.POST("/sendFriendRequest", controllers.SendFriendRequest)
-	router.POST("/acceptFriend", controllers.AcceptFriendRequest)
-	router.POST("/declineFriend", controllers.DeclineFriendRequest)
-	router.POST("/blockUser", controllers.BlockUser)
+	router.POST("/getRequestSent", controllers.GetRequestSent) //swagger added
+	router.POST("/getBlocked", controllers.GetBlocked) //swagger added
+	router.POST("/sendFriendRequest", controllers.SendFriendRequest) //swagger added
+	router.POST("/acceptFriend", controllers.AcceptFriendRequest) //swagger added
+	router.POST("/declineFriend", controllers.DeclineFriendRequest) //swagger added
+	router.POST("/blockUser", controllers.BlockUser) //swagger added
 
 	router.POST("/getCalendarEvents", controllers.GetCalendarEvents);
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent);
