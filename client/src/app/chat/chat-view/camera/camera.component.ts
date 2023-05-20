@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ChatSelectorService } from '../../chat.service';
 import { WebcamImage, WebcamInitError } from 'ngx-webcam';
 import { Subject } from 'rxjs';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-camera',
@@ -14,6 +14,7 @@ export class CameraComponent {
   @ViewChild("media_scrolling") media_scrolling!: ElementRef;
   @ViewChild("media_changing") media_changing!: ElementRef;
   @ViewChild("container_webcam") container_webcam!: ElementRef;
+  @Output() onMediaEvent: EventEmitter<{ src: string , type: string }[]> = new EventEmitter<{ src: string, type: string }[]>();
   constructor(public chatSelector: ChatSelectorService, public sanitizer: DomSanitizer) {
     this.onResize();
   }
@@ -39,7 +40,7 @@ export class CameraComponent {
   media_position: number = 0;
   scroll_position: number = 0;
 
-  seeMedia : string = "none";
+  seeMedia: string = "none";
 
   showMediaList: boolean = false;
 
@@ -63,25 +64,33 @@ export class CameraComponent {
   cameraProblem(event: WebcamInitError) {
     console.log(event);
   }
-
+  sendMedia() {
+    this.onMediaEvent.emit(this.media as { src: string, type: string }[]);
+  }
   takeMedia() {
     if (this.chatSelector.flagCamera == 1) {
       this.trigger.next();
     }
     else {
       if (!this.timer) {
-        console.log("Video started");
-        this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
-        this.video.start();
+        if (!this.video) {
+          this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
+        }
+        console.log(this.video.stream);
+        if (this.video.state == "recording" || this.video.state == "paused") {
+          this.video.resume();
+        }
+        else
+          this.video.start();
 
         this.video.ondataavailable = (event) => {
+          console.log(event);
           let recordedBlob: Blob = new Blob([event.data], { type: "video/webm" });
           let recordedSrc = URL.createObjectURL(recordedBlob);
           this.showMediaList = true;
-
+          this.seconds = this.minutes = this.hours = 0;
           this.media.push({ src: recordedSrc, type: "video" });
-          console.log("Video saved");
-          console.log(this.media);
+          this.video = null;
           this.showAllMedia()
 
         }
@@ -107,22 +116,21 @@ export class CameraComponent {
         clearInterval(this.timer);
         this.timer = null;
         this.video?.stop();
-
-
-
         this.videoOnGoing = false;
+        console.log(this.video);
       }
     }
   }
 
   showAllMedia() {
+    console.log(this.media);
     this.media_scrolling.nativeElement.innerHTML = "";
     for (let i = 0; i < this.media.length; i++) {
       let div = document.createElement("div")
       div.classList.add("media-item");
       this.media_scrolling.nativeElement.appendChild(div);
       let el = document.createElement(this.media[i].type);
-      el.setAttribute("src", this.media[i].src);
+      el.setAttribute("src", this.media[i].src as string);
       el.style.position = "relative";
       el.style.maxWidth = "640px";
       if (this.media[i].type == "video") {
@@ -179,29 +187,29 @@ export class CameraComponent {
     return time;
   }
 
-  addPhoto()
-  {
+  addPhoto() {
     this.showMediaList = false;
   }
 
   CheckIfShouldBeShown() {
 
-    if(this.showMediaList){
+    if (this.showMediaList) {
       this.seeMedia = "flex";
     }
-    else
-    {
+    else {
       this.seeMedia = "none";
     }
-    if(this.media.length != 0){
+    if (this.media.length != 0) {
       this.chatSelector.stream?.getTracks().forEach(track => track.stop());
 
     }
     return { "display": this.seeMedia };
   }
 
-  getMedia(media: { src: string, type: string }) {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(media.src);
+  getMedia(media: { src: string, type: string }, index: number) {
+    let sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(media.src);
+    this.media[index].src = sanitized.toString();
+    return sanitized;
   }
 
   changeMediaSelected(index: number) {

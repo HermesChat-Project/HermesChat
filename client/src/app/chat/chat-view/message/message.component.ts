@@ -4,6 +4,7 @@ import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteMessageComponent } from 'src/app/dialog/delete-message/delete-message.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-message',
@@ -19,7 +20,7 @@ export class MessageComponent implements AfterViewInit {
   messageActions: boolean = false;
 
 
-  constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog) { }
+  constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit(): void {
     this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
@@ -74,7 +75,9 @@ export class MessageComponent implements AfterViewInit {
     return nickname;
   }
 
-
+  getContent(content: string){
+    return content;
+  }
 
 
   getTimeFormatted(date: string) {

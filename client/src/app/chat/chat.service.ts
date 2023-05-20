@@ -33,6 +33,8 @@ export class ChatSelectorService {
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
   offsetChat: number = 1
 
+  theme:string = "light";
+
   callList: callsModel[] = [
     new callsModel(0, 1, 2, new Date(), 0),
     new callsModel(1, 1, 2, new Date(), 1),
@@ -187,7 +189,10 @@ export class ChatSelectorService {
   }
   openSurveyDialog() {
     this.dialog.open(SurveyComponent, {
-      panelClass: 'custom-dialog-container'
+      panelClass: 'custom-dialog-container',
+      width: '40%',
+      minHeight: '50%',
+      maxHeight: '70%',
     }).afterClosed().subscribe((result: boolean) => { if (result) { this.sendMessage("Ciao", "survey") } })
   }
 
@@ -479,6 +484,18 @@ export class ChatSelectorService {
   //#endregion
 
   //#region funcion
+
+
+  //header
+  closeInfo() {
+    this.user_action = -1;
+  }
+
+  changeTheme(theme: string) {
+    this.theme = theme;
+    localStorage.setItem('theme', theme);
+  }
+  //progress bar
   seeMain: boolean = false;
   waitProgress() {
 
@@ -489,6 +506,8 @@ export class ChatSelectorService {
     }
   }
 
+
+  //chat
   changeName(chatList: any[]) {
 
     for (const [index, chat] of chatList.entries()) {

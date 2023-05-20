@@ -29,7 +29,6 @@
 }
 .close i {
   font-size: 1.5em;
-  color: #0b2f5e;
   margin: 0 0.2em;
   cursor: pointer;
   text-align: end;
@@ -166,10 +165,9 @@
   justify-content: center;
   align-items: center;
   user-select: none;
-}
-
-.no_request {
   font-size: 11pt;
   font-weight: bold;
   color: #084595;
 }
+
+

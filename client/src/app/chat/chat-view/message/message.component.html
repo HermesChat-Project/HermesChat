@@ -9,7 +9,7 @@
         <span>{{getNameSender(chatMessage.messages.idUser)}}</span>
       </div>
       <div class="message-get" *ngIf="chatMessage.messages.type == 'text'">
-        <div class="text" [innerHTML]="chatMessage.messages.content" #text></div>
+        <div class="text" [innerHTML]="getContent(chatMessage.messages.content)" #text></div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
       </div>
     </div>

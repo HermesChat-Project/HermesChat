@@ -42,6 +42,7 @@ import { DeleteMessageComponent } from './dialog/delete-message/delete-message.c
 import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component';
 import { SurveyComponent } from './dialog/survey/survey.component';
 import { ChartComponent } from './dialog/chart/chart.component';
+import { InfoChatComponent } from './chat/header-chat-selector/settings/info-chat/info-chat.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { ChartComponent } from './dialog/chart/chart.component';
     ProgressBarComponent,
     SurveyComponent,
     ChartComponent,
+    InfoChatComponent,
   ],
   imports: [
     BrowserModule,

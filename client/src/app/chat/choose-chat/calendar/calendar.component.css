@@ -43,6 +43,7 @@
   width: 50%;
   height: 100%;
   border-bottom: 1px solid #0b2f5e;
+  z-index: -1;
 }
 
 .Ppos{

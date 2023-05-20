@@ -69,4 +69,4 @@
 </div>
 
 <!-- camera component -->
-<app-camera *ngIf="chatSelector.flagCamera > 0"></app-camera>
+<app-camera *ngIf="chatSelector.flagCamera > 0" (onMediaEvent)="getMedia($event)"></app-camera>

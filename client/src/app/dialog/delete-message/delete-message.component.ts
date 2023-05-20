@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ChatSelectorService } from 'src/app/chat/chat.service';
 
 @Component({
   selector: 'app-delete-message',
@@ -8,7 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class DeleteMessageComponent {
 
-  constructor(private dialogRef: MatDialogRef<DeleteMessageComponent>) { }
+  constructor(private dialogRef: MatDialogRef<DeleteMessageComponent>, public chatSelector: ChatSelectorService) { }
 
   closeDialog() {
     this.dialogRef.close(false);

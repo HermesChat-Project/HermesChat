@@ -20,7 +20,7 @@
 
 .header i{
   font-size: 1.5em;
-  color: #0b2f5e;
+  color: inherit;
   margin: 0 0.2em;
   cursor: pointer;
   text-align: end;
@@ -45,6 +45,8 @@
   margin: 0 5px;
   color: #555;
 }
+
+
 
 .row{
   margin: 0 !important;
@@ -95,7 +97,8 @@
   height: 100%;
   position: fixed;
   top: 0;
-  z-index: 6;
+  background-color: white;
+  z-index: 7;
 }
 
 .show_user_action{

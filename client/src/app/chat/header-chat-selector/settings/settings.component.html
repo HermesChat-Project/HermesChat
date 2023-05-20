@@ -4,7 +4,7 @@
     <i class="bi bi-x" (click)="closeSettings()"></i>
   </div>
   <div class="user_action">
-    <div class="row" (click)="showUserInfo()">
+    <div class="row" (click)="showInfo()">
       <div class="col-sm-12">
         <i class="bi bi-person-fill"></i>
         <div class="info">
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" >
       <div class="col-sm-12">
         <i class="bi bi-shield-lock-fill"></i>
         <div class="info">
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" (click)="showInfo(2)">
       <div class="col-sm-12">
         <i class="bi bi-chat-left-text-fill"></i>
         <div class="info">
@@ -53,3 +53,4 @@
 </div>
 
 <app-info-user class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 0, 'hide_user_action' : chatSelector.user_action != 0}" *ngIf="chatSelector.infoUser"></app-info-user>
+<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 2, 'hide_user_action' : chatSelector.user_action != 2}"></app-info-chat>

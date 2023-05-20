@@ -37,7 +37,21 @@ export class ChatViewComponent {
   isCameraPermitted: boolean = false;
 
   constructor(public chatSelector: ChatSelectorService) { }
-
+  getMedia(event:any){
+    console.log(event);
+    this.chatSelector.stream?.getTracks().forEach(track => track.stop());
+    this.chatSelector.flagCamera = 0;
+    let innerHTML = this.textMessage.nativeElement.innerrHTML == "" ? "" : "<br>";
+    for(const media of event){
+      innerHTML += `<${media.type} src='${media.src}' style="max-width: 100%; max-height: 100%;"`;
+      if(media.type == 'video')
+        innerHTML += "></video>";
+      else
+        innerHTML += "/>";
+      innerHTML += "<br><br>";
+    }
+    this.textMessage.nativeElement.innerHTML += innerHTML;
+  }
   //#region messages type
   showCamera(type: number) {
     //check if the camera is permitted
@@ -111,7 +125,7 @@ export class ChatViewComponent {
           this.textSelectedOffsetStart = oRange.startOffset;
           this.fontStyling.nativeElement.style.top = (top - 37) + 'px';
           this.fontStyling.nativeElement.style.left = left + 'px';
-          this.fontStyling.nativeElement.style.display = 'block';
+          this.fontStyling.nativeElement.style.display = 'flex';
 
           this.getStylesAlreadyApplied();
         }

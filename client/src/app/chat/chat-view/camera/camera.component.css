@@ -6,7 +6,6 @@
 .webcam_container {
   width: 100%;
   height: 100%;
-  background-color: white;
   display: flex;
   justify-items: center;
   flex-direction: column;
