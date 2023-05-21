@@ -34,4 +34,8 @@ export class LoginService {
     );
   }
 
+  register() {
+    this.router.navigate(['/signup']);
+  }
+
 }

@@ -11,14 +11,18 @@ export class ChatSelectorComponent {
   constructor(public chatSelector: ChatSelectorService) { }
 
   ngOnInit() {
-    //create a option for a post request and send the cookie to the server
+    //theme
+    this.chatSelector.theme = localStorage.getItem('theme') || 'light';
+    console.log(this.chatSelector.theme);
 
+    //create a option for a post request and send the cookie to the server
     this.chatSelector.getInfo();
     this.chatSelector.getFriends();
     this.chatSelector.getReceivedRequests();
     this.chatSelector.getSentRequest()
     // this.chatSelector.getChats();
     this.chatSelector.startSocket();
+
   }
 
   checkWhatShouldBeShown() {

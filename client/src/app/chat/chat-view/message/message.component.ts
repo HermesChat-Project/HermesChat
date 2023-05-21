@@ -4,6 +4,8 @@ import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteMessageComponent } from 'src/app/dialog/delete-message/delete-message.component';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-message',
@@ -14,12 +16,12 @@ import { DeleteMessageComponent } from 'src/app/dialog/delete-message/delete-mes
 export class MessageComponent implements AfterViewInit {
   @Input() chatMessage!: messageModel;
   @Input() index!: number;
+  @ViewChild("canvas") canvas!: ElementRef;
   @ViewChild('copy') copy!: ElementRef;
   @ViewChild("text") text!: ElementRef;
   messageActions: boolean = false;
 
-
-  constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog) { }
+  constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit(): void {
     this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
@@ -30,6 +32,34 @@ export class MessageComponent implements AfterViewInit {
     })
   }
 
+  createId(option: any, message: messageModel) {
+    let id = message.messages.dateTime.substring(0, 5) + message.messages.content + option.text
+  }
+
+  noSubmit(){
+    return false;
+  }
+
+  changeVote(){
+
+  }
+
+
+
+  getName(messages: messageModel) {
+    if (messages.messages.options.exclusion)
+      return this.chatMessage.messages.content;
+    else
+      return "";
+  }
+
+  checkInput(event: Event) {
+    let el = (event.currentTarget as HTMLElement)
+    if (el.previousElementSibling) {
+      let input = el.previousElementSibling as HTMLInputElement;
+      input.checked = !input.checked;
+    }
+  }
   alreadyTexted(i: number) {
     if (i != 0) {
       if (this.chatMessage.messages.idUser == this.chatSelector.messageList[this.chatSelector.selectedChat!._id][i - 1].messages.idUser && !this.differentDate(i))
@@ -74,7 +104,9 @@ export class MessageComponent implements AfterViewInit {
     return nickname;
   }
 
-
+  getContent(content: string) {
+    return content;
+  }
 
 
   getTimeFormatted(date: string) {

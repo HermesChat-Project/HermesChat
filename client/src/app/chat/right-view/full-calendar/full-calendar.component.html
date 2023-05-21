@@ -168,8 +168,8 @@
 
           <i class="bi"
             [ngClass]="{'bi-bell' : modifyingEvent?.notify, 'bi-bell-slash' : !modifyingEvent?.notify}"></i>
-          <mat-select [(value)]="chatSelector.selectedNotifyTime" [disabled]="readonly_disabled()">
-            <mat-option *ngFor="let time of notifyTime" [value]="time.val">{{time.time}}</mat-option>
+          <mat-select [(value)]="chatSelector.selectedNotifyTime" [disabled]="readonly_disabled()" panelClass="example-panel-{{chatSelector.theme == 'dark' ? 'dark' : 'light'}}">
+            <mat-option  *ngFor="let time of notifyTime" [value]="time.val">{{time.time}}</mat-option>
           </mat-select>
         </div>
         <div class="cal_modal_color">

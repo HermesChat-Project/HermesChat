@@ -15,7 +15,7 @@ export class LoginComponent {
   email: string = '';
   showPassword: boolean = false;
   loginWords: any = {};
-  constructor(private logged: LoginService, public translationsService: TranslationsService) { }
+  constructor(private loginService: LoginService, public translationsService: TranslationsService) { }
 
   ngOnInit()
   {
@@ -37,7 +37,7 @@ export class LoginComponent {
         observe: "response" as "response",
         withCredentials: true
       }
-      this.logged.login(body, this.errors.nativeElement, options);
+      this.loginService.login(body, this.errors.nativeElement, options);
     }
     else {
       this.errors.nativeElement.innerHTML = this.loginWords["missing-fields"];
@@ -45,7 +45,7 @@ export class LoginComponent {
   }
 
   register() {
-    console.log('register');
+    this.loginService.register();
   }
 
   changeClass() {

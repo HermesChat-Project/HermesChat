@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SurveyComponent } from '../dialog/survey/survey.component';
 import { ChartComponent } from '../dialog/chart/chart.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -33,6 +34,8 @@ export class ChatSelectorService {
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
   offsetChat: number = 1
 
+  theme:string = "light";
+
   callList: callsModel[] = [
     new callsModel(0, 1, 2, new Date(), 0),
     new callsModel(1, 1, 2, new Date(), 1),
@@ -49,7 +52,7 @@ export class ChatSelectorService {
   src: string = "";
   flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
   stream: MediaStream | null = null;
-  constructor(private dataStorage: DataStorageService, private dialog:MatDialog) { }
+  constructor(private dataStorage: DataStorageService, private dialog:MatDialog,private router: Router) { }
 
 
 
@@ -185,16 +188,27 @@ export class ChatSelectorService {
   openDeleteMessgeDialog() {
 
   }
+  chartType: number = 1; //1: bar, 2: pie, 3: line
   openSurveyDialog() {
     this.dialog.open(SurveyComponent, {
-      panelClass: 'custom-dialog-container'
-    }).afterClosed().subscribe((result: boolean) => { if (result) { this.sendMessage("Ciao", "survey") } })
+      panelClass: 'custom-dialog-container',
+      width: '40%',
+      minHeight: '50%',
+      maxHeight: '70%',
+    }).afterClosed().subscribe((result: any) => { if (result) {
+      this.sendMessage(result.title, "survey", result.survey)
+     } })
   }
 
   openChartDialog() {
     this.dialog.open(ChartComponent, {
-      panelClass: 'custom-dialog-container'
-    }).afterClosed().subscribe((result: boolean) => { if (result) { this.sendMessage("Ciao", "chart") } })
+      panelClass: 'custom-dialog-container',
+      width: '70%',
+      minHeight: '50%',
+      maxHeight: '70%',
+    }).afterClosed().subscribe((result: boolean) => { if (result) {
+        console.log(result);
+      this.sendMessage("", "chart", result) } })
   }
 
 
@@ -235,8 +249,8 @@ export class ChatSelectorService {
   sendMessage(message: string, type: string = 'text', options: any = null) {
     if (this.selectedChat) {
       let i = 0
-      this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type }));
-      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
+      this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
+      // this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
@@ -439,6 +453,23 @@ export class ChatSelectorService {
 
   logout() {
 
+    this.friendList = [];
+    this.receivedList = [];
+    this.sentList = [];
+    this.friendSerachList = [];
+    this.calendarSectionClicked = false;
+    this.selectedChat = null;
+    this.selectedFriend = null;
+    this.infoUser = null;
+    this.messageList = {};
+    this.socketMessageList = {};
+    this.chatExampleList = [];
+    this.calendarList = [];
+    this.EventsPerMonth = {};
+    this.selectedCalendarEvent = null;
+    this.selectedNotifyTime = "00:00";
+    this.isPersonalEvent = true;
+    this.router.navigate(['/login']);
   }
 
 
@@ -462,13 +493,13 @@ export class ChatSelectorService {
       console.log(data);
       if (data.type == "MSG") {
         if (this.selectedChat?._id == data.idDest) {
-          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
+          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null}));
           setTimeout(() => {
             this.bottomScroll(-1);
           }, 0);//to improve
         }
         else {
-          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text' }));
+          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null}));
         }
       }
     })
@@ -479,6 +510,18 @@ export class ChatSelectorService {
   //#endregion
 
   //#region funcion
+
+
+  //header
+  closeInfo() {
+    this.user_action = -1;
+  }
+
+  changeTheme(theme: string) {
+    this.theme = theme;
+    localStorage.setItem('theme', theme);
+  }
+  //progress bar
   seeMain: boolean = false;
   waitProgress() {
 
@@ -489,6 +532,8 @@ export class ChatSelectorService {
     }
   }
 
+
+  //chat
   changeName(chatList: any[]) {
 
     for (const [index, chat] of chatList.entries()) {

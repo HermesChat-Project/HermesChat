@@ -83,14 +83,6 @@
   background-color: #ccc;
 }
 
-/* .img img:before {
-  content: "";
-  display: block;
-  height: 50px;
-  width: 50px;
-  background-image: url("../../../../assets/img/user.jpg");
-  background-size: cover;
-} */
 
 .friends {
   border-bottom: 1px solid #ccc;
@@ -110,7 +102,6 @@
   padding-right: 10px;
 }
 .chatNow i{
-  color: #0b2f5e;
   margin: 0 0.2em;
   cursor: pointer;
   text-align: end;

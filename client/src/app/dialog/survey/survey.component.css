@@ -1,3 +1,114 @@
+.survey-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.survey-header{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+mat-dialog-content{
+  width: 100%;
+}
+
+.survey-header p{
+  margin: 0;
+  padding: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.survey_title{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: transparent transparent #2196F3 transparent;
+  outline: none;
+  background-color: #ddd;
+}
+
+.survey_options{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: auto;
+  padding: 0 10%;
+}
+.survey_option{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0 0 0;
+  justify-content: space-between;
+}
+
+.survey_option_text{
+  width: 100%;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 5px;
+}
+
+.sticky-top{
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  z-index: 1;
+  row-gap: 10px;
+  background-color: white;
+}
+
+.no-same-option{
+  color: #ff0000;
+  font-size: 0.8em;
+  margin: 0 5px;
+  width: 100%;
+  text-align: start;
+  visibility: hidden;
+
+}
+
+
+
+.confirm-survey{
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.confirm-survey p{
+  margin: 0;
+  padding: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.survey_exclusive_checbox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+  background-color: inherit;
+}
+
+.survey_exclusive_checbox p{
+  margin: 0;
+  padding: 0;
+}
+
 .switch {
   position: relative;
   display: inline-block;

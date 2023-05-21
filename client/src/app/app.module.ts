@@ -38,10 +38,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 import { DeleteMessageComponent } from './dialog/delete-message/delete-message.component';
 import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component';
 import { SurveyComponent } from './dialog/survey/survey.component';
 import { ChartComponent } from './dialog/chart/chart.component';
+import { InfoChatComponent } from './chat/header-chat-selector/settings/info-chat/info-chat.component';
+import { SignupComponent } from './signup/signup.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -73,6 +77,8 @@ import { ChartComponent } from './dialog/chart/chart.component';
     ProgressBarComponent,
     SurveyComponent,
     ChartComponent,
+    InfoChatComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +93,8 @@ import { ChartComponent } from './dialog/chart/chart.component';
     MatNativeDateModule,
     MatSelectModule,
     MatDialogModule,
-
+    MatInputModule,
+    NgApexchartsModule
   ],
   providers: [
     MatDatepickerModule,

@@ -1,0 +1,23 @@
+<div class="info_chat_container">
+  <div class="info_chat_header">
+    <i class="bi bi-x-lg" (click)="closeInfoUser()"></i>
+  </div>
+  <div class="info_chat_body">
+    <div class="theme info-chat-section">
+      <div class="info-chat-title">
+        <i class="bi bi-palette-fill"></i>
+        <p>Tema</p>
+      </div>
+      <div class="info-chat-options">
+        <input type="radio" name="optTheme" id="optDark" (change)="changeTheme('dark')" [checked]="chatSelector.theme == 'dark'">
+        <label for="optDark">Tema scuro</label>
+      </div>
+      <div class="info-chat-options">
+        <input type="radio" name="optTheme" id="optLight" (change)="changeTheme('light')" [checked]="chatSelector.theme != 'dark'">
+        <label for="optLight">Tema chiaro</label>
+      </div>
+
+    </div>
+  </div>
+
+</div>
