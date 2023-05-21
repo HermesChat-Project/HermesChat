@@ -340,6 +340,46 @@ paths:
           schema:
             type: string
       summary: Ottieni chat
+  /getFiles:
+    post:
+      description: Scarica i file dagli url specificati e li invia al client
+      parameters:
+      - collectionFormat: csv
+        description: Url dei file da scaricare
+        in: formData
+        items:
+          type: string
+        name: urls
+        required: true
+        type: array
+      - collectionFormat: csv
+        description: ChatId delle chat in cui si trovano i file
+        in: formData
+        items:
+          type: string
+        name: chatId
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Scarica i file
   /getFriendRequests:
     post:
       description: Restituisce tutti le richieste di amicizia dell'utente loggato

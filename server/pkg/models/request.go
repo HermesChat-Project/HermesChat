@@ -100,6 +100,7 @@ type Request struct {
 	FlagGroup bool `json:"flagGroup"`
 	IdDest string `json:"idDest"`
 	Payload string `json:"payload"`
+	Options string `json:"options"`
 	Index string `json:"index"`
 }
 
@@ -110,4 +111,9 @@ type Info struct {
 	Name string `json:"name"`
 	Surname string `json:"surname"`
 	Image string `json:"image"`
+}
+
+type GetFilesRequest struct {
+	Urls []string `json:"urls"`
+	ChatId []string `json:"chatId"`
 }

@@ -42,6 +42,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getMessages", controllers.GetMessages) 
 
 	router.POST("/sendFile", controllers.SendFile) 
+	router.POST("/getFiles", controllers.GetFiles)
 	/*
 	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/createGroup", controllers.CreateGroup)

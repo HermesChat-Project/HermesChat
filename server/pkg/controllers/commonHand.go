@@ -104,3 +104,27 @@ func SendFile (c *gin.Context) {
 	utils.UploadFile(index.(string), chatId, files, c)
 	
 }
+
+//GetFiles	godoc
+// @Summary 			Scarica i file
+// @Description 		Scarica i file dagli url specificati e li invia al client
+// @Param 			    urls formData []string true "Url dei file da scaricare"
+// @Param 			    chatId formData []string true "ChatId delle chat in cui si trovano i file"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /getFiles [post]
+func GetFiles (c *gin.Context) {
+	//get a json array of urls
+	var form models.GetFilesRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	//get index from token
+	index, _ := c.Get("index")
+
+	utils.DownloadFile(index.(string), form.Urls, form.ChatId, c)
+}

@@ -69,7 +69,7 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 		})
 		return
 	}
-
+	vetUrl := make([]string, len(files))
 	for _, file := range files {
 		fmt.Println(file.Filename)
 		//get only the current second and nanosecond
@@ -80,7 +80,13 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 
 		name := index + "_" + fmt.Sprintf("%d", nanoseconds) + "_" + fmt.Sprintf("%d", rand.Intn(100)) + fileExt
 		c.SaveUploadedFile(file, "uploads/"+chatID+"/"+name)
+
+		vetUrl = append(vetUrl, name)
+
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"url": vetUrl,
+	})
 }
 
 func getExtension(header multipart.FileHeader) (string, error) {
@@ -89,4 +95,72 @@ func getExtension(header multipart.FileHeader) (string, error) {
 		return "", err
 	}
 	return extension[0], nil
+}
+
+func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
+	if len(urls) != len(chats){
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid request",
+		})
+		return
+	}
+	collection := config.ClientMongoDB.Database("user").Collection("user")
+	if collection == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	objID, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+
+	opt := options.FindOne().SetProjection(bson.M{"ids": 1})
+
+	var result7 bson.M
+	ris7 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
+	ris7.Decode(&result7)
+	if result7 == nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID8",
+		})
+		return
+	}
+	// Extract the "chat" array from the result7
+	ids := result7["ids"].(primitive.A)
+	chatJSON := ids[0].(primitive.M)
+
+	vetChats := chatJSON["chats"].(primitive.A)
+
+	for _, chat := range chats {
+		//se vetChats contiene chatID allora posso procedere
+		procedi := false
+		for _, elem := range vetChats {
+			if fmt.Sprintf("%v", elem) == chat {
+				procedi = true
+				break
+			}
+		}
+		if !procedi {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"message": "invalid chatID",
+			})
+			return
+		}
+	}
+
+	for i, url := range urls {
+		c.File("uploads/"+chats[i]+"/"+url)
+	}
+
+	
+
+
+
 }

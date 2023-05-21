@@ -501,6 +501,65 @@ const docTemplate = `{
                 }
             }
         },
+        "/getFiles": {
+            "post": {
+                "description": "Scarica i file dagli url specificati e li invia al client",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Scarica i file",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Url dei file da scaricare",
+                        "name": "urls",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "ChatId delle chat in cui si trovano i file",
+                        "name": "chatId",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/getFriendRequests": {
             "post": {
                 "description": "Restituisce tutti le richieste di amicizia dell'utente loggato",
