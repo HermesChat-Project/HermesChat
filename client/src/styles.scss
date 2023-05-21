@@ -49,7 +49,7 @@ app-chat {
   height: 100%;
 }
 
-app-login {
+app-login, app-signup {
   height: 100%;
   width: 100%;
   display: grid;
@@ -344,6 +344,11 @@ app-login {
           }
         }
 
+        .survey-title{
+          background-color: #333 !important;
+          color: whitesmoke !important;
+        }
+
         .message-actions {
           background-color: #444;
 
@@ -469,6 +474,12 @@ app-login {
   }
   .dialog_bottom_text{
     color: whitesmoke !important;
+  }
+
+  .selected{
+    background-color: #444 !important;
+    color: whitesmoke !important;
+    border: none !important;
   }
 
   .survey_options input{

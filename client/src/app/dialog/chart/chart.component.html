@@ -1,8 +1,41 @@
 <div class="dialog_container" [ngClass]="{'dark-theme': chatSelector.theme == 'dark'}">
-  <div class="dialog_header">
-    <p>Grafico</p>
+  <div class="dialog_header" mat-dialog-title>
+    <div class="dialog_title">
+      <p>Grafico</p>
+      <i class="bi bi-x" [mat-dialog-close]></i>
+    </div>
+    <div class="dialog_chart_type">
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 1}" (click)="changeChartType(1)">
+        <i class="bi bi-bar-chart-fill"></i>
+      </div>
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 2}" (click)="changeChartType(2)">
+        <i class="bi bi-pie-chart-fill"></i>
+      </div>
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 3}" (click)="changeChartType(3)">
+        <i class="bi bi-graph-up"></i>
+      </div>
+
+    </div>
   </div>
-  <div class="dialog_body">
-    Dati
-  </div>
+  <mat-dialog-content class="dialog_body">
+    <div class="chart" *ngIf="chatSelector.chartType == 1"></div>
+    <div class="chart" *ngIf="chatSelector.chartType == 2">
+    </div>
+    <div class="chart" *ngIf="chatSelector.chartType == 3">linea</div>
+    <div class="chart_data_list" #chart_data_list>
+      <div class="chart_data"*ngFor="let field of fields; let i = index">
+        <input type="text" placeholder="Enter field name" class="form-control" [value]="field.name">
+        <input type="number" matInput class="form-control form-control-number" [value]="field.value">
+        <input type="color" class="form-control form-control-color" [value]="field.color">
+        <button class="bi bi-plus-circle add" (click)="addField()" *ngIf="fields.length -1 == i"></button>
+        <button class="bi bi-trash-fill delete" (click)="deleteField(i)" *ngIf="fields.length -1 != i "></button>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="confirm-survey btn" (click)="sendChart()">
+      <p>Conferma</p>
+      <i class="bi bi-check-lg"></i>
+    </button>
+  </mat-dialog-actions>
 </div>

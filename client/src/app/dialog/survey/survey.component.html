@@ -6,10 +6,10 @@
   </div>
   <mat-dialog-content #content class="dialog_body">
     <div class="survey-content-info sticky-top">
-      <input type="text" placeholder="titolo del sondaggio" class="survey_title">
+      <input type="text" placeholder="titolo del sondaggio" class="survey_title" [(ngModel)]="txtTitle" [ngModelOptions]="{standalone: true}">
       <div class="survey_exclusive_checbox">
         <label class="switch">
-          <input type="checkbox">
+          <input type="checkbox" (change)="changeSurveyCheckbox($event)">
           <span class="slider round"></span>
         </label>
         <p>Seleziona solo un'opzione</p>
@@ -19,20 +19,20 @@
     <div class="survey_options" #options>
       <div class="survey_option">
         <input type="text" placeholder="Inserisci l'opzione" class="survey_option_text" (input)="checkText($event, 1)"
-          (blur)="controlElement($event)">
+          (blur)="controlElement($event,1 )">
         <p class="no-same-option">Opzione già presente</p>
 
       </div>
       <div class="survey_option">
         <input type="text" placeholder="Inserisci l'opzione" class="survey_option_text" (input)="checkText($event, 2)"
-          (blur)="controlElement($event)">
+          (blur)="controlElement($event,2 )">
         <p class="no-same-option">Opzione già presente</p>
       </div>
     </div>
 
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button class="confirm-survey btn">
+    <button class="confirm-survey btn" (click)="checkSurvey()">
       <p>Conferma</p>
       <i class="bi bi-check-lg"></i>
     </button>

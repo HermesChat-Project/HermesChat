@@ -1,4 +1,4 @@
-<div class="message" (mouseleave)="hideActions()" >
+<div class="message" (mouseleave)="hideActions()">
   <div class="date" *ngIf="differentDate(index)">
     <span>{{fullDateView(chatMessage.messages.dateTime)}}</span>
     <hr>
@@ -12,19 +12,47 @@
         <div class="text" [innerHTML]="getContent(chatMessage.messages.content)" #text></div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
       </div>
+      <div class="message-get survey-msg" *ngIf="chatMessage.messages.type == 'survey'">
+        <div #text class="survey">
+          <h3 class="survey-title">
+            {{chatMessage.messages.content}}
+          </h3>
+          <form (submit)="noSubmit()"><!-- improve with checkbox... -->
+            <div class="survey-option-list" *ngFor="let option of chatMessage.messages.options.options">
+              <div class="survey-option">
+                <input type="radio" [name]="getName(chatMessage)" class="survey-option-radio" readonly (change)="changeVote()"/>
+                <label class="survey-option-text" (click)="checkInput($event)">{{option.text}}</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
+      </div>
+      <div class="message-get chart-msg" *ngIf="chatMessage.messages.type == 'chart'">
+        <div #text class="chart">
+          <h3 class="chart-title">
+            {{chatMessage.messages.content}}
+          </h3>
+          <div class="chart-container">
+            <apx-chart [colors]="chatMessage.messages.options.data.colors" [series]="chatMessage.messages.options.data.series" [chart]="chatMessage.messages.options.data.chart" [title]="chatMessage.messages.options.data.title" [labels]="chatMessage.messages.options.data.labels" *ngIf="chatSelector.chartType == 2"></apx-chart>
+            <apx-chart [colors]="chatMessage.messages.options.data.colors" [series]="chatMessage.messages.options.data.series" [chart]="chatMessage.messages.options.data.chart" [title]="chatMessage.messages.options.data.title" [xaxis]="chatMessage.messages.options.data.xaxis" *ngIf="chatSelector.chartType != 2"></apx-chart>
+          </div>
+        </div>
+        <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
+      </div>
     </div>
     <div class="message-action-container">
-      <div class="message-actions" [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
+      <div class="message-actions"
+        [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
         <div class="all-actions">
-          <button class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()" ></button>
+          <button class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()"></button>
           <button class="bi bi-pen-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id"></button>
           <button class="bi bi-clipboard-plus-fill" (click)="copyToClipboard()" (blur)="changeIcon()" #copy></button>
           <button class="bi bi-share-fill"></button>
-          <button class="bi bi-trash-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id" (click)="openDialog()"></button>
+          <button class="bi bi-trash-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id"
+            (click)="openDialog()"></button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-

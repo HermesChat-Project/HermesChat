@@ -47,6 +47,11 @@
   justify-content: flex-start;
 }
 
+.survey-msg{
+  flex-direction: column;
+  width: 300px;
+}
+
 .text{
   width: 90%;
   padding: 10px;
@@ -126,4 +131,42 @@ img{
 .hideMessageActions .clickAction{
   transform: rotate(0deg);
   transition: all 200ms ease;
+}
+
+
+/*survey message*/
+.survey-title{
+  font-size: 14pt;
+  padding: 10px;
+  padding-left: 30px;
+  margin: 0;
+  background-color: #ddd;
+  border-radius: 10px;
+}
+.survey-option-list{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.survey-option{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  column-gap: 10px;
+}
+
+.survey-option-radio{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
