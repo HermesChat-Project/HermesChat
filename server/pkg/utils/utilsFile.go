@@ -69,6 +69,7 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 		})
 		return
 	}
+	fmt.Println(len(files))
 	vetUrl := make([]string, len(files))
 	for _, file := range files {
 		fmt.Println(file.Filename)
@@ -82,8 +83,9 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 		c.SaveUploadedFile(file, "uploads/"+chatID+"/"+name)
 
 		vetUrl = append(vetUrl, name)
-
 	}
+	//remove the first
+	vetUrl = vetUrl[1:]
 	c.JSON(http.StatusOK, gin.H{
 		"url": vetUrl,
 	})
@@ -158,8 +160,6 @@ func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
 	for i, url := range urls {
 		c.File("uploads/"+chats[i]+"/"+url)
 	}
-
-	
 
 
 

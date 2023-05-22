@@ -1,10 +1,10 @@
-package controllers 
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
 
-	"chat/pkg/utils"
 	"chat/pkg/models"
+	"chat/pkg/utils"
 )
 
 // CreateChat godoc

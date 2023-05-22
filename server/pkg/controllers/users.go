@@ -38,7 +38,7 @@ func UpdateInfo (c *gin.Context) {
 // @Success 		    200 {object} string
 // @Failure 		    400 {object} string
 // @Failure 		    500 {object} string
-// @Router 		        /searchUsers [get]
+// @Router 		        /search [get]
 func SearchUsers (c *gin.Context) {
 	var usr = c.Query("username")
 	utils.SearchUsersDB(usr, c)

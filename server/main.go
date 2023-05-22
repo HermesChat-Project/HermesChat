@@ -21,6 +21,8 @@ func main() {
 	config.LoadConfig()
 	fmt.Println("Starting server...")
 	router := gin.Default()
+	config.ConnectToRedis()
+	fmt.Println("redis db: ", config.ClientRedis.DBSize().Val())
 	config.ConnectToDBMongoDB()
 	//set routers
 	routes.SetupRoutes(router)

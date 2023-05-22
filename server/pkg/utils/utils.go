@@ -46,7 +46,7 @@ func CreateToken (index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "api.hermeschat.it",
+		Domain:   "80.116.98.205",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -69,9 +69,7 @@ func VerifyToken (c *gin.Context){
 		//redirect to login page
 		if (c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs")) {
 			c.Next()
-		}else{
-			//if the url starts with /docs skip the check
-			
+		}else{			
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"ris": "Unauthorized",
 			})

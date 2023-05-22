@@ -1,7 +1,6 @@
 package controllers
 
 import (
-
 	"github.com/gin-gonic/gin"
 
 	"chat/pkg/models"
@@ -87,20 +86,31 @@ func SendFriendRequest (c *gin.Context) {
 // @Failure 		    500 {object} string
 // @Router 		        /sendFile [post]
 func SendFile (c *gin.Context) {
-	//get all files from request
+	err := c.Request.ParseMultipartForm(32 << 20)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 	form, _ := c.MultipartForm()
+	if form == nil {
+		c.JSON(400, gin.H{"error": "Form vuoto"})
+		return
+	}
+	//get chatId from form
+	chatId := c.Request.FormValue("chatId")
+	if chatId == "" {
+		c.JSON(400, gin.H{"error": "No chatId found"})
+	}
+	
+	
 	files := form.File["file"]
-	index, _ := c.Get("index")
-	chatId := c.PostForm("chatId")
 
+	
 	if len(files) == 0 {
 		c.JSON(400, gin.H{"error": "No file found"})
 		return
 	}
-	if chatId == "" {
-		c.JSON(400, gin.H{"error": "No chatId found"})
-	}
-
+	index, _ := c.Get("index")
 	utils.UploadFile(index.(string), chatId, files, c)
 	
 }

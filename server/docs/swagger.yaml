@@ -264,6 +264,42 @@ paths:
           schema:
             type: string
       summary: Rifiuta richiesta di amicizia
+  /deleteCalendarEvent:
+    delete:
+      description: Elimina un evento dal calendario dell'utente loggato (nel caso
+        di evento condiviso, elimina anche l'evento al calendario degli utenti con
+        cui è condiviso)ù
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Id dell'evento da eliminare
+        in: header
+        name: idEvent
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Elimina un evento dal calendario
   /getBlocked:
     post:
       description: Restituisce tutti gli utenti bloccati dall'utente loggato
@@ -551,7 +587,7 @@ paths:
           schema:
             type: string
       summary: Login utente
-  /searchUsers:
+  /search:
     get:
       description: Cerca fino a 100 utenti con username che inizia con la stringa
         passata come parametro

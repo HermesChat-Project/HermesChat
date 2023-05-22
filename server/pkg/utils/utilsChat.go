@@ -322,7 +322,9 @@ func SaveMessage(request models.Request) {
 		"content":  request.Payload,
 		"idUser":   request.Index,
 		"type" : "text",
-		"options" : request.Options,
+	}
+	if request.Options != "" {
+		message["options"] = request.Options
 	}
 
 	//update the chat

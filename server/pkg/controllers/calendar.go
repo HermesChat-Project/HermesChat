@@ -50,8 +50,7 @@ func AddCalendarEvent(c *gin.Context) {
 
 	utils.AddCalendarEventDB(index.(string), form, c)
 }
-
-// DeleteCalendarEvent	godoc
+// DeleteCalendarEvent godoc
 // @Summary 			Elimina un evento dal calendario
 // @Description 		Elimina un evento dal calendario dell'utente loggato (nel caso di evento condiviso, elimina anche l'evento al calendario degli utenti con cui è condiviso)ù
 // @Param 			    index header string true "Indice dell'utente loggato"
@@ -62,7 +61,6 @@ func AddCalendarEvent(c *gin.Context) {
 // @Failure 		    401 {object} string
 // @Failure 		    500 {object} string
 // @Router 		        /deleteCalendarEvent [delete]
-
 func DeleteCalendarEvent(c *gin.Context) {
 	var form models.DeleteCalendarEvent
 	if err := c.ShouldBind(&form); err != nil {

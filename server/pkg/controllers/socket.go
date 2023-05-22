@@ -5,11 +5,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 
+	"chat/pkg/config"
 	"chat/pkg/models"
 	"chat/pkg/utils"
-	"chat/pkg/config"
 )
 
 var upgrader = websocket.Upgrader{
@@ -36,24 +37,26 @@ func SocketConnection(c *gin.Context) {
 		return
 	}
 	index, _ := c.Get("index")
-	fmt.Println("index:", index)
-	config.Conns[index.(string)] = conn
+	uuid := uuid.New().String()
+	config.Conns[uuid] = conn
+	errRedis := config.ClientRedis.LPush(index.(string), uuid).Err()
+	if errRedis != nil {
+		fmt.Println("error:", errRedis)
+	}
+
+	conn.WriteJSON("connected")
 
 	go func() {
+
 		for {
 			var request models.Request
 			err = conn.ReadJSON(&request)
 			if err != nil {
-				fmt.Println("error:", err)
-				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					delete(config.Conns, index.(string))
-					fmt.Println("connection closed")
-				}
+					fmt.Println("closing connection")
+					config.ClientRedis.LRem(index.(string), 0, uuid)
+					conn.Close()
 				return
 			}
-
-			fmt.Println("request:", request)
-			config.Conns[index.(string)] = conn
 			request.Index = index.(string)
 			go handleTypes(request, conn)
 		}
@@ -71,15 +74,19 @@ func handleTypes(request models.Request, conn *websocket.Conn) {
 func handleMessage(request models.Request, conn *websocket.Conn) {
 	var users []string = utils.GetUsersFromGroup(request.IdDest)
 	for _, user := range users {
-		connDest := config.Conns[user]
-		if connDest != conn {
-			write(connDest, request)
+		connsId := config.GetUserConnectionsRedis(user)
+		fmt.Println("num conns:", len(connsId))
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != conn {
+				write(connDest, request, user, connId)
+			}
 		}
 	}
 	go utils.SaveMessage(request)
 }
 
-func write(conn *websocket.Conn, request models.Request) {
+func write(conn *websocket.Conn, request models.Request, user string, connId string) {
 	if conn != nil {
 		conn.WriteJSON(request)
 	}
