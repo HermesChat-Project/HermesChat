@@ -159,8 +159,6 @@ func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
 		c.File("uploads/"+chats[i]+"/"+url)
 	}
 
-	
-
 
 
 }

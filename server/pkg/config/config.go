@@ -15,6 +15,7 @@ import (
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/go-redis/redis"
 )
 
 var PORT int; 
@@ -24,6 +25,7 @@ var DOMAIN string;
 var PWDGMAIL string;
 var ClientMongoDB *mongo.Client;
 var Conns = make(map[string]*websocket.Conn);
+var ClientRedis *redis.Client;
 
 
 func LoadConfig() {
@@ -42,6 +44,19 @@ func LoadConfig() {
 	go CreateFileLog()
 }
 
+func ConnectToRedis(){
+	ClientRedis = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379", 
+	})
+	
+	// Ping the Redis server to check the connection
+	_, err := ClientRedis.Ping().Result()
+	if err != nil {
+		// Handle connection error
+		panic(err)
+	}	
+	ClientRedis.FlushAll()
+}
 func ConnectToDBMongoDB(){
 	//eseguo la connessione al database
 
@@ -106,4 +121,12 @@ func GetMyIP() string {
 		}
 	}
 	return ip
+}
+
+func GetUserConnectionsRedis (id string) []string{
+	val, err := ClientRedis.LRange(id, 0, -1).Result()
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
