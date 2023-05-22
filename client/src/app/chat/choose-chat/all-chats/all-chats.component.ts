@@ -17,7 +17,7 @@ export class AllChatsComponent {
   txtSearchChat: string = '';
 
 
-  OtherListSerach: SearchModel[] = [];
+
 
   totalUser: SearchModel[] = [
     new SearchModel(0, 'Prova', 'Ciao come stai?', 'img'),
@@ -93,12 +93,10 @@ export class AllChatsComponent {
   showChats() {
     if (this.txtSearchChat.length < 3) {
       this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
-      this.OtherListSerach = [];
+      this.chatSelector.OtherListSerach = [];
     }
     else {
-      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase())).sort((a, b) => this.getLastMessageTime(a.last).getTime() - this.getLastMessageTime(b.last).getTime());
-      this.OtherListSerach = this.totalUser.filter((chat) => chat.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()))
-      console.log(this.chatSelector.PersonalListSearch)
+      this.chatSelector.getSerachUsers(this.txtSearchChat)
     }
   }
   GetDateWithoutTime(date: Date) {

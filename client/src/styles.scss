@@ -171,7 +171,10 @@ app-login, app-signup {
 
     app-all-chats {
       color: white !important;
-
+      ::-ms-input-placeholder, ::placeholder, ::-webkit-input-placeholder {
+        color: blue !important;
+        opacity: 1 !important;
+      }
       #searchInput {
         border: none !important;
 
@@ -315,7 +318,7 @@ app-login, app-signup {
       .action,
       .row-action i,
       .row-action label {
-        background-color: inherit !important;
+        background-color: #222 !important;
       }
 
       .row-action i:hover,
@@ -326,7 +329,22 @@ app-login, app-signup {
 
       app-message {
         background-color: #333;
-
+        .message-get{
+          .time{
+            color: whitesmoke !important;
+          }
+        }
+        apx-chart{
+          text{
+            fill: whitesmoke !important;
+          }
+          span{
+            color: white !important;
+          }
+          .apexcharts-menu{
+            background-color: #333 !important;
+          }
+        }
         .message-info {
           background-color: #141414 !important;
           color: whitesmoke !important;
@@ -496,7 +514,10 @@ app-login, app-signup {
     color: whitesmoke !important;
     border: none !important;
   }
-
+  ::-ms-input-placeholder, ::placeholder, ::-webkit-input-placeholder {
+    color: blue !important;
+    opacity: 1 !important;
+  }
 
 }
 .example-panel-dark.mat-mdc-select-panel{

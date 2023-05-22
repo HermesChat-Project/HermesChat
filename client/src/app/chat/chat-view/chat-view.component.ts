@@ -173,6 +173,16 @@ export class ChatViewComponent {
       this.fontStyling.nativeElement.style.display = 'none';
     }
   }
+  getFiles(event: any) {
+    //get the files taken from the input file and convert them to binary
+    let files = event.target?.files || event.dataTransfer.files;
+    let file = files[0];
+    console.log(file);
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('chatId', this.chatSelector.selectedChat!._id);
+    this.chatSelector.sendFile(formData);
+  }
   getImages(event: any) {
     //get the images taken from the input file and convert them to base64
     let files = event.target?.files || event.dataTransfer.files;
@@ -220,13 +230,18 @@ export class ChatViewComponent {
   }
 
   scrollMsg(event: any) {
-    if(event.target.scrollTop == 0){
-      let body = {
-        idChat: this.chatSelector.selectedChat!._id,
-        offset: this.chatSelector.offsetChat
+    let el = event.currentTarget as HTMLElement;
+    if( el.scrollHeight > el.clientHeight)
+    {
+      if(event.target.scrollTop == 0 ){
+        let body = {
+          idChat: this.chatSelector.selectedChat!._id,
+          offset: this.chatSelector.offsetChat
+        }
+        this.chatSelector.getChatMessages(body, this.chatSelector.selectedChat!._id, true);
       }
-      this.chatSelector.getChatMessages(body, this.chatSelector.selectedChat!._id, true);
     }
+
   }
 
   //#region font style

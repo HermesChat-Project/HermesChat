@@ -15,6 +15,7 @@ import { SurveyComponent } from '../dialog/survey/survey.component';
 import { ChartComponent } from '../dialog/chart/chart.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { SearchModel } from 'model/search.model';
 
 
 @Injectable({
@@ -33,7 +34,7 @@ export class ChatSelectorService {
   sentList: { id: string, image: string, nickname: string }[] = [];
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
   offsetChat: number = 1
-
+  OtherListSerach: SearchModel[] = [];
   theme:string = "light";
 
   callList: callsModel[] = [
@@ -250,7 +251,7 @@ export class ChatSelectorService {
     if (this.selectedChat) {
       let i = 0
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
-      // this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
+      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
@@ -304,7 +305,10 @@ export class ChatSelectorService {
   }
 
   getChatMessages(body: any, id: string, newMsg: boolean = false) {
-    if ((!this.messageList[id] || this.messageList[id].length == 0) || newMsg) {
+    console.log(this.messageList[id].length);
+    console.log(newMsg);
+    console.log(body)
+    if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
           console.log(response);
@@ -439,12 +443,64 @@ export class ChatSelectorService {
     })
   }
 
+  sendFile(file: FormData) {
+    console.log(file.get('file'));
+    console.log(file.get('chatId'));
+    this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if(error.status == 401)
+          this.logout();
+      }
+    })
+
+  }
+
+  getSerachUsers(txtUser: string){
+    this.dataStorage.getRequest('search?username='+txtUser, this.getGetOptions()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        if(response.body){
+          this.OtherListSerach = response.body;
+          if(this.OtherListSerach.length > 10)
+            this.OtherListSerach = this.OtherListSerach.slice(0,10);
+        }
+        else
+        {
+          this.OtherListSerach = [];
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if(error.status == 401)
+          this.logout();
+      }
+    })
+  }
+  getGetOptions(){
+    return {
+      observe: 'response',
+      withCredentials: true
+    };
+  }
   getOptionsForRequest() {
     return {
       observe: 'response',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': localStorage.getItem("Authorization")
+      },
+      withCredentials: true
+    };
+  }
+  getFormDataOptions() {
+    return {
+      observe: 'response',
+      headers: {
+        "Accept": "application/json"
       },
       withCredentials: true
     };
@@ -464,6 +520,9 @@ export class ChatSelectorService {
     this.messageList = {};
     this.socketMessageList = {};
     this.chatExampleList = [];
+    this.progress = 0;
+    this.PersonalListSearch = [];
+    this.OtherListSerach = [];
     this.calendarList = [];
     this.EventsPerMonth = {};
     this.selectedCalendarEvent = null;
@@ -482,7 +541,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://192.168.1.43:8080/socket');
+    this.socket = new WebSocket('wss://80.116.98.205:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -492,7 +551,7 @@ export class ChatSelectorService {
       let data = JSON.parse(event.data);
       console.log(data);
       if (data.type == "MSG") {
-        if (this.selectedChat?._id == data.idDest) {
+        if (this.messageList[data.idDest].length > 0) {
           this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null}));
           setTimeout(() => {
             this.bottomScroll(-1);

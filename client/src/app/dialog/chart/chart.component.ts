@@ -88,7 +88,7 @@ export class ChartComponent {
     }
 
 
-    let result = {data: data, type: this.chatSelector.chartType, opt: null}
+    let result = {data}
     this.dialog.close(result);
   }
   getType(type: number){

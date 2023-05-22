@@ -34,8 +34,8 @@
             {{chatMessage.messages.content}}
           </h3>
           <div class="chart-container">
-            <apx-chart [colors]="chatMessage.messages.options.data.colors" [series]="chatMessage.messages.options.data.series" [chart]="chatMessage.messages.options.data.chart" [title]="chatMessage.messages.options.data.title" [labels]="chatMessage.messages.options.data.labels" *ngIf="chatSelector.chartType == 2"></apx-chart>
-            <apx-chart [colors]="chatMessage.messages.options.data.colors" [series]="chatMessage.messages.options.data.series" [chart]="chatMessage.messages.options.data.chart" [title]="chatMessage.messages.options.data.title" [xaxis]="chatMessage.messages.options.data.xaxis" *ngIf="chatSelector.chartType != 2"></apx-chart>
+            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [labels]="chatMessage.messages.options.labels" *ngIf="chatSelector.chartType == 2"></apx-chart>
+            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [xaxis]="chatMessage.messages.options.xaxis" *ngIf="chatSelector.chartType != 2"></apx-chart>
           </div>
         </div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
@@ -46,8 +46,8 @@
         [ngClass]="{'showMessageActions': messageActions, 'hideMessageActions' : !messageActions}">
         <div class="all-actions">
           <button class="bi bi-arrow-right-short clickAction" (click)="toggleMessageActions()"></button>
-          <button class="bi bi-pen-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id"></button>
-          <button class="bi bi-clipboard-plus-fill" (click)="copyToClipboard()" (blur)="changeIcon()" #copy></button>
+          <button class="bi bi-pen-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id && chatMessage.messages.type == 'text'"></button>
+          <button class="bi bi-clipboard-plus-fill" *ngIf="chatMessage.messages.type == 'text'" (click)="copyToClipboard()" (blur)="changeIcon()" #copy></button>
           <button class="bi bi-share-fill"></button>
           <button class="bi bi-trash-fill" *ngIf="chatMessage.messages.idUser == chatSelector.infoUser._id"
             (click)="openDialog()"></button>

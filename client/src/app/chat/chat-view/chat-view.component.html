@@ -23,8 +23,8 @@
       <div class="row-action"
         [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
         <i class="bi bi-bar-chart-fill" (click)="createSurvey()"></i>
-        <label for="txtFile" class="bi bi-file-earmark-fill"></label>
-        <input type="file" id="txtFile" multiple="multiple" (change)="getImages($event)">
+        <label for="txtFile" class="bi bi-file-earmark-fill" ></label>
+        <input type="file" id="txtFile" multiple="multiple" (change)="getFiles($event)">
       </div>
       <div class="row-action"
         [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
