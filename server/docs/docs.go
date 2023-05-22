@@ -387,6 +387,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/deleteCalendarEvent": {
+            "delete": {
+                "description": "Elimina un evento dal calendario dell'utente loggato (nel caso di evento condiviso, elimina anche l'evento al calendario degli utenti con cui è condiviso)ù",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Elimina un evento dal calendario",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'evento da eliminare",
+                        "name": "idEvent",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/getBlocked": {
             "post": {
                 "description": "Restituisce tutti gli utenti bloccati dall'utente loggato",
@@ -815,7 +866,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/searchUsers": {
+        "/search": {
             "get": {
                 "description": "Cerca fino a 100 utenti con username che inizia con la stringa passata come parametro",
                 "produces": [
