@@ -1,12 +1,12 @@
 export class SearchModel {
-  _id: number;
+  _id: string;
   nickname: string;
   info: string;
   image: string;
   group: boolean;
   members: string[];
 
-  constructor(_id: number, name: string, info: string, img: string="img", group: boolean=false, members: string[]= [""]) {
+  constructor(_id: string, name: string, info: string, img: string="img", group: boolean=false, members: string[]= [""]) {
     this._id = _id;
     this.nickname = name;
     this.info = info;

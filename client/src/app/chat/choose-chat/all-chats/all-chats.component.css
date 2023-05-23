@@ -40,6 +40,18 @@
   outline: none;
 }
 
+.chatName{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options{
+  background-color: transparent;
+  color: #084595;
+  border: none;
+}
+
 #div_chatlist,
 #div_resultSearch {
   height: 93%;
@@ -76,6 +88,15 @@
   align-items: center;
   cursor: pointer;
 }
+.div_chat_search{
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0px;
+  min-height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+}
+
+
 
 .div_chat *{
   user-select: none;
