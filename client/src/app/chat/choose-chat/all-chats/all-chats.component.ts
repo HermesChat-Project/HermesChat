@@ -19,37 +19,7 @@ export class AllChatsComponent {
 
 
 
-  totalUser: SearchModel[] = [
-    new SearchModel(0, 'Prova', 'Ciao come stai?', 'img'),
-    new SearchModel(1, 'Mario', 'Ciao come stai?', 'img'),
-    new SearchModel(2, 'Luigi', 'Ciao come stai?', 'img'),
-    new SearchModel(3, 'Pippo', 'Ciao come stai?', 'img'),
-    new SearchModel(4, 'Pluto', 'Ciao come stai?', 'img'),
-    new SearchModel(5, 'Paperino', 'Ciao come stai?', 'img'),
-    new SearchModel(6, 'Paperone', 'Ciao come stai?', 'img'),
-    new SearchModel(7, 'Topolino', 'Ciao come stai?', 'img'),
-    new SearchModel(8, 'Minnie', 'Ciao come stai?', 'img'),
-    new SearchModel(9, 'Paperoga', 'Ciao come stai?', 'img'),
-    new SearchModel(10, 'Paperina', 'Ciao come stai?', 'img'),
-    new SearchModel(11, 'Paperon de Paperoni', 'Ciao come stai?', 'img'),
-    new SearchModel(12, "Qui", 'Ciao come stai?', 'img'),
-    new SearchModel(13, "Quo", 'Ciao come stai?', 'img'),
-    new SearchModel(14, "Qua", 'Ciao come stai?', 'img'),
-    new SearchModel(15, "Gruppo 1", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi']),
-    new SearchModel(16, "Gruppo 2", 'Gruppo di prova', 'img', true, ['Mario', 'Pippo']),
-    new SearchModel(17, "Gruppo 3", 'Gruppo di prova', 'img', true, ['Mario', 'Paperino', 'Pluto']),
-    new SearchModel(18, "Gruppo 4", 'Gruppo di prova', 'img', true, ['Mario', 'Qui', 'Quo', 'Qua']),
-    new SearchModel(19, "Gruppo 5", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Pippo']),
-    new SearchModel(20, "Gruppo 6", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperino']),
-    new SearchModel(21, "Gruppo 7", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Pluto']),
-    new SearchModel(22, "Gruppo 8", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperone']),
-    new SearchModel(23, "Gruppo 9", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Topolino']),
-    new SearchModel(24, "Gruppo 10", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Minnie', 'Paperoga']),
-    new SearchModel(25, "Gruppo 11", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperina']),
-    new SearchModel(26, "Gruppo 12", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Paperon de Paperoni']),
-    new SearchModel(27, "Gruppo 13", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Qui']),
-    new SearchModel(28, "Gruppo 14", 'Gruppo di prova', 'img', true, ['Mario', 'Luigi', 'Quo', 'Qua', 'Paperone'])
-  ]
+
 
   constructor(public chatSelector: ChatSelectorService){}
 
@@ -121,6 +91,10 @@ export class AllChatsComponent {
     // setTimeout(() => {
     // this.chatSelector.bottomScroll()
     // }, 0);//to improve
+  }
+
+  sendRequest(user: SearchModel) {
+    this.chatSelector.sendFriendRequest(user);
   }
 
 

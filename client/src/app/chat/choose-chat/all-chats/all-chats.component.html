@@ -72,7 +72,7 @@
       <div id="others" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <div class="row div_chat" *ngFor="let OthersChats of chatSelector.OtherListSerach">
+          <div class="row div_chat_search" *ngFor="let OthersChats of chatSelector.OtherListSerach">
             <div class="col-sm-3">
               <div class="img img-fluid">
                 <img [src]="OthersChats.image" class="avatar">
@@ -81,6 +81,7 @@
             <div class="col-sm-9">
               <div class="chatName">
                 <h5 class="chat-name">{{OthersChats.nickname}}</h5>
+                <button class="options bi bi-person-fill-add"(click)="sendRequest(OthersChats)"></button>
               </div>
             </div>
           </div>

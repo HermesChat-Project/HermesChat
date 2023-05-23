@@ -22,6 +22,7 @@ import { SearchModel } from 'model/search.model';
   providedIn: 'root'
 })
 export class ChatSelectorService {
+
   progress: number = 0;
   PersonalListSearch: Chat[] = [];
   friendList: FriendModel[] = [];
@@ -31,11 +32,11 @@ export class ChatSelectorService {
   messageList: { [key: string]: messageModel[] } = {};
   socketMessageList: { [key: string]: messageModel[] } = {};
   infoUser: any
-  sentList: { id: string, image: string, nickname: string }[] = [];
+  sentList: { idUser: string, image: string, nickname: string }[] = [];
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
   offsetChat: number = 1
   OtherListSerach: SearchModel[] = [];
-  theme:string = "light";
+  theme: string = "light";
 
   callList: callsModel[] = [
     new callsModel(0, 1, 2, new Date(), 0),
@@ -53,7 +54,7 @@ export class ChatSelectorService {
   src: string = "";
   flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
   stream: MediaStream | null = null;
-  constructor(private dataStorage: DataStorageService, private dialog:MatDialog,private router: Router) { }
+  constructor(private dataStorage: DataStorageService, private dialog: MatDialog, private router: Router) { }
 
 
 
@@ -171,7 +172,7 @@ export class ChatSelectorService {
     let eventsPerDay: { [key: string]: CalendarModel[] } = {};
     events.forEach((event: CalendarModel) => {
       let day = event.date.getDate().toString();
-      if(day.length < 2)
+      if (day.length < 2)
         day = '0' + day;
       if (eventsPerDay[day]) {
         eventsPerDay[day].push(event);
@@ -196,9 +197,11 @@ export class ChatSelectorService {
       width: '40%',
       minHeight: '50%',
       maxHeight: '70%',
-    }).afterClosed().subscribe((result: any) => { if (result) {
-      this.sendMessage(result.title, "survey", result.survey)
-     } })
+    }).afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.sendMessage(result.title, "survey", result.survey)
+      }
+    })
   }
 
   openChartDialog() {
@@ -207,9 +210,12 @@ export class ChatSelectorService {
       width: '70%',
       minHeight: '50%',
       maxHeight: '70%',
-    }).afterClosed().subscribe((result: boolean) => { if (result) {
+    }).afterClosed().subscribe((result: boolean) => {
+      if (result) {
         console.log(result);
-      this.sendMessage("", "chart", result) } })
+        this.sendMessage("", "chart", result)
+      }
+    })
   }
 
 
@@ -249,7 +255,7 @@ export class ChatSelectorService {
 
   sendMessage(message: string, type: string = 'text', options: any = null) {
     if (this.selectedChat) {
-      let i = 0
+      console.log(type)
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
       this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
       setTimeout(() => {
@@ -274,7 +280,7 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     });
@@ -297,7 +303,7 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     });
@@ -314,7 +320,6 @@ export class ChatSelectorService {
           console.log(response);
           if (response.body.messages) {
             if (this.messageList[id]) {
-              console.log("concat");
               this.sortChats(response.body.messages)
               let array = response.body.messages.concat(this.messageList[id]);
               this.messageList[id] = array;
@@ -329,7 +334,7 @@ export class ChatSelectorService {
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
-          if(error.status == 401)
+          if (error.status == 401)
             this.logout();
         }
       });
@@ -344,17 +349,19 @@ export class ChatSelectorService {
     this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.friendList = response.body.friends;
-        if (this.friendList.length > 0)
-          this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
-        this.friendSerachList = this.friendList;
+        if (response.body.friends) {
+          this.friendList = response.body.friends;
+          if (this.friendList.length > 0)
+            this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
+          this.friendSerachList = this.friendList;
+        }
         this.progress++;
         this.waitProgress();
         this.getChats();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     });
@@ -370,7 +377,7 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     });
@@ -386,7 +393,7 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     })
@@ -399,7 +406,20 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+  denyRequest(request: string) {
+    this.dataStorage.PostRequestWithHeaders('declineFriend', {idUser: request}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
           this.logout();
       }
     })
@@ -420,7 +440,7 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     })
@@ -437,12 +457,25 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     })
   }
+  sendFriendRequest(user: SearchModel) {
+    this.dataStorage.PostRequestWithHeaders('sendFriendRequest', { username: user.nickname }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.sentList.push({ idUser: user._id, image: user.image, nickname: user.nickname });
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
 
+      }
+    })
+  }
   sendFile(file: FormData) {
     console.log(file.get('file'));
     console.log(file.get('chatId'));
@@ -452,35 +485,34 @@ export class ChatSelectorService {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     })
 
   }
 
-  getSerachUsers(txtUser: string){
-    this.dataStorage.getRequest('search?username='+txtUser, this.getGetOptions()).subscribe({
+  getSerachUsers(txtUser: string) {
+    this.dataStorage.getRequest('search?username=' + txtUser, this.getGetOptions()).subscribe({
       next: (response: any) => {
         console.log(response);
-        if(response.body){
+        if (response.body) {
           this.OtherListSerach = response.body;
-          if(this.OtherListSerach.length > 10)
-            this.OtherListSerach = this.OtherListSerach.slice(0,10);
+          if (this.OtherListSerach.length > 10)
+            this.OtherListSerach = this.OtherListSerach.slice(0, 10);
         }
-        else
-        {
+        else {
           this.OtherListSerach = [];
         }
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.status == 401)
+        if (error.status == 401)
           this.logout();
       }
     })
   }
-  getGetOptions(){
+  getGetOptions() {
     return {
       observe: 'response',
       withCredentials: true
@@ -541,7 +573,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://80.116.98.205:8090/socket');
+    this.socket = new WebSocket('wss://10.88.202.8:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -552,14 +584,34 @@ export class ChatSelectorService {
       console.log(data);
       if (data.type == "MSG") {
         if (this.messageList[data.idDest].length > 0) {
-          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null}));
+          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null }));
           setTimeout(() => {
             this.bottomScroll(-1);
           }, 0);//to improve
         }
         else {
-          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null}));
+          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null }));
         }
+      }
+      else if (data.type == "FRA") {//friend request accepted
+        let request: requestModel = data.friend;
+        let id = request.idUser;
+        this.sentList = this.sentList.filter((user) => user.idUser != id);
+        let friend = new FriendModel(id, request.name, request.surname, request.nickname, request.image);
+        this.friendList.push(friend);
+      }
+      else if (data.type == "FRR") {//friend request received
+        let request: requestModel = data.friend;
+        let requestUser = new requestModel(request.idUser, request.image, request.nickname, request.name, request.surname);
+        this.receivedList.push(requestUser);
+      }
+      else if (data.type == "FRD") {//friend request denied
+        let idUser = data.idUser;
+        console.log(idUser);
+        this.sentList = this.sentList.filter((user) =>{
+          console.log(user.idUser);
+          return user.idUser != idUser;
+        });
       }
     })
     this.socket.addEventListener("close", () => {
@@ -585,9 +637,7 @@ export class ChatSelectorService {
   waitProgress() {
 
     if (this.progress == 5) {
-      setTimeout(() => {
         this.seeMain = true;
-      }, 200);
     }
   }
 

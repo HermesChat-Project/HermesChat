@@ -23,7 +23,10 @@ export class FriendsRequestComponent {
   }
 
   denyFriend(request:requestModel, index: number){
+    let id = request.idUser;
     this.chatSelector.receivedList.splice(index,1);
+    console.log(request);
+    this.chatSelector.denyRequest(id);
   }
 
   addFriend(request:requestModel, index: number){
