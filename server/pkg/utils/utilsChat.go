@@ -111,7 +111,7 @@ func GetChats(index string, c *gin.Context) {
 	// Extract the "chat" array from the result7
 	ids := result7["ids"].(primitive.A)
 	chatJSON := ids[0].(primitive.M)
-
+	if chatJSON["chats"] != nil {
 	vetChats := chatJSON["chats"].(primitive.A)
 
 
@@ -167,6 +167,11 @@ func GetChats(index string, c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"chats": vetChats,
 	})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"chats": []string{},
+		})
+	}
 }
 
 

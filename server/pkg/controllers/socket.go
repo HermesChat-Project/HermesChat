@@ -75,19 +75,12 @@ func handleMessage(request models.Request, conn *websocket.Conn) {
 	var users []string = utils.GetUsersFromGroup(request.IdDest)
 	for _, user := range users {
 		connsId := config.GetUserConnectionsRedis(user)
-		fmt.Println("num conns:", len(connsId))
 		for _, connId := range connsId {
 			connDest := config.Conns[connId]
-			if connDest != conn {
-				write(connDest, request, user, connId)
+			if connDest != conn && connDest != nil{
+				connDest.WriteJSON(request)
 			}
 		}
 	}
 	go utils.SaveMessage(request)
-}
-
-func write(conn *websocket.Conn, request models.Request, user string, connId string) {
-	if conn != nil {
-		conn.WriteJSON(request)
-	}
 }

@@ -46,7 +46,7 @@ func CreateToken (index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "80.116.98.205",
+		Domain:   "10.88.202.8",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -430,8 +430,12 @@ func UpdateInfoDB(i string, inf string, c *gin.Context){
 		
 		msg := Message{Type: "CUI", Username: i, Info: inf}
 		fmt.Println(msg)
-		if config.Conns[idUser] != nil {
-			config.Conns[idUser].WriteJSON(msg);
+		connsId := config.GetUserConnectionsRedis(idUser)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil{
+				connDest.WriteJSON(msg)
+			}
 		}
 	}
 }
@@ -734,9 +738,13 @@ func SendFriendRequestDB(i string, username string, c *gin.Context) bool {
 	}
 	msg := Message{Type: "FRR", Username: friend.Nickname, Friend: friend}
 	fmt.Println(msg)
-	if config.Conns[id] != nil {
-		config.Conns[id].WriteJSON(msg);
-	}
+	connsId := config.GetUserConnectionsRedis(id)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil{
+				connDest.WriteJSON(msg)
+			}
+		}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "friend request sent",
@@ -938,6 +946,7 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		})
 		return;
 	}
+	fmt.Println("paolo id:" + form.IdFriend)
 	objID6, err := primitive.ObjectIDFromHex(form.IdFriend)
 	if err != nil {
 		errConn();
@@ -998,11 +1007,15 @@ func AcceptFriendRequestDB (index string, form models.AcceptFriendRequest, c *gi
 		Friend Friend `json:"friend"`
 	}
 	
-	msg := Message{Type: "FRA", Username: friend2.Nickname, Friend: friend}
+	msg := Message{Type: "FRA", Username: friend2.Nickname, Friend: friend2}
 	fmt.Println(msg)
-	if config.Conns[friend.ID] != nil {
-		config.Conns[friend.ID].WriteJSON(msg);
-	}
+	connsId := config.GetUserConnectionsRedis(friend.ID)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil{
+				connDest.WriteJSON(msg)
+			}
+		}
 }
 
 func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
@@ -1015,7 +1028,7 @@ func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
 		})
 		return;
 	}
-	objID, err := primitive.ObjectIDFromHex(index)
+	objID, err := primitive.ObjectIDFromHex(idUser)
 	if err != nil {
 		errConn();
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -1023,12 +1036,12 @@ func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
 		})
 		return;
 	}
-	ris := collectionSentTo.FindOneAndUpdate(context.Background(), bson.M{"_id": objID}, bson.M{"$pull": bson.M{"sentTo": bson.M{"idUser": idUser}}})
+	ris := collectionSentTo.FindOneAndUpdate(context.Background(), bson.M{"_id": objID}, bson.M{"$pull": bson.M{"sentTo": bson.M{"idUser": index}}})
 	var result bson.M
 	ris.Decode(&result)
 	fmt.Println("result: ", result)
 
-	objID2, err := primitive.ObjectIDFromHex(idUser)
+	objID2, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID10",
@@ -1043,7 +1056,7 @@ func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
 		})
 		return;
 	}
-	ris2 := collectionPending.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$pull": bson.M{"pending": bson.M{"idUser": index}}})
+	ris2 := collectionPending.FindOneAndUpdate(context.Background(), bson.M{"_id": objID2}, bson.M{"$pull": bson.M{"pending": bson.M{"idUser": idUser}}})
 	var result2 bson.M
 	ris2.Decode(&result2)
 	fmt.Println("result2: ", result2)
@@ -1056,11 +1069,15 @@ func DeclineFriendRequestDB (index string, idUser string, c *gin.Context){
 		Type string `json:"type"`
 		Username string `json:"idUser"`
 	}
-	msg := Message{Type: "FRD", Username: idUser}
+	msg := Message{Type: "FRD", Username: index}
 	fmt.Println(msg)
-	if config.Conns[idUser] != nil {
-		config.Conns[idUser].WriteJSON(msg);
-	}
+	connsId := config.GetUserConnectionsRedis(idUser)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil{
+				connDest.WriteJSON(msg)
+			}
+		}
 
 }
 
@@ -1185,7 +1202,7 @@ func SearchUsersDB (username string, c *gin.Context){
 	pipeline := []bson.M{
 		{"$match": bson.M{"nickname": primitive.Regex{Pattern: "^" + username, Options: "i"}}},
 		{"$limit": 100},
-		{"$project": bson.M{"_id" : 0, "nickname" : 1, "image" : 1}},
+		{"$project": bson.M{"_id" : 1, "nickname" : 1, "image" : 1}},
 	}
 
 	cursor, err := collection.Aggregate(context.Background(), pipeline)

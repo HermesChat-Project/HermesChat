@@ -26,7 +26,7 @@ type BlockUser struct {
 
 type Friend struct {
 	Nickname string `json:"nickname"`
-	IDUser string `json:"idUser"`
+	IDUser string `bson:"idUser" json:"idUser"` 
 	Image string `json:"image"`
 	Name string `json:"name"`
 	Surname string `json:"surname"`
