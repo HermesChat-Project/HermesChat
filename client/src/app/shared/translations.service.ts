@@ -9,7 +9,7 @@ export class TranslationsService {
 
   constructor() { }
 
-  languageSelected!: string
+  languageSelected: string = ""
   languageWords: any = {}
 
   languagesList: string[] = ['it', 'en']
@@ -25,6 +25,8 @@ export class TranslationsService {
         this.languageWords = _en
         break;
     }
+
+    return this.languageSelected;
 
   }
 }

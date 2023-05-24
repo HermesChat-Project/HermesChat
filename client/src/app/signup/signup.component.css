@@ -79,9 +79,7 @@ text-align: center;
 }
 
 #login_btn{
-  margin-top: 20px;
-  float: right;
-  margin-bottom: 20px;
+ width: 100%;
 }
 
 .progress-bar {
@@ -94,6 +92,30 @@ text-align: center;
   border-radius: 5px;
 }
 
+.login-button{
+  /*button styling black and white*/
+  margin: 0 auto;
+  background-color: #FFFFFF;
+  border: 1px solid #084595;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  color: #084595;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  margin-top: 20px;
+
+}
+.login-button:hover {
+  background-color: #084595;
+  color: #FFFFFF;
+}
+
 .progress-bar span {
 display: inline-block;
 height: 10px;
@@ -104,7 +126,7 @@ border-radius: 3px;
 -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
 -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
 box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
-background: rgb(13, 110, 253) !important;
+background: rgb(8, 51, 116) !important;
 transition: width .3s ease-in-out;
 }
 
@@ -113,4 +135,13 @@ color: red;
 font-size: 10pt;
 margin-bottom: 5px;
 margin-left: 2px;
+}
+
+#login{
+  margin-top: 20px;
+  text-align: center;
+  color: #084595;
+  font-size: 9pt;
+  text-decoration: none;
+  float: left;
 }
