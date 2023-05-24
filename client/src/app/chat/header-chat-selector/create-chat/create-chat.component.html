@@ -21,8 +21,22 @@
       Gruppo
     </div>
   </div>
-  <div class="group-creation">
-    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">
+  <div class="single-chat-creation" *ngIf="headerService.chatCreationType == 1">
+    <div class="row" *ngFor="let friend of chatSelectorService.friendList" (click)="createChat(friend)">
+      <div class="col-sm-3">
+        <div class="img">
+          <img [src]="friend.image" class="img-fluid">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="friendName">
+          <h5 class="friend-name">{{friend.nickname}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="group-creation" *ngIf="headerService.chatCreationType == 2">
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList" (click)="checkFriend(friend)">
       <div class="col-sm-3">
         <div class="img">
           <img [src]="friend.image" class="img-fluid">
