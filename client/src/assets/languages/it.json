@@ -3,11 +3,25 @@
     "sign-in" : "Accedi",
     "forgot-password" : "Password dimenticata?",
     "sign-up" : "Registrati",
-    "new-to-hermes" : "Nuovo su Hermes?",
-    "email" : "Email",
+    "new-to-hermes" : "Nuovo su HermesChat?",
+    "username" : "Username",
     "password" : "Password",
     "missing-fields" : "Compila tutti i campi",
-    "wrong-credentials" : "Email o password errati"
+    "wrong-credentials" : "Username o password errati"
+  },
+  "signup":{
+    "signup" : "Registrati",
+    "sign-in" : "Accedi",
+    "already-have-account" : "Hai già un account?",
+    "email" : "Email",
+    "password" : "Password",
+    "confirm-password" : "Conferma password",
+    "missing-fields" : "Compila tutti i campi",
+    "passwords-dont-match" : "Le password non coincidono",
+    "email-already-exists" : "Email già registrata",
+    "invalid-email" : "Email non valida",
+    "name" : "Nome",
+    "last-name" : "Cognome"
   },
   "all-chats": "Tutte le chat",
   "friends": "Amici",

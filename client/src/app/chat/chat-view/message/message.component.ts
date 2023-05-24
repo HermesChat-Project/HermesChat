@@ -44,6 +44,10 @@ export class MessageComponent implements AfterViewInit {
 
   }
 
+  sanitize(url: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
 
 
   getName(messages: messageModel) {

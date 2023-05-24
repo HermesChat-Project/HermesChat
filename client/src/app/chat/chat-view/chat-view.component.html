@@ -35,7 +35,7 @@
       <div class="row-action"
         [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
         <i class="bi bi-camera-fill"  (click)="showCamera(1)"></i>
-        <i class="bi bi-mic-fill"></i>
+        <i class="bi bi-mic-fill" (click)="recordAudio()"></i>
       </div>
     </div>
     <div id="messageSendButton">
