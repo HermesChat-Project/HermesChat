@@ -326,7 +326,7 @@ func SaveMessage(request models.Request) {
 		"dateTime": time.Now(),
 		"content":  request.Payload,
 		"idUser":   request.Index,
-		"type" : "text",
+		"type" : request.TypeMSG,
 	}
 	if request.Options != "" {
 		message["options"] = request.Options

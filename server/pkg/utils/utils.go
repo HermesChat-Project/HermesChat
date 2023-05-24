@@ -46,7 +46,7 @@ func CreateToken (index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "10.88.202.8",
+		Domain:   "api.hermeschat.it",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -136,7 +136,7 @@ func LoginMongoDB (username string, password string, c *gin.Context) {
 	CreateToken(result["_id"].(primitive.ObjectID).Hex(), c)	
 }
 
-func VerifyPassword(email string, user string, pwd string,c *gin.Context){
+func VerifyPassword(email string, user string, pwd string, name string, surname string, lang string, c *gin.Context){
 	//7 or more characters, at least one letter and one number and one special character and one uppercase letter
 		var (
 			hasMinLen  = false
@@ -161,13 +161,13 @@ func VerifyPassword(email string, user string, pwd string,c *gin.Context){
 			}
 		}
 		if hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial{
-			checkEmail(email, user, pwd, c)
+			checkEmail(email, user, pwd, name, surname, lang, c)
 		} else {
 			err := fmt.Errorf("password not valid")
 			SendError(c, err)
 		}
 }
-func checkEmail(email string, username string, password string, c *gin.Context) {
+func checkEmail(email string, username string, password string, name string, surname string, lang string, c *gin.Context) {
 	//check that email is an email
 	if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
 		err := fmt.Errorf("email not valid")
@@ -193,9 +193,9 @@ func checkEmail(email string, username string, password string, c *gin.Context) 
 		SendError(c, err)
 		return
 	}
-	checkUsername(username, password, email, c)
+	checkUsername(username, password, email, lang, name, surname, c)
 }
-func checkUsername (username string, password string, email string, c *gin.Context) {
+func checkUsername (username string, password string, email string, lang string, name string, surname string, c *gin.Context) {
 	if len(username) < 3 || len(username) > 20 {
 		err := fmt.Errorf("username not found")
 		SendError(c, err)
@@ -236,11 +236,13 @@ func checkUsername (username string, password string, email string, c *gin.Conte
 		context.Background(), 
 		bson.M{
 			"nickname": username, 
+			"name" : name,
+			"surname" : surname,
 			"email" : email,
 			"password": string(hash),
 			"visible": true,
 			"info": infoUser,
-			"language": "it",
+			"language": lang,
 			"otp" : otp,
 			"flagOtp": false,
 			"otpExpire": time.Now().Add(time.Minute * 10),
