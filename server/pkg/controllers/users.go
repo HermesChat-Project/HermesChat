@@ -184,7 +184,7 @@ func GetInfo (c *gin.Context) {
 // Check OTP	godoc
 // @Summary 			Verifica OTP
 // @Description 		Verifica che l'OTP inserito dall'utente sia lo stesso generato dal server e inviato via email
-// @Param 			    id header string true "Indice dell'utente da verificare"
+// @Param 			    email header string true "Email dell'utente da verificare"
 // @Param 			    otp header string true "OTP inserito dall'utente"
 // @Produce 		    json
 // @Success 		    200 {object} string

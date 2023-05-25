@@ -48,7 +48,6 @@ func CreateToken(index string, c *gin.Context) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "api.hermeschat.it",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -232,6 +231,7 @@ func checkUsername(username string, password string, email string, lang string, 
 	otp := generateOTP()
 
 	go sendEmail(email, otp)
+	//add a field ids which is an array of string, that in the 0 contains a json called "chats" which contains an array of string
 
 	collection.InsertOne(
 		context.Background(),
@@ -247,46 +247,90 @@ func checkUsername(username string, password string, email string, lang string, 
 			"otp":       otp,
 			"flagOtp":   false,
 			"otpExpire": time.Now().Add(time.Minute * 10),
+			"ids": []struct {
+				Chat []string `bson:"chats"`
+			}{
+				{
+					Chat: []string{},
+				},
+			},
 		},
 	)
 	//print the id of the user created
 
 	id := GetId(username)
+
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	fmt.Println("obj:" + objID.Hex())
 	//create a collection with the id of the user
 	collection = config.ClientMongoDB.Database("user").Collection("blocked")
-	collection.InsertOne(
+	_, err1 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":      objID,
 			"blocked": []string{},
 		},
 	)
+	if err1 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("friendship")
 	//insert id and friends which is an array of object
-	collection.InsertOne(
+	_, err2 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":      objID,
 			"friends": []string{},
 		},
 	)
+	if err2 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("sentFriendship")
-	collection.InsertOne(
+	_, err3 :=collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":     id,
+			"_id":     objID,
 			"sentTo": []string{},
 		},
 	)
+	if err3 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
-	collection.InsertOne(
+	_, err4 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":      objID,
 			"pending": []string{},
 		},
 	)
-
+	if err4 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "user created",
 	})
@@ -553,7 +597,7 @@ func GetRequestSentDB(i string, c *gin.Context) {
 	if err != nil {
 		errConn()
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
+			"message": "invalid ObjectID 1",
 		})
 		return
 	}
@@ -563,7 +607,7 @@ func GetRequestSentDB(i string, c *gin.Context) {
 	if result2 == nil {
 		errConn()
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
+			"message": "invalid ObjectID 2",
 		})
 		return
 	}
@@ -1133,9 +1177,18 @@ func CheckOtpDB(form models.CheckOtp, c *gin.Context) {
 		})
 		return
 	}
-	objID, err := primitive.ObjectIDFromHex(form.ID)
-	if err != nil {
+	ris1 := collection.FindOne(context.Background(), bson.M{"nickname": form.Nickname})
+	var result1 bson.M
+	ris1.Decode(&result1)
+	if result1 == nil {
 		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid email",
+		})
+		return
+	}
+	objID, err := primitive.ObjectIDFromHex(result1["_id"].(primitive.ObjectID).Hex())
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID",
 		})
@@ -1151,7 +1204,12 @@ func CheckOtpDB(form models.CheckOtp, c *gin.Context) {
 		})
 		return
 	}
-	if result["otpDate"].(string) < time.Now().Format("2020-05-28T15:00:00.000+00:00") {
+	//check if otp is expired (24 hours)
+	otpDate := result["otpExpire"].(primitive.DateTime)
+	otpDateGo := otpDate.Time()
+	now := time.Now()
+	diff := now.Sub(otpDateGo)
+	if diff.Hours() > 24{
 		//delete
 		collection.FindOneAndDelete(context.Background(), bson.M{"_id": objID})
 		c.JSON(http.StatusBadRequest, gin.H{

@@ -1,5 +1,6 @@
 package models
 
+
 type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -78,6 +79,8 @@ type CreateChat struct {
 	IdUser string `json:"idUser" binding:"required"`
 	FirstImg string `json:"img" binding:"required"`
 	SecondImg string `json:"friendImg" binding:"required"`
+	FirstNickname string `json:"nickname" binding:"required"`
+	SecondNickname string `json:"friendNickname" binding:"required"`
 }
 
 type CreateGroup struct {
@@ -91,7 +94,7 @@ type GetMessages struct{
 }
 
 type CheckOtp struct {
-	ID string `json:"id" binding:"required"`
+	Nickname string `json:"nickname" binding:"required"`
 	Otp string `json:"otp" binding:"required"`
 }
 
@@ -118,11 +121,13 @@ type Info struct {
 }
 
 type GetFilesRequest struct {
-	Urls []string `json:"urls"`
-	ChatId []string `json:"chatId"`
+	Url string `json:"urls"`
+	ChatId string `json:"chatId"`
 }
 
 type CreateGroupRequest struct {
 	Name string `json:"name"`
 	Users []string `json:"users"`
+	Description string `json:"description"`
+	Img string `json:"img"`
 }

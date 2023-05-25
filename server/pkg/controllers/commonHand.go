@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 
 	"chat/pkg/models"
@@ -35,6 +37,9 @@ func Login(c *gin.Context) {
 // @Param 			    username formData string true "Username dell'utente"
 // @Param 			    password formData string true "Password dell'utente"
 // @Param 			    email formData string true "Email dell'utente"
+// @Param 			    name formData string true "Nome dell'utente"
+// @Param 			    surname formData string true "Cognome dell'utente"
+// @Param 			    lang formData string true "Lingua dell'utente"
 // @Produce 		    json
 // @Success 		    200 {object} string
 // @Failure 		    400 {object} string
@@ -133,10 +138,10 @@ func GetFiles (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println(form)
 	//get index from token
 	index, _ := c.Get("index")
-
-	utils.DownloadFile(index.(string), form.Urls, form.ChatId, c)
+	utils.DownloadFile(index.(string), form.Url, form.ChatId, c)
 }
 
 
@@ -159,6 +164,5 @@ func CreateGroup (c *gin.Context) {
 		return
 	}
 	index, _ := c.Get("index")
-
 	utils.CreateGroupDB(index.(string), form, c)
 }

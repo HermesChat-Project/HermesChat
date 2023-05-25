@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"mime"
 	"mime/multipart"
@@ -110,13 +111,7 @@ func getExtension(header multipart.FileHeader) (string, error) {
 	return extensions[0], nil
 }
 
-func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
-	if len(urls) != len(chats){
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid request",
-		})
-		return
-	}
+func DownloadFile (index string, url string, chat string, c *gin.Context){
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
 		errConn()
@@ -147,12 +142,14 @@ func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
 	}
 	// Extract the "chat" array from the result7
 	ids := result7["ids"].(primitive.A)
+	fmt.Println("ids: ", ids)
 	chatJSON := ids[0].(primitive.M)
+	fmt.Println("chatJSON: ", chatJSON)
 
 	vetChats := chatJSON["chats"].(primitive.A)
+	fmt.Println("vetChats: ", vetChats)
 
-	for _, chat := range chats {
-		//se vetChats contiene chatID allora posso procedere
+	//se vetChats contiene chatID allora posso procedere
 		procedi := false
 		for _, elem := range vetChats {
 			if fmt.Sprintf("%v", elem) == chat {
@@ -166,12 +163,16 @@ func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
 			})
 			return
 		}
-	}
-
-	for i, url := range urls {
-		c.File("uploads/"+chats[i]+"/"+url)
-	}
-
-
-
-}
+		//read the content of the file
+		filePath := "uploads/" + chat + "/" + url
+		content, err := ioutil.ReadFile(filePath)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while opening file",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"content": content,
+		})
+    }
