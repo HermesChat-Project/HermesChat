@@ -17,6 +17,10 @@ export class CreateChatComponent {
     this.headerService.generalClosing();
   }
 
+  txtGroupDesc: string = '';
+  txtGroupName: string = '';
+  imgGroup: File | null = null;
+
   changeSelection(type: number) {
     console.log(type);
     this.headerService.chatCreationType = type;
@@ -24,6 +28,19 @@ export class CreateChatComponent {
 
   checkFriend(friend: FriendModel) {
 
+  }
+
+  getImg(event: Event) {
+    if((event.currentTarget as HTMLInputElement).files)
+    {
+      this.imgGroup = (event.currentTarget as HTMLInputElement).files![0];
+    }
+  }
+
+  createGroupChat() {
+    if (this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null) {
+      this.chatSelectorService.createGroupChat(this.txtGroupName, this.txtGroupDesc, this.imgGroup);
+    }
   }
 
   createChat(friend: FriendModel) {

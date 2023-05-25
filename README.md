@@ -33,7 +33,9 @@ Some of the many features are:
 
 **Server:** Golang (GinGonic Framework)
 
-**DataBase:** MongoDB
+**DataBase:** MongoDB, Redis
+
+**Others:** Figma, Docker, Godaddy DNS, Photoshop
 
 
 

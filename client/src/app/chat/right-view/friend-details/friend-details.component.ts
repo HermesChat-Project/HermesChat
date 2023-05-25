@@ -10,8 +10,19 @@ import { FriendModel } from 'model/friend.model';
 export class FriendDetailsComponent {
   constructor(public chatSelector: ChatSelectorService) { }
 
-  createChat(selectedFriend : FriendModel)
-  {
-    this.chatSelector.createChat(selectedFriend);
+  createChat(selectedFriend: FriendModel) {
+    if (!this.chatSelector.chatList.find((chat) => {
+      return chat.name == selectedFriend.nickname && chat.flagGroup == false;
+    })) {
+      this.chatSelector.createChat(selectedFriend);
+    }
+    else {
+      this.chatSelector.selectedChat = this.chatSelector.chatList.find((chat) => {
+        return chat.name == selectedFriend.nickname && chat.flagGroup == false;
+      })!;
+
+      this.chatSelector.getChatMessages({ idChat: this.chatSelector.selectedChat._id, offset: 1 }, this.chatSelector.selectedChat._id);
+      this.chatSelector.selectedFriend = null;
+    }
   }
 }

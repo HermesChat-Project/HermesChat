@@ -432,6 +432,23 @@ export class ChatSelectorService {
     })
   }
 
+  createGroupChat(groupName: string, GroupDesc: string, groupImage: File) {
+    let formData = new FormData();
+    formData.append('groupName', groupName);
+    formData.append('groupDesc', GroupDesc);
+    formData.append('groupImage', groupImage);
+    this.dataStorage.PostRequestWithHeaders('createGroupChat', formData, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.chatList.push(response.body.chat);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
 
 
   createNewChat(id: string, img: string, friendImg: string, nickname: string) {
@@ -446,6 +463,7 @@ export class ChatSelectorService {
     this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
+        this.chatList.push(response.body.chat);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -610,7 +628,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://95.244.170.144:8090/socket');
+    this.socket = new WebSocket('wss://95.252.67.97:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;

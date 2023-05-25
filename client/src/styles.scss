@@ -501,6 +501,11 @@ app-login, app-signup {
     border: none !important;
   }
 
+  input, textarea{
+    background-color: #333 !important;
+    color: whitesmoke !important;
+  }
+
   .survey_options input{
     background-color: #333 !important;
     color: whitesmoke !important;

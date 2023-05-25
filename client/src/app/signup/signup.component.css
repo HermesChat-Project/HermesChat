@@ -115,6 +115,16 @@ center {
   background-color: #084595;
   color: #ffffff;
 }
+.text{
+  text-align: center;
+}
+
+.sign-in{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .progress-bar span {
   display: inline-block;
