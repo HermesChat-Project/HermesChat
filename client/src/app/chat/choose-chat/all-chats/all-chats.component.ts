@@ -25,8 +25,8 @@ export class AllChatsComponent {
 
 
   ngOnInit() {
-    this.chatSelector.chatExampleList.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime())
-    this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
+    this.chatSelector.chatList.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime())
+    this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
   }
 
   DateAdjustment(date: Date) {
@@ -62,7 +62,7 @@ export class AllChatsComponent {
 
   showChats() {
     if (this.txtSearchChat.length < 3) {
-      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
       this.chatSelector.OtherListSerach = [];
     }
     else {

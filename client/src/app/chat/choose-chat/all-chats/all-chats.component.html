@@ -8,8 +8,8 @@
   </div>
 </div>
 <div id="div_chatlist" *ngIf="txtSearchChat.length<3">
-  <div class="list_result" *ngIf="chatSelector.chatExampleList.length != 0 && chatSelector.chatExampleList">
-    <div class="row div_chat" *ngFor="let chat of chatSelector.chatExampleList" (click)="showEntireChat(chat)">
+  <div class="list_result" *ngIf="chatSelector.chatList.length != 0 && chatSelector.chatList">
+    <div class="row div_chat" *ngFor="let chat of chatSelector.chatList" (click)="showEntireChat(chat)">
 
       <div class="col-sm-3">
         <div class="img img-fluid">

@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="single-chat-creation" *ngIf="headerService.chatCreationType == 1">
-    <div class="row" *ngFor="let friend of chatSelectorService.friendList" (click)="createChat(friend)">
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList" (click)="createChat(friend)">
       <div class="col-sm-3">
         <div class="img">
           <img [src]="friend.image" class="img-fluid">

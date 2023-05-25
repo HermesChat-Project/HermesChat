@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "https://api.hermeschat.it:8090/";
+  private REST_API_SERVER: string = "https://95.244.170.144:8090/";
   constructor(private httpClient: HttpClient) { }
 
   public getRequest(endpoint: string, options: any) {

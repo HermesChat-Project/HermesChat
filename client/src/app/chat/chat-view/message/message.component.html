@@ -43,7 +43,7 @@
       <div class="message-get audio-msg" *ngIf="chatMessage.messages.type == 'audio'">
         <div #text class="audio">
           <audio controls>
-            <source [src]="sanitize(chatMessage.messages.options.audio)" type="audio/mpeg">
+            <source [src]="getFile(chatMessage.messages.options.audio)" type="audio/mp3">
           </audio>
         </div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>

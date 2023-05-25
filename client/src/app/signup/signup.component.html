@@ -1,4 +1,4 @@
-<div class="row" id="wrapper" (keydown)="keyEvent($event)">
+<div class="row" id="wrapper" (keydown)="keyEvent($event)" *ngIf="!loginService.registerSuccess">
   <div class="row">
     <div class="col-md-12">
       <p class="title">HermesChat</p>
@@ -8,31 +8,36 @@
     <!-- textbox email -->
     <div class="col-md-12 center">
       <div class="form-floating" id="form_email">
-        <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="email" [(ngModel)]="txtEmail" [ngModelOptions]="{standalone: true}" tabindex="1">
+        <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="email" [(ngModel)]="txtEmail"
+          [ngModelOptions]="{standalone: true}" tabindex="1">
         <label for="email">Email</label>
       </div>
     </div>
     <div class="col-md-6" id="form_name">
       <div class="form-floating">
-        <input type="text" class="form-control" id="txtName" placeholder="Name" name="name" [(ngModel)]="txtName" [ngModelOptions]="{standalone: true}">
+        <input type="text" class="form-control" id="txtName" placeholder="Name" name="name" [(ngModel)]="txtName"
+          [ngModelOptions]="{standalone: true}">
         <label for="name">{{registerWords["name"]}}</label>
       </div>
     </div>
     <div class="col-md-6" id="form_surname">
       <div class="form-floating">
-        <input type="text" class="form-control" id="txtSurname" placeholder="Surname" name="surname" [(ngModel)]="txtSurname" [ngModelOptions]="{standalone: true}">
+        <input type="text" class="form-control" id="txtSurname" placeholder="Surname" name="surname"
+          [(ngModel)]="txtSurname" [ngModelOptions]="{standalone: true}">
         <label for="surname">{{registerWords["last-name"]}}</label>
       </div>
     </div>
     <div class="col-md-12 center">
       <div class="form-floating" id="form_nickname">
-        <input type="text" class="form-control" id="txtNickname" placeholder="Nickname" name="nickname" [(ngModel)]="txtNickname" [ngModelOptions]="{standalone: true}">
+        <input type="text" class="form-control" id="txtNickname" placeholder="Nickname" name="nickname"
+          [(ngModel)]="txtNickname" [ngModelOptions]="{standalone: true}">
         <label for="nickname">Username</label>
       </div>
       <!-- textbox password -->
       <div class="col-md-12 center" id="form_password">
         <div class="form-floating">
-          <input type="password" class="form-control" id="txtPassword" placeholder="Password" name="password" [(ngModel)]="txtPassword" [ngModelOptions]="{standalone: true}">
+          <input type="password" class="form-control" id="txtPassword" placeholder="Password" name="password"
+            [(ngModel)]="txtPassword" [ngModelOptions]="{standalone: true}">
           <label for="password">Password</label>
           <i class="bi" id="showPwd"></i>
         </div>
@@ -40,18 +45,20 @@
       <!-- textbox confirm password-->
       <div class="col-md-12 center" id="form_confirmPassword">
         <div class="form-floating">
-          <input type="password" #pwd class="form-control" id="txtPasswordAck" placeholder="Password" name="password"[(ngModel)]="txtConfirmPassword" [ngModelOptions]="{standalone: true}">
+          <input type="password" #pwd class="form-control" id="txtPasswordAck" placeholder="Password" name="password"
+            [(ngModel)]="txtConfirmPassword" [ngModelOptions]="{standalone: true}">
           <label for="password">{{registerWords["confirm-password"]}}</label>
           <i class="bi" id="showPwd"></i>
         </div>
         <p id="errorConfirmPassword" style="display: none;">{{registerWords["passwords-dont-match"]}}</p>
       </div>
-      <div class="progress-bar" id="divProgressBar" >
+      <div class="progress-bar" id="divProgressBar">
         <span id="progressBar" [ngStyle]="{'width' : getWidth()}"></span>
       </div>
       <div class="col-md-12 center" id="divButton">
         <div class="form-group d-flex align-content-center justify-content-center" id="login_btn">
-          <button type="button" class="btn btn-primary btn-block login-button " [disabled]="this.progress != 6" (click)="register()">{{registerWords["signup"]}}</button>
+          <button type="button" class="btn btn-primary btn-block login-button " [disabled]="this.progress != 6"
+            (click)="register()">{{registerWords["signup"]}}</button>
         </div>
       </div>
 
@@ -59,6 +66,34 @@
         <div class="form-group">
           <p>{{registerWords["already-have-account"]}} <a [routerLink]="['/login']">{{registerWords["sign-in"]}}</a></p>
         </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="otp" *ngIf="loginService.registerSuccess">
+  <div class="row" id="wrapper">
+    <div class="row sign-in">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="title">HermesChat</h3>
+          <p>{{registerWords["otp-message"]}}</p>
+        </div>
+      </div>
+      <!-- textbox email -->
+      <div class="col-md-12 center opt-container">
+        <div class="form-floating">
+          <!--6 opt item (textbox) that accept only 1 character-->
+          <input type="text" class="form-control opt-item" id="opt1" maxlength="1" placeholder="1" (keyup)="keyEventOtp($event)" (paste)="onPaste($event)"/>
+        <input type="text" class="form-control  opt-item" id="opt2" maxlength="1" placeholder="2" (keyup)="keyEventOtp($event)"/>
+        <input type="text" class="form-control opt-item" id="opt3" maxlength="1" placeholder="3" (keyup)="keyEventOtp($event)"/>
+        <input type="text" class="form-control opt-item" id="opt4" maxlength="1" placeholder="4" (keyup)="keyEventOtp($event)"/>
+        <input type="text" class="form-control opt-item" id="opt5" maxlength="1" placeholder="5" (keyup)="keyEventOtp($event)"/>
+        <input type="text" class="form-control opt-item" id="opt6" maxlength="1" placeholder="6" (keyup)="keyEventOtp($event)"/>
+      </div>
+      <div class="center">
+        <button class="btn btn-primary" id="btnSubmit" #btnSubmit (click)="getOtp()">Verifica Codice</button>
+      </div>
       </div>
     </div>
   </div>

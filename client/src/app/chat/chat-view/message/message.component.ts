@@ -36,6 +36,10 @@ export class MessageComponent implements AfterViewInit {
     let id = message.messages.dateTime.substring(0, 5) + message.messages.content + option.text
   }
 
+  getFile(url: string) {
+
+  }
+
   noSubmit(){
     return false;
   }

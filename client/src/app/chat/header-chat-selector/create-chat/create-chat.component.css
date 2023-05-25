@@ -29,6 +29,8 @@
 .createChat{
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .row{
   margin: 0px;
@@ -109,6 +111,11 @@
   height: 14.29%;
   padding-left: 10px;
   align-items: center;
+}
+
+.single-chat-creation, .group-creation {
+  overflow: auto;
+  flex-grow: 1;
 }
 
 
