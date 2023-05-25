@@ -248,8 +248,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Indice dell'utente da verificare",
-                        "name": "id",
+                        "description": "Email dell'utente da verificare",
+                        "name": "email",
                         "in": "header",
                         "required": true
                     },
@@ -1027,6 +1027,27 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Email dell'utente",
                         "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nome dell'utente",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cognome dell'utente",
+                        "name": "surname",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lingua dell'utente",
+                        "name": "lang",
                         "in": "formData",
                         "required": true
                     }

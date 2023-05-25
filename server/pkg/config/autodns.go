@@ -24,7 +24,7 @@ func ConfigDnsAuto() {
 
 	url := fmt.Sprintf("https://api.godaddy.com//v1/domains/%s/records/A/%s", domain, subdomain)
 	client := &http.Client{}
-	req, err := http.NewRequest("PUT", url, strings.NewReader(fmt.Sprintf("[{\"data\":\"%s\",\"ttl\":3600}]", ipAddress)))
+	req, err := http.NewRequest("PUT", url, strings.NewReader(fmt.Sprintf("[{\"data\":\"%s\",\"ttl\":600}]", ipAddress)))
 	if err != nil {
 		fmt.Printf("Errore durante la creazione della richiesta: %s\n", err.Error())
 		return

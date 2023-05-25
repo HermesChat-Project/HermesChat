@@ -167,9 +167,9 @@ paths:
       description: Verifica che l'OTP inserito dall'utente sia lo stesso generato
         dal server e inviato via email
       parameters:
-      - description: Indice dell'utente da verificare
+      - description: Email dell'utente da verificare
         in: header
-        name: id
+        name: email
         required: true
         type: string
       - description: OTP inserito dall'utente
@@ -698,6 +698,21 @@ paths:
       - description: Email dell'utente
         in: formData
         name: email
+        required: true
+        type: string
+      - description: Nome dell'utente
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Cognome dell'utente
+        in: formData
+        name: surname
+        required: true
+        type: string
+      - description: Lingua dell'utente
+        in: formData
+        name: lang
         required: true
         type: string
       produces:
