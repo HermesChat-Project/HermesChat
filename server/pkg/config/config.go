@@ -26,6 +26,8 @@ var PWDGMAIL string;
 var ClientMongoDB *mongo.Client;
 var Conns = make(map[string]*websocket.Conn);
 var ClientRedis *redis.Client;
+var API_KEY_GODADDY string;
+var API_SECRET_GODADDY string;
 
 
 func LoadConfig() {
@@ -41,6 +43,8 @@ func LoadConfig() {
 	SECRET = os.Getenv("SECRET")
 	DOMAIN = os.Getenv("DOMAIN")
 	PWDGMAIL = os.Getenv("PWDGMAIL")
+	API_KEY_GODADDY = os.Getenv("API_KEY_GODADDY")
+	API_SECRET_GODADDY = os.Getenv("API_SECRET_GODADDY")
 	go CreateFileLog()
 }
 

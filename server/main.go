@@ -19,6 +19,7 @@ import (
 
 func main() {
 	config.LoadConfig()
+	//config.ConfigDnsAuto()
 	fmt.Println("Starting server...")
 	router := gin.Default()
 	config.ConnectToRedis()

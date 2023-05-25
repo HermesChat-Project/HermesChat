@@ -40,6 +40,14 @@
         </div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
       </div>
+      <div class="message-get audio-msg" *ngIf="chatMessage.messages.type == 'audio'">
+        <div #text class="audio">
+          <audio controls>
+            <source [src]="sanitize(chatMessage.messages.options.audio)" type="audio/mpeg">
+          </audio>
+        </div>
+        <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>
+      </div>
     </div>
     <div class="message-action-container">
       <div class="message-actions"

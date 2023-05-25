@@ -10,11 +10,6 @@ import { ChatSelectorService } from 'src/app/chat/chat.service';
 export class DeleteMessageComponent {
 
   constructor(private dialogRef: MatDialogRef<DeleteMessageComponent>, public chatSelector: ChatSelectorService) { }
-
-  closeDialog() {
-    this.dialogRef.close(false);
-  }
-
   deleteMessage() {
     this.dialogRef.close(true);
   }

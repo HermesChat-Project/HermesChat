@@ -9,6 +9,9 @@ type SignUpRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Email    string `json:"email" binding:"required"`
+	Name    string `json:"name" binding:"required"`
+	Surname    string `json:"surname" binding:"required"`
+	Lang   string `json:"lang" binding:"required"`
 }
 
 //for every api call from now it's required the token, which will be put by the server in the index value of the header
@@ -102,6 +105,7 @@ type Request struct {
 	Payload string `json:"payload"`
 	Options string `json:"options"`
 	Index string `json:"index"`
+	TypeMSG string `json:"typeMSG"`
 }
 
 
@@ -116,4 +120,9 @@ type Info struct {
 type GetFilesRequest struct {
 	Urls []string `json:"urls"`
 	ChatId []string `json:"chatId"`
+}
+
+type CreateGroupRequest struct {
+	Name string `json:"name"`
+	Users []string `json:"users"`
 }

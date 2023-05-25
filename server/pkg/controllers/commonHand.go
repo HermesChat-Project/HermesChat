@@ -48,7 +48,7 @@ func SignUp (c *gin.Context) {
 	}
 
 	//check if password respect requirements
-	utils.VerifyPassword(form.Email, form.Username, form.Password, c)
+	utils.VerifyPassword(form.Email, form.Username, form.Password, form.Name, form.Surname, form.Lang, c)
 }
 
 
@@ -137,4 +137,28 @@ func GetFiles (c *gin.Context) {
 	index, _ := c.Get("index")
 
 	utils.DownloadFile(index.(string), form.Urls, form.ChatId, c)
+}
+
+
+//CreateGroup	godoc
+// @Summary 			Crea un gruppo
+// @Description 		Crea un gruppo con i membri specificati, almeno uno e attribuisce il ruolo di admin a colui che ha creato il server
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    name formData string true "Nome del gruppo"
+// @Param 			    users formData []string true "Membri del gruppo (ci sono gli id)"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /createGroup [post]
+
+func CreateGroup (c *gin.Context) {
+	var form models.CreateGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+
+	utils.CreateGroupDB(index.(string), form, c)
 }

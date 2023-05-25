@@ -46,6 +46,7 @@ import { ChartComponent } from './dialog/chart/chart.component';
 import { InfoChatComponent } from './chat/header-chat-selector/settings/info-chat/info-chat.component';
 import { SignupComponent } from './signup/signup.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChatCreationComponent } from './dialog/chat-creation/chat-creation.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     ChartComponent,
     InfoChatComponent,
     SignupComponent,
+    ChatCreationComponent,
   ],
   imports: [
     BrowserModule,

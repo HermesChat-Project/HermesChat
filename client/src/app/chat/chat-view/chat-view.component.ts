@@ -2,6 +2,7 @@ import { Component, createNgModule, ElementRef, ViewChild } from '@angular/core'
 import { messageModel } from 'model/message.model';
 import { ChatSelectorService } from '../chat.service';
 import { ViewEncapsulation } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat-view',
@@ -33,18 +34,20 @@ export class ChatViewComponent {
   isSuperscript: boolean = false;
   isSubscript: boolean = false;
 
+  audioRecord: boolean = false;
+
   //camera variables
   isCameraPermitted: boolean = false;
 
   constructor(public chatSelector: ChatSelectorService) { }
-  getMedia(event:any){
+  getMedia(event: any) {
     console.log(event);
     this.chatSelector.stream?.getTracks().forEach(track => track.stop());
     this.chatSelector.flagCamera = 0;
     let innerHTML = this.textMessage.nativeElement.innerrHTML == "" ? "" : "<br>";
-    for(const media of event){
+    for (const media of event) {
       innerHTML += `<${media.type} src='${media.src}' style="max-width: 100%; max-height: 100%;"`;
-      if(media.type == 'video')
+      if (media.type == 'video')
         innerHTML += "></video>";
       else
         innerHTML += "/>";
@@ -57,7 +60,7 @@ export class ChatViewComponent {
     //check if the camera is permitted
     if (navigator.mediaDevices) {
       if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
           this.chatSelector.stream = stream;
           this.isCameraPermitted = true;
           this.chatSelector.flagCamera = type;
@@ -76,13 +79,11 @@ export class ChatViewComponent {
 
   }
 
-  createSurvey()
-  {
+  createSurvey() {
     this.chatSelector.openSurveyDialog();
   }
 
-  createChart()
-  {
+  createChart() {
     this.chatSelector.openChartDialog();
   }
 
@@ -146,7 +147,47 @@ export class ChatViewComponent {
     this.chatSelector.src = '';
   }
 
+  recordAudio() {
+    let constraints = { audio: true };
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      this.audioRecord = true;
+      let mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+      let audioChunks: Blob[] = [];
+       mediaRecorder.addEventListener("dataavailable", (event: any) => {
+        console.log(event.data);
+        audioChunks.push(event.data);
+        let audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+        let audioUrl = URL.createObjectURL(audioBlob);
+        let file = new File([audioBlob], "audio.mp3", { type: 'audio/mp3' });
+        console.log(file);
+        let formData = new FormData();
+        formData.append('file', file);
+        formData.append('chatId', this.chatSelector.selectedChat!._id);
+        this.chatSelector.sendFile(formData).then((file: any) => {
+          this.chatSelector.messageList[this.chatSelector.selectedChat!._id].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: this.chatSelector.infoUser._id, type: "audio", options: { audio: file } }));
+        })
+        .catch((err: HttpErrorResponse) => {
+          console.log(err.message);
+        });
 
+      });
+      mediaRecorder.addEventListener("stop", () => {
+        let audioBlob = new Blob(audioChunks);
+        let audioUrl = URL.createObjectURL(audioBlob);
+        let audio = new Audio(audioUrl);
+      });
+      setTimeout(() => {
+        console.log("stop");
+        this.audioRecord = false;
+        stream.getTracks().forEach(track => track.stop());
+        mediaRecorder.stop();
+      }, 3000);
+    })
+      .catch((err: Error) => {
+        console.log(err.message);
+      });
+  }
   sendMsg() {
     let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
 
@@ -176,12 +217,14 @@ export class ChatViewComponent {
   getFiles(event: any) {
     //get the files taken from the input file and convert them to binary
     let files = event.target?.files || event.dataTransfer.files;
-    let file = files[0];
-    console.log(file);
-    let formData = new FormData();
-    formData.append('file', file);
-    formData.append('chatId', this.chatSelector.selectedChat!._id);
-    this.chatSelector.sendFile(formData);
+    if (files) {
+      let file = files[0];
+      console.log(file);
+      let formData = new FormData();
+      formData.append('file', file);
+      formData.append('chatId', this.chatSelector.selectedChat!._id);
+      this.chatSelector.sendFile(formData);
+    }
   }
   getImages(event: any) {
     //get the images taken from the input file and convert them to base64
@@ -231,9 +274,8 @@ export class ChatViewComponent {
 
   scrollMsg(event: any) {
     let el = event.currentTarget as HTMLElement;
-    if( el.scrollHeight > el.clientHeight)
-    {
-      if(event.target.scrollTop == 0 ){
+    if (el.scrollHeight > el.clientHeight) {
+      if (event.target.scrollTop == 0) {
         let body = {
           idChat: this.chatSelector.selectedChat!._id,
           offset: this.chatSelector.offsetChat

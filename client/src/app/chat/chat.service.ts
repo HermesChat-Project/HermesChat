@@ -199,6 +199,7 @@ export class ChatSelectorService {
       maxHeight: '70%',
     }).afterClosed().subscribe((result: any) => {
       if (result) {
+        console.log(result);
         this.sendMessage(result.title, "survey", result.survey)
       }
     })
@@ -257,7 +258,7 @@ export class ChatSelectorService {
     if (this.selectedChat) {
       console.log(type)
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
-      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup }))
+      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup, typeMSG: type, options: options }));
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
@@ -413,7 +414,7 @@ export class ChatSelectorService {
   }
 
   denyRequest(request: string) {
-    this.dataStorage.PostRequestWithHeaders('declineFriend', {idUser: request}, this.getOptionsForRequest()).subscribe({
+    this.dataStorage.PostRequestWithHeaders('declineFriend', { idUser: request }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
       },
@@ -477,17 +478,20 @@ export class ChatSelectorService {
     })
   }
   sendFile(file: FormData) {
-    console.log(file.get('file'));
-    console.log(file.get('chatId'));
-    this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
-      next: (response: any) => {
-        console.log(response);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-        if (error.status == 401)
-          this.logout();
-      }
+
+    return new Promise((resolve, reject) => {
+      this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          resolve(response.body);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status == 401)
+            this.logout();
+          reject(error);
+        }
+      })
     })
 
   }
@@ -573,7 +577,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://10.88.202.8:8090/socket');
+    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -608,7 +612,7 @@ export class ChatSelectorService {
       else if (data.type == "FRD") {//friend request denied
         let idUser = data.idUser;
         console.log(idUser);
-        this.sentList = this.sentList.filter((user) =>{
+        this.sentList = this.sentList.filter((user) => {
           console.log(user.idUser);
           return user.idUser != idUser;
         });
@@ -637,7 +641,7 @@ export class ChatSelectorService {
   waitProgress() {
 
     if (this.progress == 5) {
-        this.seeMain = true;
+      this.seeMain = true;
     }
   }
 

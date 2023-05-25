@@ -2,11 +2,13 @@ package utils
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"mime"
 	"mime/multipart"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -76,7 +78,6 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 		//get only the current second and nanosecond
 
 		nanoseconds := time.Now().UnixNano()
-
 		fileExt, _ := getExtension(*file)
 
 		name := index + "_" + fmt.Sprintf("%d", nanoseconds) + "_" + fmt.Sprintf("%d", rand.Intn(100)) + fileExt
@@ -92,11 +93,21 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 }
 
 func getExtension(header multipart.FileHeader) (string, error) {
-	extension, err := mime.ExtensionsByType(header.Header.Get("Content-Type"))
+	contentType := header.Header.Get("Content-Type")
+	if contentType == "audio/mpeg" || strings.HasPrefix(contentType, "audio/mp3") {
+		return ".mp3", nil
+	}
+
+	extensions, err := mime.ExtensionsByType(contentType)
 	if err != nil {
 		return "", err
 	}
-	return extension[0], nil
+
+	if len(extensions) == 0 {
+		return "", errors.New("extension not found")
+	}
+
+	return extensions[0], nil
 }
 
 func DownloadFile (index string, urls []string, chats []string, c *gin.Context){
