@@ -52,7 +52,6 @@ func SocketConnection(c *gin.Context) {
 			var request models.Request
 			err = conn.ReadJSON(&request)
 			if err != nil {
-					fmt.Println("closing connection")
 					config.ClientRedis.LRem(index.(string), 0, uuid)
 					conn.Close()
 				return

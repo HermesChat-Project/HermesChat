@@ -166,3 +166,13 @@ func CreateGroup (c *gin.Context) {
 	index, _ := c.Get("index")
 	utils.CreateGroupDB(index.(string), form, c)
 }
+
+func AddUserToGroup(c *gin.Context){
+	var form models.AddUserToGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.AddUserToGroupDB(index.(string), form, c)
+}
