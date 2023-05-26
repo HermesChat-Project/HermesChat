@@ -36,4 +36,20 @@ export class FriendsListComponent {
     this.chatSelector.selectedFriend = friend;
 
   }
+
+  createChat(friend: FriendModel) {
+    if (!this.chatSelector.chatList.find((chat) => {
+      return chat.name == friend.nickname && chat.flagGroup == false;
+    })) {
+      this.chatSelector.createChat(friend);
+    }
+    else {
+      this.chatSelector.selectedChat = this.chatSelector.chatList.find((chat) => {
+        return chat.name == friend.nickname && chat.flagGroup == false;
+      })!;
+
+      this.chatSelector.getChatMessages({ idChat: this.chatSelector.selectedChat._id, offset: 1 }, this.chatSelector.selectedChat._id);
+      this.chatSelector.selectedFriend = null;
+    }
+  }
 }

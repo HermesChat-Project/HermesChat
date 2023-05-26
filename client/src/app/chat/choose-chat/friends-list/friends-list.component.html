@@ -23,7 +23,7 @@
           <span class="text-truncate friend_name" [title]="friend.name + '' + friend.surname">{{friend.name + " " + friend.surname}}</span>
         </div>
         <div class="chatNow">
-          <i class="bi bi-chat-left-text-fill" [title]="'scrivi a ' +friend.nickname"></i>
+          <i class="bi bi-chat-left-text-fill" [title]="'scrivi a ' +friend.nickname" (click)="createChat(friend)"></i>
         </div>
       </div>
     </div>

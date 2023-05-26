@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChatSelectorService } from 'src/app/chat/chat.service';
 
 @Component({
@@ -7,6 +8,5 @@ import { ChatSelectorService } from 'src/app/chat/chat.service';
   styleUrls: ['./chat-creation.component.css']
 })
 export class ChatCreationComponent {
-  @Input() nickname!: string;
-  constructor(public chatSelector: ChatSelectorService) { }
+  constructor(public chatSelector: ChatSelectorService, @Inject(MAT_DIALOG_DATA) public data: any ) { }
 }

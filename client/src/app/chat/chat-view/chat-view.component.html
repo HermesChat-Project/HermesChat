@@ -5,8 +5,10 @@
   </div>
   <div id="messageSend">
     <div id="messageSendText">
-      <div id="txtMessage" #textMessage (keydown)="keyAction($event)" contenteditable="true"
-        (paste)="pastedMessage($event)"></div>
+      <div id="txtMessage" #textMessage (keydown)="keyAction($event)" [contentEditable]="contentEditable"
+        (paste)="pastedMessage($event)">
+        <button class="bi " [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}" (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
+      </div>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
       </button>

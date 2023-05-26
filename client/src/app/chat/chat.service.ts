@@ -8,12 +8,10 @@ import { FriendModel } from 'model/friend.model';
 import { CalendarModel } from 'model/calendar.model';
 import { requestModel } from 'model/request.model';
 import { Chat } from 'model/chat.model';
-import { webSocket } from 'rxjs/webSocket'
-import { Conditional } from '@angular/compiler';
 import { MatDialog } from '@angular/material/dialog';
 import { SurveyComponent } from '../dialog/survey/survey.component';
 import { ChartComponent } from '../dialog/chart/chart.component';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
 
@@ -23,19 +21,19 @@ import { SearchModel } from 'model/search.model';
 })
 export class ChatSelectorService {
 
-  progress: number = 0;
-  PersonalListSearch: Chat[] = [];
-  friendList: FriendModel[] = [];
-  friendSerachList: FriendModel[] = [];
-  receivedList: requestModel[] = [];
-  chatExampleList: Chat[] = [];
-  messageList: { [key: string]: messageModel[] } = {};
-  socketMessageList: { [key: string]: messageModel[] } = {};
-  infoUser: any
-  sentList: { idUser: string, image: string, nickname: string }[] = [];
-  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout
-  offsetChat: number = 1
-  OtherListSerach: SearchModel[] = [];
+  progress: number = 0;// wait until 6 calls are done
+  PersonalListSearch: Chat[] = [];//serach for personal chat
+  friendList: FriendModel[] = [];//list of friends
+  friendSerachList: FriendModel[] = [];//firend list for search
+  receivedList: requestModel[] = [];//received frieedn request list
+  chatList: Chat[] = [];//chat list
+  messageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat
+  socketMessageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat from socket (when a new message is received)
+  infoUser: any//user info
+  sentList: { idUser: string, image: string, nickname: string }[] = [];//list of sent friend request
+  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout -> used to know which dialog to open
+  offsetChat: number = 1 //offset for chat list (for retrieving more messages)
+  OtherListSerach: SearchModel[] = [];//search list for other users
   theme: string = "light";
 
   callList: callsModel[] = [
@@ -50,6 +48,7 @@ export class ChatSelectorService {
 
   userLang = navigator.language || 'en-US';
 
+  userNonChatFriendList: FriendModel[] = [];//list of friends that are not in chat
 
   src: string = "";
   flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
@@ -65,7 +64,8 @@ export class ChatSelectorService {
     let id = friend.id;
     let imgUser = this.infoUser.image;
     let friendImage = friend.image;
-    this.createNewChat(id, imgUser, friendImage);
+    let nickname = friend.nickname;
+    this.createNewChat(id, imgUser, friendImage, nickname);
   }
   //#endregion
 
@@ -258,7 +258,7 @@ export class ChatSelectorService {
     if (this.selectedChat) {
       console.log(type)
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
-      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup, typeMSG: type, options: options }));
+      this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup, typeMSG: type, options: JSON.stringify(options) }));
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
@@ -291,9 +291,9 @@ export class ChatSelectorService {
     this.dataStorage.PostRequestWithHeaders(`getChats`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.chatExampleList = response.body.chats;
+        this.chatList = response.body.chats;
         this.changeName(response.body.chats);
-        for (const chat of this.chatExampleList) {
+        for (const chat of this.chatList) {
           if (this.messageList[chat._id] == undefined)
             this.messageList[chat._id] = [];
           if (this.socketMessageList[chat._id] == undefined)
@@ -320,6 +320,10 @@ export class ChatSelectorService {
         next: (response: any) => {
           console.log(response);
           if (response.body.messages) {
+            response.body.messages.forEach((message: messageModel) => {
+              if (message.messages.options && typeof message.messages.options === 'string')
+                message.messages.options = JSON.parse(message.messages.options as string);
+            });
             if (this.messageList[id]) {
               this.sortChats(response.body.messages)
               let array = response.body.messages.concat(this.messageList[id]);
@@ -329,6 +333,8 @@ export class ChatSelectorService {
               this.messageList[id] = response.body.messages;
               this.sortChats();
             }
+
+
 
             this.messageFeature(newMsg, id);
           }
@@ -426,18 +432,38 @@ export class ChatSelectorService {
     })
   }
 
+  createGroupChat(groupName: string, GroupDesc: string, groupImage: File) {
+    let formData = new FormData();
+    formData.append('groupName', groupName);
+    formData.append('groupDesc', GroupDesc);
+    formData.append('groupImage', groupImage);
+    this.dataStorage.PostRequestWithHeaders('createGroupChat', formData, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.chatList.push(response.body.chat);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
 
 
-  createNewChat(id: string, img: string, friendImg: string) {
+  createNewChat(id: string, img: string, friendImg: string, nickname: string) {
     let body = {
       "idUser": id,
       "img": img,
-      "friendImg": friendImg
+      "friendImg": friendImg,
+      "friendNickname": nickname,
+      "nickname": this.infoUser.nickname,
     }
 
     this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
+        this.chatList.push(response.body.chat);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -483,7 +509,7 @@ export class ChatSelectorService {
       this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
         next: (response: any) => {
           console.log(response);
-          resolve(response.body);
+          resolve(response.body.url[0]);
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -494,6 +520,22 @@ export class ChatSelectorService {
       })
     })
 
+  }
+
+  getFile(file: string, id: string) {
+    console.log(file, id);
+    this.dataStorage.PostRequestWithHeaders('getFiles', { urls: file, chatId: id }, this.getFileOptions()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        const blob = this.base64ToBlob(response.body.content, 'audio/mp3');
+        this.saveBlobAsFile(blob, "file." + file.split('.')[1]);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
   }
 
   getSerachUsers(txtUser: string) {
@@ -527,7 +569,16 @@ export class ChatSelectorService {
       observe: 'response',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': localStorage.getItem("Authorization")
+      },
+      withCredentials: true
+    };
+  }
+
+  getFileOptions() {
+    return {
+      observe: 'response',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8;',
       },
       withCredentials: true
     };
@@ -555,7 +606,7 @@ export class ChatSelectorService {
     this.infoUser = null;
     this.messageList = {};
     this.socketMessageList = {};
-    this.chatExampleList = [];
+    this.chatList = [];
     this.progress = 0;
     this.PersonalListSearch = [];
     this.OtherListSerach = [];
@@ -577,7 +628,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
+    this.socket = new WebSocket('wss://95.252.67.97:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -651,14 +702,14 @@ export class ChatSelectorService {
 
     for (const [index, chat] of chatList.entries()) {
       if (chat.flagGroup) {
-        this.chatExampleList[index].name = chat.groupName;
-        this.chatExampleList[index].image = chat.groupImage;
+        this.chatList[index].name = chat.groupName;
+        this.chatList[index].image = chat.groupImage;
       }
       else {
-        this.chatExampleList[index].name = this.getSingleChatname(chat.users);
+        this.chatList[index].name = this.getSingleChatname(chat.users);
 
-        this.chatExampleList[index].image = this.getSingleChatImg(chat.users);
-        console.log(this.chatExampleList[index].name);
+        this.chatList[index].image = this.getSingleChatImg(chat.users);
+        console.log(this.chatList[index].name);
       }
     }
   }
@@ -696,6 +747,25 @@ export class ChatSelectorService {
         this.bottomScroll(-1);
       }, 0);//to improve
     }
+  }
+  base64ToBlob(base64Data: string, contentType: string): Blob {
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    return new Blob([byteArray], { type: contentType });
+  }
+
+  saveBlobAsFile(blob: Blob, fileName: string) {
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
   }
   //#endregion
 }
