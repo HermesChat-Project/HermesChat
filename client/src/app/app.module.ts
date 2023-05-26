@@ -48,7 +48,12 @@ import { SignupComponent } from './signup/signup.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChatCreationComponent } from './dialog/chat-creation/chat-creation.component';
 import { MobileComponent } from './mobile/mobile.component';
+import { FriendComponent } from './chat/header-chat-selector/create-chat/friend/friend.component';
+import { LottieModule } from 'ngx-lottie';
 
+export function playerFactory() {
+  return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -83,6 +88,7 @@ import { MobileComponent } from './mobile/mobile.component';
     SignupComponent,
     ChatCreationComponent,
     MobileComponent,
+    FriendComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +104,8 @@ import { MobileComponent } from './mobile/mobile.component';
     MatSelectModule,
     MatDialogModule,
     MatInputModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    LottieModule.forRoot({ player: playerFactory }),
   ],
   providers: [
     MatDatepickerModule,

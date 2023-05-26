@@ -62,6 +62,7 @@ export class CreateChatComponent {
       this.chatSelectorService.selectedChat = this.chatSelectorService.chatList.find((chat) => {
         return chat.name == friend.nickname && chat.flagGroup == false;
       })!;
+      this.chatSelectorService.getChatMessages({ "idChat": this.chatSelectorService.selectedChat._id, "offset": 1}, this.chatSelectorService.selectedChat._id);
 
     }
   }

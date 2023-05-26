@@ -75,8 +75,8 @@ export class AllChatsComponent {
 
 
 
-  getLastMessageTime(last: string): Date {
-    return new Date(last);
+  getLastMessageTime(message: any): Date {
+    return new Date(message.dateTime);
   }
 
   showEntireChat(selected : Chat){
