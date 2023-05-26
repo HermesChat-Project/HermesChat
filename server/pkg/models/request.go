@@ -131,3 +131,8 @@ type CreateGroupRequest struct {
 	Description string `json:"description"`
 	Img string `json:"img"`
 }
+
+type AddUserToGroupRequest struct {
+	ChatId string `json:"chatId"`
+	Users []string `json:"users"`
+}

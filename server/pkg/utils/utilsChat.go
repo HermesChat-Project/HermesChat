@@ -225,20 +225,39 @@ func GetChats(index string, c *gin.Context) {
 			})
 			return
 		}
-
-		opt2 := options.FindOne().SetProjection(bson.M{"messages": 0})
+		pipeline := bson.A{
+			bson.M{
+				"$match": bson.M{
+					"_id": idChats,
+				},
+			},
+			bson.M{
+				"$unwind": bson.M{
+					"path": "$messages",
+				},
+			},
+			bson.M{
+				"$sort": bson.M{
+					"messages.dateTime": -1,
+				},
+			},
+			bson.M{
+				"$limit": 1,
+			},
+		}
 
 		var result8 bson.M
 
-		ris8 := collection2.FindOne(context.Background(), bson.M{"_id": idChats}, opt2)
-		ris8.Decode(&result8)
-		if result8 == nil {
-			errConn()
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "invalid ObjectID10",
+		ris8, err := collection2.Aggregate(context.Background(), pipeline)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
 			})
 			return
 		}
+		ris8.Next(context.Background())
+		ris8.Decode(&result8)
+
 
 		vetChats[i-1] = result8
 
@@ -277,8 +296,6 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(form.Offset)
-	fmt.Println(objID)
 
 		pipeline := bson.A{
 			bson.M{
@@ -324,7 +341,6 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Println(result)
 			//push the messages in the array
 			messages = append(messages, result)
 			
@@ -384,7 +400,6 @@ func GetUsersFromGroup (idGroup string) [] string{
 		users[i] = strings.Split(elem, ":")[1]
 	}
 
-	fmt.Println(users)
 	return users
 }
 
