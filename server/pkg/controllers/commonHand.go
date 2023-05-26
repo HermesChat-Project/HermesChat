@@ -176,3 +176,13 @@ func AddUserToGroup(c *gin.Context){
 	index, _ := c.Get("index")
 	utils.AddUserToGroupDB(index.(string), form, c)
 }
+
+func ChangeRoleRGroup (c *gin.Context){
+	var form models.ChangeRoleGroup;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.ChangeRoleGroupDB(index.(string), form, c)
+}

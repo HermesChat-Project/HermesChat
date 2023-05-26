@@ -291,3 +291,77 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 	}
 	
 }
+
+func ChangeRoleGroupDB (idAdmin string, form models.ChangeRoleGroup, c *gin.Context){
+	
+	objGroup , errObj := primitive.ObjectIDFromHex(form.ChatId)
+	if errObj != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID2",
+		})
+		return
+	}
+	collecChat := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collecChat == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//search the group and get the array of users
+	ris1 := collecChat.FindOne(c.Request.Context(), bson.M{"_id": objGroup})
+	if ris1 == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	type user struct {
+		IdUser string `json:"idUser" bson:"idUser"`
+		Role string `json:"role" bson:"role"`
+		Nickname string `json:"nickname" bson:"nickname"`
+		Image string `json:"image" bson:"image"`
+	}
+	type group struct {
+		Users []user `json:"users" bson:"users"`
+	}
+	var result1 group
+	err := ris1.Decode(&result1)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	isAdmin := false
+	for _, element := range result1.Users {
+		if element.IdUser == idAdmin && element.Role == "admin" {
+			isAdmin = true
+		}
+	}
+	if !isAdmin {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "not an admin",
+		})
+		return
+	}
+
+	//update the user that has "user" id as idUser with the new role
+	for _, element := range result1.Users {
+		if element.IdUser == form.User {
+			element.Role = form.Role
+		}
+	}
+	_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objGroup}, bson.M{"$set": bson.M{"users": result1.Users}})
+	if errUpload != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "role changed successfully",
+	})
+}
