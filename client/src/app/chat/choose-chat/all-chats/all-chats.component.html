@@ -21,8 +21,8 @@
           <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
-          <span class="text-truncate last-message" [innerHTML]="chat.last"></span>
-          <span>{{DateAdjustment(getLastMessageTime(chat.last))}}</span>
+          <span class="text-truncate last-message" [innerHTML]="chat.messages.content"></span>
+          <span>{{DateAdjustment(getLastMessageTime(chat.messages))}}</span>
         </div>
       </div>
 
@@ -56,8 +56,8 @@
                 <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.last)"></span>
-                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.last))}}</span>
+                <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.messages.content)"></span>
+                <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.messages))}}</span>
               </div>
             </div>
           </div>

@@ -9,8 +9,9 @@ export class Chat {
   public creationDate: string;
   public last: string;
   public visibility: string;
+  public messages: any;
 
-  constructor(id: string, users: { _id: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", last: string = "", visibility: string = "private") {
+  constructor(id: string, users: { _id: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", last: string = "", visibility: string = "private", messages: any) {
     this._id = id;
     this.users = users;
     this.flagGroup = flagGroup;
@@ -20,5 +21,6 @@ export class Chat {
     this.creationDate = creationDate;
     this.last = last;
     this.visibility = visibility;
+    this.messages = messages;
   }
 }

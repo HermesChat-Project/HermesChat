@@ -211,10 +211,10 @@ export class ChatSelectorService {
       width: '70%',
       minHeight: '50%',
       maxHeight: '70%',
-    }).afterClosed().subscribe((result: boolean) => {
+    }).afterClosed().subscribe((result: any) => {
       if (result) {
         console.log(result);
-        this.sendMessage("", "chart", result)
+        this.sendMessage("", "chart", result.data)
       }
     })
   }
@@ -255,6 +255,7 @@ export class ChatSelectorService {
   }
 
   sendMessage(message: string, type: string = 'text', options: any = null) {
+    console.log(options)
     if (this.selectedChat) {
       console.log(type)
       this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
@@ -300,6 +301,11 @@ export class ChatSelectorService {
             this.socketMessageList[chat._id] = [];
           this.progress++;
           this.waitProgress();
+          this.chatList.sort((a, b) => {
+            let aDate = new Date(a.messages!.dateTime);
+            let bDate = new Date(b.messages!.dateTime);
+            return bDate.getTime() - aDate.getTime();
+          })
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -321,8 +327,9 @@ export class ChatSelectorService {
           console.log(response);
           if (response.body.messages) {
             response.body.messages.forEach((message: messageModel) => {
+              console.log(message.messages.options, message.messages.type)
               if (message.messages.options && typeof message.messages.options === 'string')
-                message.messages.options = JSON.parse(message.messages.options as string);
+                message.messages.options = JSON.parse(message.messages.options as string)
             });
             if (this.messageList[id]) {
               this.sortChats(response.body.messages)
@@ -333,6 +340,8 @@ export class ChatSelectorService {
               this.messageList[id] = response.body.messages;
               this.sortChats();
             }
+
+            console.log(this.messageList[id]);
 
 
 
@@ -628,7 +637,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://95.252.67.97:8090/socket');
+    this.socket = new WebSocket('wss://10.88.211.250:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -638,14 +647,17 @@ export class ChatSelectorService {
       let data = JSON.parse(event.data);
       console.log(data);
       if (data.type == "MSG") {
+        let opt;
+        if (data.options)
+          opt = JSON.parse(data.options);
         if (this.messageList[data.idDest].length > 0) {
-          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null }));
+          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
           setTimeout(() => {
             this.bottomScroll(-1);
           }, 0);//to improve
         }
         else {
-          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: null }));
+          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
         }
       }
       else if (data.type == "FRA") {//friend request accepted

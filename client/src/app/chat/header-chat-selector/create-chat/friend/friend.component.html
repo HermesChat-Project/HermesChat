@@ -1,0 +1,15 @@
+<div class="row" (click)="checkFriend()">
+  <div class="col-sm-3">
+    <div class="img">
+      <img [src]="friend.image" class="img-fluid">
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="friendName">
+      <h5 class="friend-name">{{friend.nickname}}</h5>
+    </div>
+  </div>
+  <div class="col-sm-3 check">
+    <ng-lottie *ngIf="check" [options]="options" width="40px" height="40px" > </ng-lottie>
+  </div>
+</div>

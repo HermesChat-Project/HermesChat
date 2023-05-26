@@ -60,18 +60,8 @@
       <button class="btn btn-primary btn-lg btn-block">Crea gruppo</button>
     </div>
 
-    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList"
-      (click)="checkFriend(friend)">
-      <div class="col-sm-3">
-        <div class="img">
-          <img [src]="friend.image" class="img-fluid">
-        </div>
-      </div>
-      <div class="col-sm-9">
-        <div class="friendName">
-          <h5 class="friend-name">{{friend.nickname}}</h5>
-        </div>
-      </div>
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">
+        <app-friend [friend]="friend" ></app-friend>
     </div>
 
   </div>
