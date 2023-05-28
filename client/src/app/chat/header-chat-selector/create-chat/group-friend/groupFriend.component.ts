@@ -4,8 +4,8 @@ import { FriendModel } from 'model/friend.model';
 
 @Component({
   selector: 'app-friend',
-  templateUrl: './friend.component.html',
-  styleUrls: ['./friend.component.css']
+  templateUrl: './groupFriend.component.html',
+  styleUrls: ['./groupFriend.component.css']
 })
 export class FriendComponent {
   @Input() friend!: FriendModel;
@@ -15,10 +15,12 @@ export class FriendComponent {
 
   options: AnimationOptions = {
     path: '../../../../../assets/animation/check.json',
-    loop: false
+    loop: false,
+
   }
 
   checkFriend(){
+
     this.check = !this.check;
     this.checkFriendEvent.emit({friend: this.friend, check: this.check});
   }

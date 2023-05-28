@@ -67,38 +67,33 @@ export class LoginComponent {
       this.login(event);
   }
   onPaste(event: ClipboardEvent){
+    event.preventDefault();
     let pastedData = event.clipboardData!.getData("text/plain");
     pastedData = pastedData.trim();
     console.log(pastedData);
     if (pastedData.length == 6) {
       //copio ogni singolo carattere e lo inserisco in ogni input
       let el = event.target as HTMLInputElement;
+
       let parent = (el.parentElement as HTMLElement);
       for (let i = 0; i < 6; i++) {
-        parent.children[i].innerHTML = pastedData[i];
+        (parent.children[i] as HTMLInputElement).value = pastedData[i];
       }
     }
-    event.preventDefault();
   }
   keyEventOtp(event: KeyboardEvent) {
     let el = event.target as HTMLInputElement;
-    //chekf if backspace
-    if (!event.altKey && event.key != "caps lock") {
-
-      if (event.key == 'Backspace') {
-        let prev = el.previousElementSibling as HTMLInputElement;
-        if (prev != null)
-          prev.focus();
+    if (event.key.length == 1 && !event.shiftKey) {
+      if(el.value.length == 1)
+      {
+        el.value = event.key;
       }
-      else if (event.key == 'Space') {
-        el.value = el.value = "";
+      //check if the input is the last one
+      if (el.nextElementSibling == null) {
+        this.btnSubmit.nativeElement.focus();
       }
-      else if (event.key != "delete") {
-        let next = el.nextElementSibling as HTMLInputElement;
-        if (next != null)
-          next.focus();
-        else
-          this.btnSubmit.nativeElement.focus();
+      else {
+        (el.nextElementSibling as HTMLInputElement).focus();
       }
     }
   }

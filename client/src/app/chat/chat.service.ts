@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { userModel } from '../../../model/user.model';
-import { chatList } from '../../../model/chat-list.model';
 import { callsModel } from '../../../model/calls.model';
 import { messageModel } from '../../../model/message.model';
 import { DataStorageService } from '../shared/data-storage.service';
@@ -11,10 +9,10 @@ import { Chat } from 'model/chat.model';
 import { MatDialog } from '@angular/material/dialog';
 import { SurveyComponent } from '../dialog/survey/survey.component';
 import { ChartComponent } from '../dialog/chart/chart.component';
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
-import { ShareCalendarComponent } from '../dialog/share-calendar/share-calendar.component';
+import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
 
 
 @Injectable({
@@ -221,15 +219,15 @@ export class ChatSelectorService {
   }
 
   shareCalendar(){
-    this.dialog.open(ShareCalendarComponent, {
+    this.dialog.open(ShareCalendarListComponent, {
       panelClass: 'custom-dialog-container',
       width: '50%',
       minHeight: '50%',
       maxHeight: '70%',
-    }).afterClosed().subscribe((result: any) => {
+    }).afterClosed().subscribe((result: CalendarModel[] | null) => {
       if (result) {
         console.log(result);
-        this.sendMessage(result.title, "calendar", result.calendar)
+        this.sendMessage("", "calendar", result)
       }
     })
   }
