@@ -46,6 +46,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/createGroup", controllers.CreateGroup)
 	router.POST("/addUserToGroup", controllers.AddUserToGroup)
+	router.POST("/changeRole", controllers.ChangeRoleRGroup)
 	/*
 	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)

@@ -136,3 +136,9 @@ type AddUserToGroupRequest struct {
 	ChatId string `json:"chatId"`
 	Users []string `json:"users"`
 }
+
+type ChangeRoleGroup struct {
+	ChatId string `json:"chatId"`
+	User string `json:"user"`
+	Role string `json:"role"`
+}
