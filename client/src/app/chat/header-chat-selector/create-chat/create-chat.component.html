@@ -57,11 +57,11 @@
           <input type="file" class="form-control" id="inputGroupFile02" (change)="getImg($event)">
         </div>
       </div>
-      <button class="btn btn-primary btn-lg btn-block">Crea gruppo</button>
+      <button class="btn btn-primary btn-lg btn-block" (click)="createGroup()">Crea gruppo</button>
     </div>
 
     <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">
-        <app-friend [friend]="friend" ></app-friend>
+        <app-friend [friend]="friend" (checkFriendEvent)="updatePossibleUserArray($event)"></app-friend>
     </div>
 
   </div>

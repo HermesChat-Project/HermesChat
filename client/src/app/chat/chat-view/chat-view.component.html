@@ -19,7 +19,7 @@
       </div>
       <div class="row-action"
         [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-calendar-event-fill"></i>
+        <i class="bi bi-calendar-event-fill" (click)="shareCalendar()"></i>
         <i class="bi bi-graph-up-arrow" (click)="createChart()"></i>
       </div>
       <div class="row-action"

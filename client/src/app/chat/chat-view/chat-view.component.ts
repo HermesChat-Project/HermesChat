@@ -246,6 +246,10 @@ export class ChatViewComponent {
       });
     }
   }
+
+  shareCalendar() {
+    this.chatSelector.shareCalendar();
+  }
   getImages(event: any) {
     //get the images taken from the input file and convert them to base64
     let files = event.target?.files || event.dataTransfer.files;

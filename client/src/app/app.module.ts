@@ -50,6 +50,7 @@ import { ChatCreationComponent } from './dialog/chat-creation/chat-creation.comp
 import { MobileComponent } from './mobile/mobile.component';
 import { FriendComponent } from './chat/header-chat-selector/create-chat/friend/friend.component';
 import { LottieModule } from 'ngx-lottie';
+import { ShareCalendarComponent } from './dialog/share-calendar/share-calendar.component';
 
 export function playerFactory() {
   return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
@@ -89,6 +90,7 @@ export function playerFactory() {
     ChatCreationComponent,
     MobileComponent,
     FriendComponent,
+    ShareCalendarComponent,
   ],
   imports: [
     BrowserModule,

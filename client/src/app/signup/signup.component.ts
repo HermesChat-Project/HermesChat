@@ -74,13 +74,17 @@ export class SignupComponent {
     return passwordRegex.test(password);
   }
 
-  register() {
+  register(e: Event) {
+    if(e instanceof KeyboardEvent){
+      e.preventDefault();
+    }
+    console.log("register");
     this.loginService.registerUser(this.txtEmail, this.txtPassword, this.txtName, this.txtSurname, this.txtNickname, this.translationService.getLanguage());
   }
 
   keyEvent(event: KeyboardEvent) {
     if (event.key == 'Enter' && this.progress == 6)
-      this.register();
+      this.register(event);
   }
 
   onPaste(event: ClipboardEvent){
@@ -90,7 +94,7 @@ export class SignupComponent {
     if (pastedData.length == 6) {
       //copio ogni singolo carattere e lo inserisco in ogni input
       let el = event.target as HTMLInputElement;
-      let parent = (this.btnSubmit.nativeElement.parentElement as HTMLElement).previousElementSibling as HTMLElement;
+      let parent = (el.parentElement as HTMLElement)
       for (let i = 0; i < 6; i++) {
         parent.children[i].innerHTML = pastedData[i];
       }

@@ -29,7 +29,10 @@ export class LoginComponent {
       this.loginWords = this.translationService.languageWords["login"];
     }
   }
-  login() {
+  login( e: Event) {
+    if(e instanceof KeyboardEvent){
+      e.preventDefault();
+    }
     //log email password
     if (this.email != '' && this.password != '') {
       let body = {
@@ -61,7 +64,7 @@ export class LoginComponent {
   }
   keyEvent(event: KeyboardEvent) {
     if (event.key == 'Enter' )
-      this.login();
+      this.login(event);
   }
   onPaste(event: ClipboardEvent){
     let pastedData = event.clipboardData!.getData("text/plain");
@@ -70,7 +73,7 @@ export class LoginComponent {
     if (pastedData.length == 6) {
       //copio ogni singolo carattere e lo inserisco in ogni input
       let el = event.target as HTMLInputElement;
-      let parent = (this.btnSubmit.nativeElement.parentElement as HTMLElement).previousElementSibling as HTMLElement;
+      let parent = (el.parentElement as HTMLElement);
       for (let i = 0; i < 6; i++) {
         parent.children[i].innerHTML = pastedData[i];
       }

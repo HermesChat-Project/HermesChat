@@ -14,6 +14,7 @@ import { ChartComponent } from '../dialog/chart/chart.component';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
+import { ShareCalendarComponent } from '../dialog/share-calendar/share-calendar.component';
 
 
 @Injectable({
@@ -219,6 +220,19 @@ export class ChatSelectorService {
     })
   }
 
+  shareCalendar(){
+    this.dialog.open(ShareCalendarComponent, {
+      panelClass: 'custom-dialog-container',
+      width: '50%',
+      minHeight: '50%',
+      maxHeight: '70%',
+    }).afterClosed().subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        this.sendMessage(result.title, "calendar", result.calendar)
+      }
+    })
+  }
 
 
   //#endregion
@@ -441,23 +455,7 @@ export class ChatSelectorService {
     })
   }
 
-  createGroupChat(groupName: string, GroupDesc: string, groupImage: File) {
-    let formData = new FormData();
-    formData.append('groupName', groupName);
-    formData.append('groupDesc', GroupDesc);
-    formData.append('groupImage', groupImage);
-    this.dataStorage.PostRequestWithHeaders('createGroupChat', formData, this.getOptionsForRequest()).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        this.chatList.push(response.body.chat);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-        if (error.status == 401)
-          this.logout();
-      }
-    })
-  }
+
 
 
   createNewChat(id: string, img: string, friendImg: string, nickname: string) {
@@ -478,6 +476,23 @@ export class ChatSelectorService {
         console.log(error);
         if (error.status == 401)
           this.logout();
+      }
+    })
+  }
+
+  createGroupChat(body: any){
+    this.dataStorage.PostRequestWithHeaders('createGroupChat', body, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.chatList.push(response.body.chat);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      },
+      complete: () => {
+        this.getChats();
       }
     })
   }

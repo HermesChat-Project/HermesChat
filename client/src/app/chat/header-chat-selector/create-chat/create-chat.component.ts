@@ -17,6 +17,8 @@ export class CreateChatComponent {
     this.headerService.generalClosing();
   }
 
+  possibleUser: FriendModel[] = [];
+
   txtGroupDesc: string = '';
   txtGroupName: string = '';
   imgGroup: File | null = null;
@@ -30,16 +32,36 @@ export class CreateChatComponent {
 
   }
 
+  updatePossibleUserArray(event: {friend: FriendModel, check: boolean }){
+    if(event.check)
+    {
+      this.possibleUser.push(event.friend);
+    }
+    else
+    {
+      this.possibleUser = this.possibleUser.filter((friend) => {
+        return friend.nickname != event.friend.nickname;
+      })
+    }
+  }
+
+  createGroup(){
+    if(this.possibleUser.length > 0 && this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null)
+    {
+      let body = {
+        "groupName": this.txtGroupName,
+        "groupDesc": this.txtGroupDesc,
+        "groupImage": this.imgGroup,
+        "members" : this.possibleUser
+      }
+      this.chatSelectorService.createGroupChat(body);
+    }
+  }
+
   getImg(event: Event) {
     if((event.currentTarget as HTMLInputElement).files)
     {
       this.imgGroup = (event.currentTarget as HTMLInputElement).files![0];
-    }
-  }
-
-  createGroupChat() {
-    if (this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null) {
-      this.chatSelectorService.createGroupChat(this.txtGroupName, this.txtGroupDesc, this.imgGroup);
     }
   }
 
