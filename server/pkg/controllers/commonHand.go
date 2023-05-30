@@ -186,3 +186,13 @@ func ChangeRoleRGroup (c *gin.Context){
 	index, _ := c.Get("index")
 	utils.ChangeRoleGroupDB(index.(string), form, c)
 }
+
+func RemoveUserFromGroup (c *gin.Context){
+	var form models.RemoveUserFromGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.RemoveUserFromGroupDB(index.(string), form, c)
+}
