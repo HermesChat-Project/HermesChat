@@ -19,6 +19,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/login", controllers.Login) 
 	router.POST("/logout", controllers.Logout)
+	router.GET("/checkToken", controllers.CheckToken)
 	router.POST("/signup", controllers.SignUp) 
 	router.POST("/checkOtp", controllers.CheckOtp) 
 	router.POST("/getInfoUser", controllers.GetInfo) 
@@ -32,6 +33,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/acceptFriend", controllers.AcceptFriendRequest) 
 	router.POST("/declineFriend", controllers.DeclineFriendRequest) 
 	router.POST("/blockUser", controllers.BlockUser) 
+	router.POST("/removeFriend", controllers.RemoveFriend)
 
 	router.POST("/getCalendarEvents", controllers.GetCalendarEvents); 
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent); 
@@ -51,7 +53,6 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/changeRole", controllers.ChangeRoleRGroup)
 	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)
 	/*
-	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/leaveGroup", controllers.LeaveGroup)
 	router.POST("/deleteGroup", controllers.DeleteGroup)
 	router.POST("/changeGroupInfo", controllers.ChangeGroupInfo)

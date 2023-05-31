@@ -42,8 +42,26 @@ func Logout(c *gin.Context) {
 	utils.DeleteToken(c)
 }
 
+// GetVersion	godoc
+// @Summary 			Ottieni versione
+// @Description 		Restituisce la versione del server in modo da poterla confrontare con quella del client
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Router 		        /getVersion [get]
 func GetVersion(c *gin.Context) {
 	c.JSON(200, gin.H{"version": "1.0.0"})
+}
+
+// CheckToken	godoc
+// @Summary 			Controlla token
+// @Description 		Controlla se il token è valido oppure no, così il client sa se l'utente è loggato o no
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    401 {object} string
+// @Router 		        /checkToken [get]
+func CheckToken(c *gin.Context) {
+	fmt.Println("CheckToken")
+	utils.CheckToken(c)
 }
 // Signup	godoc
 // @Summary 			Registrazione di un utente
@@ -212,4 +230,14 @@ func RemoveUserFromGroup (c *gin.Context){
 	}
 	index, _ := c.Get("index")
 	utils.RemoveUserFromGroupDB(index.(string), form, c)
+}
+
+func RemoveFriend (c *gin.Context){
+	var form models.RemoveFriend;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.RemoveFriendDB(index.(string), form.UserId, c)
 }
