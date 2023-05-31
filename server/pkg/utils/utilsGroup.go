@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"chat/pkg/config"
 	"chat/pkg/models"
@@ -171,9 +173,24 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "group created",
-	})
+	for _, friend := range form.Users {
+
+		type Message struct {
+			Type     string `json:"type"`
+			ChatId   string `json:"chatId"`
+			Info     string `json:"info"`
+		}
+
+		msg := Message{Type: "CNG", ChatId: id.InsertedID.(primitive.ObjectID).Hex(), Info: "You have been added to a group"}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(friend)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+	}
 
 }
 
@@ -289,6 +306,25 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 		})
 		return
 	}
+
+	for _, friend := range form.Users {
+
+		type Message struct {
+			Type     string `json:"type"`
+			ChatId   string `json:"chatId"`
+			Info     string `json:"info"`
+		}
+
+		msg := Message{Type: "ATG", ChatId: form.ChatId, Info: "sei stato aggiunto al gruppo"}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(friend)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+	}
 	
 }
 
@@ -364,4 +400,130 @@ func ChangeRoleGroupDB (idAdmin string, form models.ChangeRoleGroup, c *gin.Cont
 	c.JSON(http.StatusOK, gin.H{
 		"message": "role changed successfully",
 	})
+}
+
+func RemoveUserFromGroupDB (idAdmin string, form models.RemoveUserFromGroupRequest, c *gin.Context){
+	objGroup , errObj := primitive.ObjectIDFromHex(form.ChatId)
+	if errObj != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID2",
+		})
+		return
+	}
+	collecChat := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collecChat == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//search the group and get the array of users
+	ris1 := collecChat.FindOne(c.Request.Context(), bson.M{"_id": objGroup})
+	if ris1 == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	type user struct {
+		IdUser string `json:"idUser" bson:"idUser"`
+		Role string `json:"role" bson:"role"`
+	}
+	type group struct {
+		Users []user `json:"users" bson:"users"`
+	}
+	var result1 group
+	err := ris1.Decode(&result1)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	isAdmin := false
+	for _, element := range result1.Users {
+		if element.IdUser == idAdmin && element.Role == "admin" {
+			isAdmin = true
+		}
+	}
+	if !isAdmin {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "not an admin",
+		})
+		return
+	}
+	for _, element := range result1.Users {
+		if element.IdUser == form.UserId {
+			_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objGroup}, bson.M{"$pull": bson.M{"users": bson.M{"idUser": form.UserId}}})
+			if errUpload != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": "error while connecting to database",
+				})
+				return
+			}
+			c.JSON(http.StatusOK, gin.H{
+				"message": "user removed successfully",
+			})
+			return
+		}
+	}
+	c.JSON(http.StatusBadRequest, gin.H{
+		"message": "user not found",
+	})
+
+	//get the user with the idUser and remove the group from his list of groups
+	objUser , errObj := primitive.ObjectIDFromHex(form.UserId)
+	if errObj != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID2",
+		})
+		return
+	}
+	collecUser := config.ClientMongoDB.Database("chat").Collection("user")
+	if collecUser == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	opt := options.FindOne().SetProjection(bson.M{"ids": 1})
+
+	var result7 bson.M
+	ris7 := collecUser.FindOne(c.Request.Context(), bson.M{"_id": objUser}, opt)
+	ris7.Decode(&result7)
+	if result7 == nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID8",
+		})
+		return
+	}
+	// Extract the "chat" array from the result7
+	ids := result7["ids"].(primitive.A)
+	chatJSON := ids[0].(primitive.M)
+	if chatJSON["chats"] != nil {
+	vetChats := chatJSON["chats"].(primitive.A)
+
+
+	chatIDs := make([]string, len(vetChats))
+
+	for i, elem := range vetChats {
+		chatIDs[i] = fmt.Sprintf("%v", elem)
+	}
+	//remove the group from the user's list of groups
+	for _, element := range chatIDs {
+		if element == form.ChatId {
+			_, errUpload := collecUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$pull": bson.M{"ids.0.chats": bson.M{"$in": []string{form.ChatId}}}})
+			if errUpload != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": "error while connecting to database",
+				})
+				return
+			}
+		}
+	}
+}
+
 }

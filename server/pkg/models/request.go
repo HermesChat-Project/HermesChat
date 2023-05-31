@@ -142,3 +142,8 @@ type ChangeRoleGroup struct {
 	User string `json:"user"`
 	Role string `json:"role"`
 }
+
+type RemoveUserFromGroupRequest struct {
+	ChatId string `json:"chatId"`
+	UserId string `json:"userId"`
+}

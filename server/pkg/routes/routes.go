@@ -15,8 +15,10 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/socket", controllers.SocketConnection) 
 	router.GET("/search", controllers.SearchUsers) 
+	router.GET("/getVersion", controllers.GetVersion)
 
 	router.POST("/login", controllers.Login) 
+	router.POST("/logout", controllers.Logout)
 	router.POST("/signup", controllers.SignUp) 
 	router.POST("/checkOtp", controllers.CheckOtp) 
 	router.POST("/getInfoUser", controllers.GetInfo) 
@@ -47,9 +49,12 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/createGroup", controllers.CreateGroup)
 	router.POST("/addUserToGroup", controllers.AddUserToGroup)
 	router.POST("/changeRole", controllers.ChangeRoleRGroup)
+	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)
 	/*
 	router.POST("/removeFriend", controllers.RemoveFriend)
-	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)
+	router.POST("/leaveGroup", controllers.LeaveGroup)
+	router.POST("/deleteGroup", controllers.DeleteGroup)
+	router.POST("/changeGroupInfo", controllers.ChangeGroupInfo)
 	*/
 }
 

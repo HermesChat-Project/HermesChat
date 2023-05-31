@@ -46,6 +46,7 @@ func CreateToken(index string, c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
+		Domain:  "api.hermeschat.it",
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
 		HttpOnly: true,
@@ -60,6 +61,25 @@ func CreateToken(index string, c *gin.Context) {
 	})
 }
 
+func DeleteToken(c *gin.Context) {
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Domain:  "api.hermeschat.it",
+		Expires:  time.Now().AddDate(0, 0, -1), // Set expiration to a past time
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	}
+
+	http.SetCookie(c.Writer, cookie)
+
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "ok",
+	})
+}
+
 func VerifyToken(c *gin.Context) {
 	cookie, err := c.Cookie("token")
 
@@ -67,7 +87,7 @@ func VerifyToken(c *gin.Context) {
 	//check if token is empty or null
 	if cookie == "" || err != nil {
 		//redirect to login page
-		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs") {
+		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs") || c.Request.URL.Path == "/getVersion" {
 			c.Next()
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -90,7 +110,7 @@ func VerifyToken(c *gin.Context) {
 		return
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	if !ok || !token.Valid || claims["exp"] == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"ris": "Unauthorized",
 		})
