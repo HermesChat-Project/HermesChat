@@ -48,6 +48,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 import { WebcamModule } from 'ngx-webcam';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -111,6 +112,7 @@ export function playerFactory() {
     MatInputModule,
     MatFormFieldModule,
     NgApexchartsModule,
+    MatButtonModule,
     LottieModule.forRoot({ player: playerFactory })
   ],
   providers: [

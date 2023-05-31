@@ -13,9 +13,8 @@ export class ShareCalendarComponent {
   @Output() checkCalendarEvent = new EventEmitter<{calendar: CalendarModel, check: boolean}>();
 
   options: AnimationOptions = {
-    path: '../../../assets/animation/check.json',
-    loop: false,
-
+    path: '../../../../assets/animation/check.json',
+    loop: false
   }
 
   check: boolean = false;

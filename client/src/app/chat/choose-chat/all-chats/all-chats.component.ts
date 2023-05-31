@@ -5,6 +5,8 @@ import { userModel } from 'model/user.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
 import { Chat } from 'model/chat.model';
+import { TranslationsService } from 'src/app/shared/translations.service';
+
 
 @Component({
   selector: 'app-all-chats',
@@ -16,12 +18,7 @@ export class AllChatsComponent {
   @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
-
-
-
-
-
-  constructor(public chatSelector: ChatSelectorService){}
+  constructor(public chatSelector: ChatSelectorService, public translationService: TranslationsService){}
 
 
   ngOnInit() {
@@ -72,7 +69,11 @@ export class AllChatsComponent {
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
-
+  getLastMessage(message: any){
+    if(message.type == "chart")
+      return "&#128200; " + (this.translationService.languageWords["chart"] || "chart");
+    return message.content;
+  }
 
 
   getLastMessageTime(message: any): Date {

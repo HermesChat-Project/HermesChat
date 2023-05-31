@@ -29,14 +29,14 @@
     align-items: center
 }
 
-#txtSearch {
+.txtSearch {
   border-radius: 10px;
   border: 1px solid #ccc;
   padding: 7px !important;
   width: 80%;
   height: 25px;
 }
-#txtSearch:focus {
+.txtSearch:focus {
   outline: none;
 }
 
@@ -113,10 +113,12 @@
 }
 
 /*Graphic Last message in the chat selector*/
-.lastMessage span:last-of-type {
+.lastMessage > span:last-of-type {
   font-size: 12px;
   color: #ccc;
   padding-right: 5px;
+  width: 100px;
+  text-align: end;
 }
 
 

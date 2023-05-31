@@ -218,10 +218,12 @@ export class ChatSelectorService {
     })
   }
 
-  shareCalendar(){
+  shareCalendar() {
+    if (this.calendarList.length == 0)
+      this.getCalendarEvents();
     this.dialog.open(ShareCalendarListComponent, {
       panelClass: 'custom-dialog-container',
-      width: '50%',
+      width: '40%',
       minHeight: '50%',
       maxHeight: '70%',
     }).afterClosed().subscribe((result: CalendarModel[] | null) => {
@@ -283,6 +285,20 @@ export class ChatSelectorService {
 
   //#region server calls
 
+  logoutCall() {
+    this.dataStorage.PostRequestWithHeaders(`logout`, {}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response.headers);
+        this.logout();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    });
+  }
+
   token: string = '';
   getInfo() {
     this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
@@ -339,7 +355,6 @@ export class ChatSelectorService {
           console.log(response);
           if (response.body.messages) {
             response.body.messages.forEach((message: messageModel) => {
-              console.log(message.messages.options, message.messages.type)
               if (message.messages.options && typeof message.messages.options === 'string')
                 message.messages.options = JSON.parse(message.messages.options as string)
             });
@@ -478,7 +493,7 @@ export class ChatSelectorService {
     })
   }
 
-  createGroupChat(body: any){
+  createGroupChat(body: any) {
     this.dataStorage.PostRequestWithHeaders('createGroupChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
@@ -650,7 +665,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://10.88.211.250:8090/socket');
+    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;

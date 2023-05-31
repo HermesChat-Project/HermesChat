@@ -118,8 +118,6 @@ export class MessageComponent implements AfterViewInit {
 
 
   getTimeFormatted(date: string) {
-    if(this.chatMessage.messages.type == "chart")
-      console.log(this.chatMessage.messages);
     let dateObj = new Date(date);
     let hours = dateObj.getHours().toString();
     let minutes = dateObj.getMinutes().toString();
