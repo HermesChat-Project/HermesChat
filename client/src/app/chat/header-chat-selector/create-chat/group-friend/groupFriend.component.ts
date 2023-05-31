@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { AnimationOptions } from 'ngx-lottie';
+import { AnimationOptions, LottieCacheModule, LottieDirective, LottieTransferState } from 'ngx-lottie';
 import { FriendModel } from 'model/friend.model';
 
 @Component({
@@ -13,14 +13,13 @@ export class FriendComponent {
   constructor() { }
   check: boolean = false;
 
-  options: AnimationOptions = {
+  options : AnimationOptions ={
     path: '../../../../../assets/animation/check.json',
     loop: false,
 
-  }
+  };
 
   checkFriend(){
-
     this.check = !this.check;
     this.checkFriendEvent.emit({friend: this.friend, check: this.check});
   }

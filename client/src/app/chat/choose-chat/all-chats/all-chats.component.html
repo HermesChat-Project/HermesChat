@@ -2,7 +2,7 @@
   <div class="col-sm-12">
     <!-- SEARCH BOX -->
     <div class="form-floating">
-      <input type="search" placeholder="Search" class="" id="txtSearch" [(ngModel)]="txtSearchChat"
+      <input type="search" placeholder="Search" class="" class="txtSearch" [(ngModel)]="txtSearchChat"
         [ngModelOptions]="{standalone:true}" (input)="showChats()">
     </div>
   </div>
@@ -21,7 +21,7 @@
           <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
-          <span class="text-truncate last-message" [innerHTML]="chat.messages.content"></span>
+          <span class="text-truncate last-message" [innerHTML]="getLastMessage(chat.messages)"></span>
           <span>{{DateAdjustment(getLastMessageTime(chat.messages))}}</span>
         </div>
       </div>
@@ -56,7 +56,7 @@
                 <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message" [innerHTML]="getLastMessageTime(personalChatSearch.messages.content)"></span>
+                <span class="text-truncate last-message" [innerText]="getLastMessage(personalChatSearch.messages)"></span>
                 <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.messages))}}</span>
               </div>
             </div>

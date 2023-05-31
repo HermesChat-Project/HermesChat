@@ -18,6 +18,6 @@ export class HeaderService {
 
   logout() {
     this.typeOfAction = 0;
-    this.chatSelector.logout();
+    this.chatSelector.logoutCall();
   }
 }

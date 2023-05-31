@@ -3,7 +3,7 @@
     <div class="title">
       <h1>Condividi calendario</h1>
     </div>
-    <div class="close">
+    <div class="close-dialog">
       <button mat-icon-button mat-dialog-close>
         <mat-icon>close</mat-icon>
       </button>
@@ -11,11 +11,11 @@
   </div>
   <div class="body">
     <app-share-calendar *ngFor="let calendar of chatSelector.calendarList" [calendar]="calendar" (checkCalendarEvent)="checkCalendar($event)"></app-share-calendar>
-    <mat-dialog-actions class="row">
-      <div class="col-sm-6">
+    <mat-dialog-actions class="row" >
+      <div class="col-sm-6 warning">
         <button mat-raised-button color="warn" [mat-dialog-close]="null">Annulla</button>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6 done">
         <button mat-raised-button color="primary" [disabled]="calendarSharingList.length == 0" >Condividi</button>
       </div>
     </mat-dialog-actions>
