@@ -15,8 +15,10 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/socket", controllers.SocketConnection) 
 	router.GET("/search", controllers.SearchUsers) 
+	router.GET("/getVersion", controllers.GetVersion)
 
 	router.POST("/login", controllers.Login) 
+	router.POST("/logout", controllers.Logout)
 	router.POST("/signup", controllers.SignUp) 
 	router.POST("/checkOtp", controllers.CheckOtp) 
 	router.POST("/getInfoUser", controllers.GetInfo) 

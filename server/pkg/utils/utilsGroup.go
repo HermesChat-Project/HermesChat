@@ -173,9 +173,24 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "group created",
-	})
+	for _, friend := range form.Users {
+
+		type Message struct {
+			Type     string `json:"type"`
+			ChatId   string `json:"chatId"`
+			Info     string `json:"info"`
+		}
+
+		msg := Message{Type: "CNG", ChatId: id.InsertedID.(primitive.ObjectID).Hex(), Info: "You have been added to a group"}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(friend)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+	}
 
 }
 
@@ -290,6 +305,25 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 			"message": "error while connecting to database",
 		})
 		return
+	}
+
+	for _, friend := range form.Users {
+
+		type Message struct {
+			Type     string `json:"type"`
+			ChatId   string `json:"chatId"`
+			Info     string `json:"info"`
+		}
+
+		msg := Message{Type: "ATG", ChatId: form.ChatId, Info: "sei stato aggiunto al gruppo"}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(friend)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
 	}
 	
 }

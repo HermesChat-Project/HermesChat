@@ -31,6 +31,20 @@ func Login(c *gin.Context) {
 
 }
 
+// Logout	godoc
+// @Summary 			Logout utente
+// @Description 		Effettua il logout di un utente e cancella il cookie http-only
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    401 {object} string
+// @Router 		        /logout [post]
+func Logout(c *gin.Context) {
+	utils.DeleteToken(c)
+}
+
+func GetVersion(c *gin.Context) {
+	c.JSON(200, gin.H{"version": "1.0.0"})
+}
 // Signup	godoc
 // @Summary 			Registrazione di un utente
 // @Description 		Effettua la registrazione di un utente e crea un codice OTP che verrà inviato via email
@@ -167,6 +181,9 @@ func CreateGroup (c *gin.Context) {
 	utils.CreateGroupDB(index.(string), form, c)
 }
 
+//AddUserToGroup	godoc
+// @Summary 			Aggiungi utente ad un gruppo
+// @Description 		Aggiunge un utente ad un gruppo
 func AddUserToGroup(c *gin.Context){
 	var form models.AddUserToGroupRequest;
 	if err := c.ShouldBind(&form); err != nil {
