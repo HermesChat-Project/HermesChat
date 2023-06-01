@@ -21,18 +21,25 @@ import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-
 export class ChatSelectorService {
 
   progress: number = 0;// wait until 6 calls are done
+
+  infoUser: any//user info
+
   PersonalListSearch: Chat[] = [];//serach for personal chat
+  OtherListSerach: SearchModel[] = [];//search list for other users
+
   friendList: FriendModel[] = [];//list of friends
   friendSerachList: FriendModel[] = [];//firend list for search
+
   receivedList: requestModel[] = [];//received frieedn request list
+  sentList: { idUser: string, image: string, nickname: string }[] = [];//list of sent friend request
+
   chatList: Chat[] = [];//chat list
+
   messageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat
   socketMessageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat from socket (when a new message is received)
-  infoUser: any//user info
-  sentList: { idUser: string, image: string, nickname: string }[] = [];//list of sent friend request
+
   user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout -> used to know which dialog to open
   offsetChat: number = 1 //offset for chat list (for retrieving more messages)
-  OtherListSerach: SearchModel[] = [];//search list for other users
   theme: string = "light";
 
   callList: callsModel[] = [
@@ -70,6 +77,7 @@ export class ChatSelectorService {
 
   //#region calendar
   calendarList: CalendarModel[] = []
+  personalCalendarList: CalendarModel[] = []
 
   /*variables for the calendar modal*/
   triggerCalendarModal: boolean = false;
@@ -229,7 +237,7 @@ export class ChatSelectorService {
     }).afterClosed().subscribe((result: CalendarModel[] | null) => {
       if (result) {
         console.log(result);
-        this.sendMessage("", "calendar", result)
+
       }
     })
   }
@@ -517,6 +525,9 @@ export class ChatSelectorService {
         this.calendarList.forEach((event: CalendarModel) => {
           event.date = new Date(event.dateTime);
         })
+        this.personalCalendarList = this.calendarList.filter((event: CalendarModel) => {
+          return event.idUser == this.infoUser._id && event.date > new Date();
+        })
         this.EventsPerMonth = this.getCalendarEventsByMonth();
       },
       error: (error: HttpErrorResponse) => {
@@ -595,6 +606,23 @@ export class ChatSelectorService {
       }
     })
   }
+
+  createCalendarEvent(body: any) {
+    return new Promise((resolve, reject) => {
+      this.dataStorage.PostRequestWithHeaders('addCalendarEvent', body, this.getOptionsForRequest()).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          resolve(response.body.event);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status == 401)
+            this.logout();
+          reject(error);
+        }
+      })
+    });
+  }
   getGetOptions() {
     return {
       observe: 'response',
@@ -665,7 +693,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
+    this.socket = new WebSocket('wss://192.168.1.43:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -707,6 +735,13 @@ export class ChatSelectorService {
           console.log(user.idUser);
           return user.idUser != idUser;
         });
+      }
+      else if(data.type == "CEA"){//calendar event added
+        let event = data.event;
+        let date = new Date(event.date)
+        let eventModel = new CalendarModel(event.title, event.description, event.idUser, date, event.date, event.type, event.color, event.notify, event.notifyTime, event.idChats);
+        this.calendarList.push(eventModel);
+        this.getCalendarEventsByMonth()
       }
     })
     this.socket.addEventListener("close", () => {

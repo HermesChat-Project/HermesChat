@@ -42,7 +42,7 @@ type AddCalendarEvent struct {
 	Date string `json:"date" binding:"required"`
 	Type string `json:"type" binding:"required"`
 	IdUser string `json:"idUser" binding:"required"`
-	Notify string `json:"notify" binding:"required"`
+	Notify bool `json:"notify" binding:"required"`
 	NotifyTime string `json:"notifyTime" binding:"required"`
 	Color string `json:"color" binding:"required"`
 	IdChats []string `json:"idChats"`

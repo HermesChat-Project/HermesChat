@@ -5,6 +5,7 @@ import { ConstantPool } from '@angular/compiler';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatSelectChange } from '@angular/material/select';
+import { Chat } from 'model/chat.model';
 
 
 @Component({
@@ -29,6 +30,9 @@ export class FullCalendarComponent {
   modifyingEvent: CalendarModel | null = null;
   selDate: string = "";
   confirmExit: boolean = false;
+
+  selected: boolean = false;
+  sharedArray: string[] = [];
 
   readonly_disabled() {
     return !this.isOnModifyingMode && !this.isOnCreatingMode;
@@ -101,13 +105,13 @@ export class FullCalendarComponent {
     return day;
   }
 
-  getContrastYIQ(hexcolor: string){
-    var r = parseInt(hexcolor.substring(1,3),16);
-    var g = parseInt(hexcolor.substring(3,5),16);
-    var b = parseInt(hexcolor.substring(5,7),16);
-    var yiq = ((r*299)+(g*587)+(b*114))/1000;
+  getContrastYIQ(hexcolor: string) {
+    var r = parseInt(hexcolor.substring(1, 3), 16);
+    var g = parseInt(hexcolor.substring(3, 5), 16);
+    var b = parseInt(hexcolor.substring(5, 7), 16);
+    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
     return (yiq >= 128) ? 'black' : 'white';
-}
+  }
 
   goToDate(row: number, col: number, event: MouseEvent) {
     let day = (row * 7) + col - this.chatSelector.firstDayOfMonth + 1;
@@ -128,7 +132,6 @@ export class FullCalendarComponent {
   createEvent(event: MouseEvent, rows: number, cols: number) {
     let elClicked = event.target as HTMLElement;
     this.confirmExit = false;
-    console.log(elClicked.tagName);
     if (elClicked.tagName == "P" || elClicked.tagName == "SPAN") {
       event.stopPropagation();
     }
@@ -138,7 +141,9 @@ export class FullCalendarComponent {
       if (this.clickedDate >= new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate())) {
         this.chatSelector.triggerCalendarModal = true;
         this.isOnCreatingMode = true;
-        this.modifyingEvent = new CalendarModel("-1", "",  "", this.chatSelector.infoUser._id, new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes())).toISOString(), "personal");
+        let date = new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes()))
+        this.modifyingEvent = new CalendarModel( "", "", this.chatSelector.infoUser._id,date, date.toISOString(), "personal");
+        console.log(this.modifyingEvent);
       }
     }
   }
@@ -238,6 +243,17 @@ export class FullCalendarComponent {
       return false;
   }
 
+  checkForActions() {
+    if (this.isOnCreatingMode)
+      return true;
+    else {
+      if (this.chatSelector.selectedCalendarEvent?.idUser == this.chatSelector.infoUser._id)
+        return true;
+      else
+        return false;
+    }
+  }
+
   changeTime(event: any) {
     this.modifyingEvent!.date = new Date(this.modifyingEvent!.date!.getFullYear(), this.modifyingEvent!.date!.getMonth(), this.modifyingEvent!.date!.getDate(), event.target.value.split(":")[0], event.target.value.split(":")[1]);
   }
@@ -253,6 +269,26 @@ export class FullCalendarComponent {
   changeTitle(event: any) {
     this.modifyingEvent!.title = event.target.value;
   }
+
+
+  toggleList() {
+    this.selected = !this.selected;
+  }
+
+  hideList() {
+    this.selected = false;
+  }
+
+  updateSharedArray(chat: Chat | null) {
+    if (chat)
+      this.sharedArray.includes(chat._id) ? this.sharedArray.splice(this.sharedArray.indexOf(chat._id), 1) : this.sharedArray.push(chat._id);
+    else {
+      this.sharedArray = [];
+      this.selected = false;
+    }
+    console.log(this.sharedArray);
+  }
+
 
 
 
@@ -273,10 +309,33 @@ export class FullCalendarComponent {
       }
     }
     else {
-      this.chatSelector.calendarList.push(this.modifyingEvent!);
-      this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
-      this.chatSelector.triggerCalendarModal = false;
-      this.isOnCreatingMode = false;
+      let shared: string = "personal";
+      let notify = this.modifyingEvent?.notifyTime == "00:00" ? false : true
+      if (this.sharedArray.length > 0) {
+        shared = "shared";
+      }
+      let body: any = {
+        title: this.modifyingEvent!.title,
+        description: this.modifyingEvent!.description,
+        date: this.modifyingEvent!.dateTime,
+        color: this.modifyingEvent!.color,
+        notifyTime: this.chatSelector.selectedNotifyTime,
+        type: shared,
+        notify: notify,
+        idUser: this.chatSelector.infoUser._id,
+
+      }
+      if (shared)
+        body.idChats = this.sharedArray;
+      this.chatSelector.createCalendarEvent(body)
+        .then(() => {
+          this.chatSelector.calendarList.push(this.modifyingEvent!);
+          this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+        }).finally(() => {
+          this.chatSelector.triggerCalendarModal = false;
+          this.isOnCreatingMode = false;
+        });
+
     }
   }
 

@@ -2,6 +2,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { Component } from '@angular/core';
 import { CalendarModel } from 'model/calendar.model';
 import { ChatSelectorService } from 'src/app/chat/chat.service';
+import { CalendarComponent } from 'src/app/chat/choose-chat/calendar/calendar.component';
 
 
 @Component({
@@ -10,13 +11,10 @@ import { ChatSelectorService } from 'src/app/chat/chat.service';
   styleUrls: ['./share-calendar-list.component.css']
 })
 export class ShareCalendarListComponent {
-  constructor(public chatSelector: ChatSelectorService, private dialog: DialogRef<CalendarModel[]>) { }
+  constructor(public chatSelector: ChatSelectorService, private dialog: DialogRef<CalendarComponent>) { }
   check: boolean = false;
   calendarSharingList: CalendarModel[] = [];
-  shareCalendar() {
-    if(this.calendarSharingList.length != 0)
-      this.dialog.close(this.calendarSharingList);
-  }
+
 
   checkCalendar(event: { calendar: CalendarModel; check: boolean; }) {
     this.check = event.check;

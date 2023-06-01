@@ -10,13 +10,13 @@
     </div>
   </div>
   <div class="body">
-    <app-share-calendar *ngFor="let calendar of chatSelector.calendarList" [calendar]="calendar" (checkCalendarEvent)="checkCalendar($event)"></app-share-calendar>
+    <app-share-calendar *ngFor="let calendar of chatSelector.personalCalendarList" [calendar]="calendar" (checkCalendarEvent)="checkCalendar($event)"></app-share-calendar>
     <mat-dialog-actions class="row" >
       <div class="col-sm-6 warning">
         <button mat-raised-button color="warn" [mat-dialog-close]="null">Annulla</button>
       </div>
       <div class="col-sm-6 done">
-        <button mat-raised-button color="primary" [disabled]="calendarSharingList.length == 0" >Condividi</button>
+        <button mat-raised-button color="primary" [disabled]="calendarSharingList.length == 0" [mat-dialog-close]="calendarSharingList" >Condividi</button>
       </div>
     </mat-dialog-actions>
 </div>

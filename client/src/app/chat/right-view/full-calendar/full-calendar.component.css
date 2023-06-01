@@ -17,9 +17,10 @@
   border-radius: 50%;
   background-color: #f5f5f5;
   border: 1px solid #e5e5e5;
-  display: flex;
+  display: grid;
   justify-content: center;
-  align-items: center;
+  align-content: center;
+  justify-items: center;
   cursor: pointer;
 }
 
@@ -168,18 +169,20 @@ tbody {
   z-index: 100;
 }
 .cal_modal_container {
+  position: relative;
   width: 50%;
   height: 75%;
   background-color: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  row-gap: 10px;
   align-items: center;
   padding: 10px;
 }
 .cal_modal_container * {
   user-select: none;
+  row-gap: 10px;
 }
 .cal_modal_header {
   width: 100%;
@@ -187,6 +190,7 @@ tbody {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 15px;
 }
 
 .cal_modal_title {
@@ -197,6 +201,10 @@ tbody {
   outline: none;
   flex-grow: 1;
   border: none;
+  background-color: #ddd;
+  border-bottom: 2px solid #8181fb;
+  padding: 5px 10px;
+  border-radius: 10px;
 }
 
 .cal_modal_close {
@@ -313,6 +321,98 @@ tbody {
 
 .cal_modal_color input {
   flex-grow: 1;
+}
+
+/*SHARE*/
+
+.cal_modal_share {
+  width: 100%;
+}
+.cal_modal_share_toggle {
+  display: flex;
+  justify-items: center;
+  height: fit-content;
+  user-select: none;
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+}
+
+.cal_modal_share_list {
+  user-select: none;
+  width: fit-content;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  position: absolute;
+  right: 0px;
+  border-radius: 10px;
+  padding: 10px;
+  opacity: 0;
+  overflow: auto;
+  background-color: #fff;
+  top: 0;
+  height: 100%;
+  width: fit-content;
+
+}
+
+.animation {
+  z-index: 1;
+  right: -30px;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.hideanimation {
+  z-index: -1;
+  right: 50px;
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.sel mat-icon {
+  transform: rotate(180deg);
+  transition: all 0.2s ease-in-out;
+}
+
+.not_sel mat-icon {
+  transform: rotate(0deg);
+  transition: all 0.2s ease-in-out;
+}
+
+.not_sel {
+  background-color: #fff;
+}
+
+.chat_share_list{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 15px !important;
+}
+
+.chat_share_container {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.chat_share_container img{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.option p{
+  margin: 0;
+  font-size: small;
+  font-weight: 500;
+}
+
+.chat_share_type{
+  margin-left: auto;
 }
 
 /*********************************************/

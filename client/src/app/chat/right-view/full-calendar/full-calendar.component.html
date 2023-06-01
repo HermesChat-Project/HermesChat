@@ -24,8 +24,8 @@
             <div class="date_month">{{getThisDate(0, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(0,i)]"
-                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
-                (dblclick)="seeEvent(cal_events)">
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}"
+                [title]="cal_events.title" (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
                   class="calendar_day_time">{{chatSelector.getHoursAndMinutes(cal_events.date)}}</span>
@@ -136,10 +136,12 @@
   </table>
 </div>
 
-<div class="cal_modal" [ngStyle]="{'display' : chatSelector.triggerCalendarModal  ? 'flex' : 'none'}" (click)="close($event)">
+<div class="cal_modal" [ngStyle]="{'display' : chatSelector.triggerCalendarModal  ? 'flex' : 'none'}"
+  (click)="close($event)">
   <div class="cal_modal_container">
     <div class="cal_modal_header">
-      <input class="cal_modal_title" [value]="modifyingEvent?.title || ''" (input)="changeTitle($event)" [readOnly]="readonly_disabled()" [(ngModel)]="title" />
+      <input class="cal_modal_title" [value]="modifyingEvent?.title || ''" (input)="changeTitle($event)"
+        [readOnly]="readonly_disabled()" [(ngModel)]="title" [placeholder]="'Titolo'" maxlength="30" />
       <span class="cal_modal_close" (click)="closeModal()">&times;</span>
     </div>
     <div class="cal_modal_body">
@@ -147,7 +149,7 @@
         <div class="cal_modal_date">
           <i class="bi bi-clock"></i>
           <div class="cal_modal_date">
-            <input matInput [matDatepicker]="datepicker" [value]="modifyingEvent?.date || clickedDate" readonly
+            <input matInput [matDatepicker]="datepicker" [value]="modifyingEvent?.dateTime || clickedDate" readonly
               [min]="today" (dateChange)="changeDate($event)" />
             <mat-datepicker-toggle matIconSuffix [for]="datepicker"
               [ngStyle]="{'visibility' : !readonly_disabled() ? 'visible': 'hidden'}"></mat-datepicker-toggle>
@@ -161,30 +163,67 @@
             <i class="bi bi-card-text"></i>
             <label for="cal_modal_desc">Description</label>
           </div>
-          <textarea class="form-control" placeholder="Description" id="cal_modal_desc"
-            [readOnly]="readonly_disabled()" [value]="modifyingEvent?.description" (input)="chengeDesc($event)"></textarea>
+          <textarea class="form-control" placeholder="Description" id="cal_modal_desc" [readOnly]="readonly_disabled()"
+            [value]="modifyingEvent?.description" (input)="chengeDesc($event)"></textarea>
+        </div>
+        <div class="cal_modal_share">
+
+          <button class="cal_modal_share_toggle" (click)="toggleList()"
+            [ngClass]="{'sel' : selected, 'not_sel' : !selected}">
+            <span>share with</span>
+            <mat-icon [ngClass]="{'rotate' : selected, 'normal' : !selected}">chevron_right</mat-icon>
+          </button>
+          <div class="cal_modal_share_list" [ngClass]="{'animation': selected, 'hideanimation': !selected}">
+            <div class="chat_chare_container">
+              <div class="chat_share_name option" (click)="updateSharedArray(null)">
+                <p>None</p>
+              </div>
+              <div class="chat_share_name">
+                <p>Chat disponibili</p>
+              </div>
+            </div>
+            <ul class="chat_share_list">
+              <li class="chat_share_container option" *ngFor="let chat of chatSelector.chatList" (click)="updateSharedArray(chat)">
+                <div class="chat_share_img">
+                  <img [src]="chat.image" alt="">
+                </div>
+                <div class="chat_share_name">
+                  <p>{{chat.name}}</p>
+                </div>
+                <div class="chat_share_checkbox">
+
+                </div>
+                <div class="chat_share_type">
+                  <i class="bi bi-person-fill" *ngIf="!chat.flagGroup"></i>
+                  <i class="bi bi-people-fill" *ngIf="chat.flagGroup"></i>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="cal_modal_notify">
 
-          <i class="bi"
-            [ngClass]="{'bi-bell' : modifyingEvent?.notify, 'bi-bell-slash' : !modifyingEvent?.notify}"></i>
-          <mat-select [(value)]="chatSelector.selectedNotifyTime" [disabled]="readonly_disabled()" panelClass="example-panel-{{chatSelector.theme == 'dark' ? 'dark' : 'light'}}">
-            <mat-option  *ngFor="let time of notifyTime" [value]="time.val">{{time.time}}</mat-option>
+          <i class="bi" [ngClass]="{'bi-bell' : modifyingEvent?.notify, 'bi-bell-slash' : !modifyingEvent?.notify}"></i>
+          <mat-select [(value)]="chatSelector.selectedNotifyTime" [disabled]="readonly_disabled()"
+            panelClass="example-panel-{{chatSelector.theme == 'dark' ? 'dark' : 'light'}}">
+            <mat-option *ngFor="let time of notifyTime" [value]="time.val">{{time.time}}</mat-option>
           </mat-select>
         </div>
         <div class="cal_modal_color">
           <i class="bi bi-palette"></i>
           <p>Color</p>
-          <input type="color" class="form-control form-control-color" id="cal_color" [value]="modifyingEvent?.color || '#1B7AF7'" [disabled]="readonly_disabled()" (change)="changeCol($event)">
+          <input type="color" class="form-control form-control-color" id="cal_color"
+            [value]="modifyingEvent?.color || '#1B7AF7'" [disabled]="readonly_disabled()" (change)="changeCol($event)">
         </div>
       </div>
     </div>
-    <div class="cal_modal_footer">
-      <button class="btn btn-danger" *ngIf="!isOnModifyingMode && checkIfThaEventCanBeModified() && !isOnCreatingMode" (click)="deleteEvent()">Cancella</button>
-      <button class="cal_modal_modify btn btn-secondary" *ngIf="isOnModifyingMode"
+    <div class="cal_modal_footer" *ngIf="checkForActions()">
+      <button class="btn btn-danger" *ngIf="!isOnModifyingMode && checkIfThaEventCanBeModified() && !isOnCreatingMode"
+        (click)="deleteEvent()">Cancella</button>
+      <button class="cal_modal_modify btn btn-secondary" *ngIf="isOnModifyingMode "
         (click)="exitModifyingMode($event)">Annulla</button>
       <button class="cal_modal_modify btn "
         [ngClass]="{'btn-primary' : !isOnModifyingMode, 'btn-success': isOnModifyingMode || isOnCreatingMode}"
-        *ngIf="checkIfThaEventCanBeModified()" (click)="modifyEvent($event)">{{modifyingOrCreation()}}</button>
+        *ngIf="checkIfThaEventCanBeModified() " (click)="modifyEvent($event)">{{modifyingOrCreation()}}</button>
     </div>
   </div>

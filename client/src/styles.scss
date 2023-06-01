@@ -535,3 +535,9 @@ app-login, app-signup {
 .example-panel-dark.mat-mdc-select-panel span{
   color: whitesmoke !important;
 }
+
+.no-chk .mat-pseudo-checkbox{
+  display: none !important;
+}
+
+

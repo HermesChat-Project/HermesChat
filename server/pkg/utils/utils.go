@@ -46,7 +46,7 @@ func CreateToken(index string, c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
-		Domain:   "api.hermeschat.it",
+		Domain:   "",
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
 		HttpOnly: true,
