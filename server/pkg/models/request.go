@@ -151,3 +151,7 @@ type RemoveUserFromGroupRequest struct {
 type RemoveFriend struct {
 	UserId string `json:"userId"`
 }
+
+type LeaveGroupRequest struct {
+	ChatId string `json:"chatId"`
+}
