@@ -83,7 +83,7 @@ export class CameraComponent {
         else
           this.video.start();
 
-        this.video.ondataavailable = (event) => {
+        this.video.ondataavailable = (event: BlobEvent) => {
           console.log(event);
           let recordedBlob: Blob = new Blob([event.data], { type: "video/webm" });
           let recordedSrc = URL.createObjectURL(recordedBlob);

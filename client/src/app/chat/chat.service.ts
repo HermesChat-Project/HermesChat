@@ -276,11 +276,13 @@ export class ChatSelectorService {
     }
   }
 
-  sendMessage(message: string, type: string = 'text', options: any = null) {
+  sendMessage(message: string, type: string = 'text', options: any = null, localpush: boolean = true) {
     console.log(options)
     if (this.selectedChat) {
       console.log(type)
-      this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
+      if (localpush)
+        this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
+
       this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup, typeMSG: type, options: JSON.stringify(options) }));
       setTimeout(() => {
         this.bottomScroll();
@@ -362,10 +364,16 @@ export class ChatSelectorService {
         next: (response: any) => {
           console.log(response);
           if (response.body.messages) {
-            response.body.messages.forEach((message: messageModel) => {
+            response.body.messages.forEach(async (message: messageModel) => {
               if (message.messages.options && typeof message.messages.options === 'string')
                 message.messages.options = JSON.parse(message.messages.options as string)
+              if (message.messages.type == 'audio')
+                await this.getFile(message.messages.options.audio, this.selectedChat?._id!).then((res: any) => {
+                  let audioUrl = URL.createObjectURL(res.blob);
+                  message.messages.options.audio = audioUrl;
+                })
             });
+            console.log(this.messageList[id]);
             if (this.messageList[id]) {
               this.sortChats(response.body.messages)
               let array = response.body.messages.concat(this.messageList[id]);
@@ -376,7 +384,6 @@ export class ChatSelectorService {
               this.sortChats();
             }
 
-            console.log(this.messageList[id]);
 
 
 
@@ -571,18 +578,19 @@ export class ChatSelectorService {
   }
 
   getFile(file: string, id: string) {
-    console.log(file, id);
-    this.dataStorage.PostRequestWithHeaders('getFiles', { urls: file, chatId: id }, this.getFileOptions()).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        const blob = this.base64ToBlob(response.body.content, 'audio/mp3');
-        this.saveBlobAsFile(blob, "file." + file.split('.')[1]);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error);
-        if (error.status == 401)
-          this.logout();
-      }
+    return new Promise((resolve, reject) => {
+      this.dataStorage.PostRequestWithHeaders('getFiles', { urls: file, chatId: id }, this.getFileOptions()).subscribe({
+        next: (response: any) => {
+          const blob: Blob = this.base64ToBlob(response.body.content, 'audio/mp3');
+          resolve({ blob: blob });
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status == 401)
+            this.logout();
+          reject(error);
+        }
+      })
     })
   }
 
@@ -732,17 +740,36 @@ export class ChatSelectorService {
       let data = JSON.parse(event.data);
       console.log(data);
       if (data.type == "MSG") {
-        let opt;
-        if (data.options)
-          opt = JSON.parse(data.options);
-        if (this.messageList[data.idDest].length > 0) {
-          this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
-          setTimeout(() => {
-            this.bottomScroll(-1);
-          }, 0);//to improve
+        if (data.typeMSG == "audio") {
+          let opt = JSON.parse(data.options);
+          this.getFile(opt.audio, data.idDest).then((filedata: any) => {
+            let blob = filedata.blob;
+            let audioUrl = URL.createObjectURL(blob);
+            if (this.messageList[data.idDest].length > 0) {
+              this.messageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
+              setTimeout(() => {
+                this.bottomScroll(-1);
+              }, 0);//to improve
+            }
+            else {
+              this.socketMessageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
+            }
+
+          });
         }
         else {
-          this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
+          let opt;
+          if (data.options)
+            opt = JSON.parse(data.options);
+          if (this.messageList[data.idDest].length > 0) {
+            this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
+            setTimeout(() => {
+              this.bottomScroll(-1);
+            }, 0);//to improve
+          }
+          else {
+            this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
+          }
         }
       }
       else if (data.type == "FRA") {//friend request accepted
@@ -853,7 +880,7 @@ export class ChatSelectorService {
     }
   }
   base64ToBlob(base64Data: string, contentType: string): Blob {
-    const byteCharacters = atob(base64Data);
+    const byteCharacters = window.atob(base64Data);
     const byteNumbers = new Array(byteCharacters.length);
 
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -865,11 +892,5 @@ export class ChatSelectorService {
     return new Blob([byteArray], { type: contentType });
   }
 
-  saveBlobAsFile(blob: Blob, fileName: string) {
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
-  }
   //#endregion
 }

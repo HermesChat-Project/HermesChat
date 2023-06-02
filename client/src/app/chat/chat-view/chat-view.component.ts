@@ -154,7 +154,7 @@ export class ChatViewComponent {
 
   toggleAudioPlay() {
     this.audioplay = !this.audioplay;
-    if(this.audioplay)
+    if (this.audioplay)
       this.audioRecorder?.resume();
     else
       this.audioRecorder?.pause();
@@ -174,17 +174,22 @@ export class ChatViewComponent {
         console.log(event.data);
         audioChunks.push(event.data);
         let audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+        let audioUrl = URL.createObjectURL(audioBlob);
+        console.log(audioUrl);
         let file = new File([audioBlob], "audio.mp3", { type: 'audio/mp3' });
         console.log(file);
         let formData = new FormData();
         formData.append('file', file);
         formData.append('chatId', this.chatSelector.selectedChat!._id);
-        this.chatSelector.sendFile(formData).then((file: any) => {
-          this.chatSelector.messageList[this.chatSelector.selectedChat!._id].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: this.chatSelector.infoUser._id, type: "audio", options: { audio: file } }));
-          this.contentEditable = true;
-          this.audioRecord = false;
-          this.chatSelector.getFile(file, this.chatSelector.selectedChat!._id);
-        })
+        this.chatSelector.sendFile(formData)
+          .then((filename: any) => {
+            console.log(filename);
+            this.contentEditable = true;
+            this.audioRecord = false;
+            this.chatSelector.messageList[this.chatSelector.selectedChat!._id].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: this.chatSelector.infoUser._id, type: "audio", options: {audio: audioUrl} }));
+
+            this.chatSelector.sendMessage("", "audio", { audio: filename }, false);
+          })
           .catch((err: HttpErrorResponse) => {
             console.log(err.message);
             this.contentEditable = true;
@@ -199,11 +204,10 @@ export class ChatViewComponent {
       });
   }
   sendMsg() {
-    if(this.audioRecord){
+    if (this.audioRecord) {
       this.audioRecorder?.stop();
     }
-    else
-    {
+    else {
       let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
 
       this.messageSent = this.textMessage.nativeElement.innerHTML;
