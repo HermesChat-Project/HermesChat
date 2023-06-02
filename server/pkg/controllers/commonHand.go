@@ -307,3 +307,24 @@ func LeaveGroup(c *gin.Context){
 	index, _ := c.Get("index")
 	utils.LeaveGroupDB(index.(string), form.ChatId, c)
 }
+
+//DeleteGroup	godoc
+// @Summary 			Elimina gruppo
+// @Description 		Elimina un gruppo passando l'id del gruppo (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /deleteGroup [post]
+func DeleteGroup (c *gin.Context){
+	var form models.DeleteGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.DeleteGroupDB(index.(string), form.ChatId, c)
+}

@@ -527,3 +527,92 @@ func RemoveUserFromGroupDB (idAdmin string, form models.RemoveUserFromGroupReque
 }
 
 }
+
+func DeleteGroupDB (idUser string, chatId string, c *gin.Context){
+    objChat , errObj := primitive.ObjectIDFromHex(chatId)
+	if errObj != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID2",
+		})
+		return
+	}
+	collecChat := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collecChat == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//search the group and get the array of users
+	ris1 := collecChat.FindOne(c.Request.Context(), bson.M{"_id": objChat})
+	if ris1 == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	type user struct {
+		IdUser string `json:"idUser" bson:"idUser"`
+		Role string `json:"role" bson:"role"`
+	}
+	type group struct {
+		Users []user `json:"users" bson:"users"`
+	}
+	var result1 group
+	err := ris1.Decode(&result1)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	isAdmin := false
+	for _, element := range result1.Users {
+		if element.IdUser == idUser && element.Role == "admin" {
+			isAdmin = true
+		}
+	}
+	if !isAdmin {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "not an admin",
+		})
+		return
+	}
+	//remove the group from the user's list of groups
+	collecUser := config.ClientMongoDB.Database("chat").Collection("user")
+	if collecUser == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	for _, elem := range result1.Users {
+		objUser , errObj := primitive.ObjectIDFromHex(elem.IdUser)
+		if errObj != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "invalid ObjectID2",
+			})
+			return
+		}
+		_, errUpload := collecUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$pull": bson.M{"ids.0.chats": bson.M{"$in": []string{chatId}}}})
+		if errUpload != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
+			})
+			return
+		}
+	}
+	//remove the group from the database
+	_, errUpload := collecChat.DeleteOne(c.Request.Context(), bson.M{"_id": objChat})
+	if errUpload != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "group deleted successfully",
+	})
+}
