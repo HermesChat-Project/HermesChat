@@ -46,6 +46,7 @@ type AddCalendarEvent struct {
 	NotifyTime string `json:"notifyTime" binding:"required"`
 	Color string `json:"color" binding:"required"`
 	IdChats []string `json:"idChats"`
+	IdCalendar string `json:"idCalendar"`
 }
 
 type DeleteCalendarEvent struct {

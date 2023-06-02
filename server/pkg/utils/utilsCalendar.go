@@ -154,9 +154,9 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 		return
 	}
 
-	//add the event to the database
+	//add the event to the database and save its id
 
-	_, err := collection.InsertOne(c.Request.Context(), bson.M{"title": form.Title, "description": form.Description, "dateTime": form.Date, "type": form.Type, "notify": form.Notify, "notifyTime": form.NotifyTime, "color": form.Color, "idUser": index, "idChats": form.IdChats})
+	resInsert, err := collection.InsertOne(c.Request.Context(), bson.M{"title": form.Title, "description": form.Description, "dateTime": form.Date, "type": form.Type, "notify": form.Notify, "notifyTime": form.NotifyTime, "color": form.Color, "idUser": index, "idChats": form.IdChats})
 	if err != nil {
 		errConn()
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -165,12 +165,13 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"ris": "event added",
-	})
-
+	form.IdCalendar = resInsert.InsertedID.(primitive.ObjectID).Hex()
+	
+	vetAus := []string{}
+	vetAus = append(vetAus, index)
 	if form.Type == "shared" {
 		//for each chat get users, if they are not who added the event, send them a notification via websocket
+		
 		for _, elem := range form.IdChats {
 			collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
 			if collection2 == nil {
@@ -199,27 +200,39 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 			var result bson.M
 			ris.Decode(&result)
 
-			for _, elem2 := range result["users"].(primitive.A) {
-				idel := elem2.(primitive.M)["idUser"].(string)
-				if idel != index {
-					type Message struct {
-						Type     string                  `json:"type"`
-						Username string                  `json:"username"`
-						Event    models.AddCalendarEvent `json:"event"`
-					}
+			// Extract the "users" array from the result
+			users := result["users"].(primitive.A)
 
-					msg := Message{Type: "CEA", Username: index, Event: form}
-					fmt.Println(msg)
-					connsId := config.GetUserConnectionsRedis(idel)
-					for _, connId := range connsId {
-						connDest := config.Conns[connId]
-						if connDest != nil {
-							connDest.WriteJSON(msg)
-						}
+			for _, elem2 := range users {
+				check := false
+				for _, elem3 := range vetAus {
+					if elem2 == elem3 {
+						check = true
 					}
+				}
+				if !check {
+					vetAus = append(vetAus, elem2.(string))
 				}
 			}
 		}
+	}
+	for _, elem2 := range vetAus {
+		type Message struct {
+			Type     string                  `json:"type"`
+			Username string                  `json:"username"`
+			Event    models.AddCalendarEvent `json:"event"`
+		}
+
+		msg := Message{Type: "CEA", Username: index, Event: form}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(elem2)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+
 	}
 }
 
@@ -301,7 +314,6 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 
 			for _, elem2 := range result["users"].(primitive.A) {
 				idel := elem2.(primitive.M)["idUser"].(string)
-				if idel != index {
 					type Message struct {
 						Type     string `json:"type"`
 						Username string `json:"username"`
@@ -317,7 +329,6 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 							connDest.WriteJSON(msg)
 						}
 					}
-				}
 			}
 		}
 	}
@@ -432,6 +443,72 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 			return
 		}
 	}
+
+	risChat, err := collection.Find(c.Request.Context(), bson.M{"_id": objID})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while updating event",
+		})
+		return
+	}
+	var resultA bson.M
+	risChat.Decode(&resultA)
+
+	vetAus := []string{}
+	vetAus = append(vetAus, index)
+	for _, elem := range resultA["idChats"].(primitive.A) {
+		idChat := elem.(primitive.M)["idChat"].(string)
+		objIDChat, err := primitive.ObjectIDFromHex(idChat)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "invalid ObjectID",
+			})
+			return
+		}
+		risChat, err := config.ClientMongoDB.Database("chat").Collection("chats").Find(c.Request.Context(), bson.M{"_id": objIDChat})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while updating event",
+			})
+			return
+		}
+		var resultB bson.M
+		risChat.Decode(&resultB)
+		for _, elem := range resultB["idUsers"].(primitive.A) {
+			check := false
+			for _, elem2 := range vetAus {
+				if elem2 == elem.(string) {
+					check = true
+				}
+			}
+			if !check{
+				vetAus = append(vetAus, elem.(string))
+			}
+		}
+	}
+
+	for _, elem2 := range vetAus {
+		type Message struct {
+			Type     string                  `json:"type"`
+			Username string                  `json:"username"`
+			Event    models.UpdateCalendarEvent `json:"event"`
+		}
+
+		msg := Message{Type: "CEM", Username: index, Event: form}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(elem2)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+
+	}
+
+
+
+		
 
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "event updated",
