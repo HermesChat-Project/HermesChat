@@ -201,7 +201,17 @@ func CreateGroup (c *gin.Context) {
 
 //AddUserToGroup	godoc
 // @Summary 			Aggiungi utente ad un gruppo
-// @Description 		Aggiunge un utente ad un gruppo
+// @Description 		Aggiunge un o più utenti ad un gruppo
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    users formData []string true "Id dei membri da aggiungere al gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /addUserToGroup [post]
+
 func AddUserToGroup(c *gin.Context){
 	var form models.AddUserToGroupRequest;
 	if err := c.ShouldBind(&form); err != nil {
@@ -212,7 +222,21 @@ func AddUserToGroup(c *gin.Context){
 	utils.AddUserToGroupDB(index.(string), form, c)
 }
 
-func ChangeRoleRGroup (c *gin.Context){
+//ChangeRoleGroup	godoc
+// @Summary 			Cambia il ruolo di un utente in un gruppo
+// @Description 		Cambia il ruolo di un utente in un gruppo se si è admin
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    user formData string true "Id dell'utente a cui cambiare il ruolo"
+// @Param 			    role formData string true "Ruolo da assegnare all'utente (admin o normal)"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /changeRoleGroup [post]
+
+func ChangeRoleGroup (c *gin.Context){
 	var form models.ChangeRoleGroup;
 	if err := c.ShouldBind(&form); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -222,6 +246,18 @@ func ChangeRoleRGroup (c *gin.Context){
 	utils.ChangeRoleGroupDB(index.(string), form, c)
 }
 
+//RemoveUserFromGroup	godoc
+// @Summary 			Rimuovi utente da un gruppo
+// @Description 		Rimuove un utente da un gruppo passando l'id del gruppo e l'id dell'utente da rimuovere (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    userId formData string true "Id dell'utente da rimuovere"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /removeUserFromGroup [post]
 func RemoveUserFromGroup (c *gin.Context){
 	var form models.RemoveUserFromGroupRequest;
 	if err := c.ShouldBind(&form); err != nil {
@@ -232,6 +268,16 @@ func RemoveUserFromGroup (c *gin.Context){
 	utils.RemoveUserFromGroupDB(index.(string), form, c)
 }
 
+//RemoveFriend	godoc
+// @Summary 			Rimuovi amico
+// @Description 		Rimuove un amico passando l'id dell'utente da rimuovere, tuttavia le chat non vengono eliminate
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    userId formData string true "Id dell'amico da rimuovere"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /removeFriend [post]
 func RemoveFriend (c *gin.Context){
 	var form models.RemoveFriend;
 	if err := c.ShouldBind(&form); err != nil {
@@ -242,6 +288,16 @@ func RemoveFriend (c *gin.Context){
 	utils.RemoveFriendDB(index.(string), form.UserId, c)
 }
 
+//LeaveGroup	godoc
+// @Summary 			Abbandona gruppo
+// @Description 		Abbandona un gruppo passando l'id del gruppo
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /leaveGroup [post]
 func LeaveGroup(c *gin.Context){
 	var form models.LeaveGroupRequest;
 	if err := c.ShouldBind(&form); err != nil {
