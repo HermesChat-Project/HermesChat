@@ -437,3 +437,65 @@ func SaveMessage(request models.Request) {
 	}
 
 }
+
+func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
+	//remove the user from the group
+
+	collection := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collection == nil {
+		errConn()
+		return
+	}
+
+	objID, err := primitive.ObjectIDFromHex(idGroup)
+	if err != nil {
+		errConn()
+		return
+	}
+
+	//remove the user from the group
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objID}, bson.M{"$pull": bson.M{"users": index}})
+	if err != nil {
+		errConn()
+		return
+	}
+
+	objUser, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		errConn()
+		return
+	}
+
+	ris := collection.FindOne(c.Request.Context(), bson.M{"_id": objUser})
+	if ris == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	// Extract the "chat" array from the result
+	result := bson.M{}
+	ris.Decode(&result)
+
+	// Extract the "chat" array from the result
+	chat := result["ids"].(primitive.A)[0].(primitive.M)["chats"].(primitive.A)
+
+	// remove the chat to the array
+	for i, elem := range chat {
+		if elem == idGroup {
+			chat = append(chat[:i], chat[i+1:]...)
+			break
+		}
+	}
+
+	// Update the document
+	_, err = collection.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$set": bson.M{"ids.0.chats": chat}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+}

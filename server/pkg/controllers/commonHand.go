@@ -241,3 +241,13 @@ func RemoveFriend (c *gin.Context){
 	index, _ := c.Get("index")
 	utils.RemoveFriendDB(index.(string), form.UserId, c)
 }
+
+func LeaveGroup(c *gin.Context){
+	var form models.LeaveGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.LeaveGroupDB(index.(string), form.ChatId, c)
+}
