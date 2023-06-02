@@ -318,7 +318,7 @@ func LeaveGroup(c *gin.Context){
 // @Failure 		    400 {object} string
 // @Failure 		    401 {object} string
 // @Failure 		    500 {object} string
-// @Router 		        /deleteGroup [post]
+// @Router 		        /deleteGroup [delete]
 func DeleteGroup (c *gin.Context){
 	var form models.DeleteGroupRequest;
 	if err := c.ShouldBind(&form); err != nil {
@@ -327,4 +327,28 @@ func DeleteGroup (c *gin.Context){
 	}
 	index, _ := c.Get("index")
 	utils.DeleteGroupDB(index.(string), form.ChatId, c)
+}
+
+//ChangeGroupInfo	godoc
+// @Summary 			Cambia info gruppo
+// @Description 		Cambia info di un gruppo passando l'id del gruppo e i nuovi dati (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    name formData string true "Nuovo nome del gruppo"
+// @Param 			    description formData string true "Nuova descrizione del gruppo"
+// @Param 			    img formData file true "Nuova immagine del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /changeGroupInfo [post]
+func ChangeGroupInfo (c *gin.Context){
+	var form models.ChangeGroupInfoRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.ChangeGroupInfoDB(index.(string), form, c)
 }

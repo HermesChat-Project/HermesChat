@@ -159,3 +159,10 @@ type LeaveGroupRequest struct {
 type DeleteGroupRequest struct {
 	ChatId string `json:"chatId"`
 }
+
+type ChangeGroupInfoRequest struct {
+	ChatId string `json:"chatId"`
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Img string `json:"img"`
+}

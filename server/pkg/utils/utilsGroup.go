@@ -616,3 +616,84 @@ func DeleteGroupDB (idUser string, chatId string, c *gin.Context){
 		"message": "group deleted successfully",
 	})
 }
+
+func ChangeGroupInfoDB (index string, form models.ChangeGroupInfoRequest, c *gin.Context){
+	objChat , errObj := primitive.ObjectIDFromHex(form.ChatId)
+	if errObj != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID2",
+		})
+		return
+	}
+	collecChat := config.ClientMongoDB.Database("chat").Collection("chat")
+	if collecChat == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//search the group and get the array of users
+	ris1 := collecChat.FindOne(c.Request.Context(), bson.M{"_id": objChat})
+	if ris1 == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	type user struct {
+		IdUser string `json:"idUser" bson:"idUser"`
+		Role string `json:"role" bson:"role"`
+	}
+	type group struct {
+		Users []user `json:"users" bson:"users"`
+	}
+	var result1 group
+	err := ris1.Decode(&result1)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	isAdmin := false
+	for _, element := range result1.Users {
+		if element.IdUser == index && element.Role == "admin" {
+			isAdmin = true
+		}
+	}
+	if !isAdmin {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "not an admin",
+		})
+		return
+	}
+	if form.Name != "" {
+		_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objChat}, bson.M{"$set": bson.M{"name": form.Name}})
+		if errUpload != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
+			})
+			return
+		}
+	}
+	if form.Description != "" {
+		_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objChat}, bson.M{"$set": bson.M{"description": form.Description}})
+		if errUpload != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
+			})
+			return
+		}
+	}
+	if form.Img != "" {
+		_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objChat}, bson.M{"$set": bson.M{"image": form.Img}})
+		if errUpload != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "error while connecting to database",
+			})
+			return
+		}
+	}
+
+}
