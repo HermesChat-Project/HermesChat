@@ -142,7 +142,7 @@ export class FullCalendarComponent {
         this.chatSelector.triggerCalendarModal = true;
         this.isOnCreatingMode = true;
         let date = new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes()))
-        this.modifyingEvent = new CalendarModel( "", "", this.chatSelector.infoUser._id,date, date.toISOString(), "personal");
+        this.modifyingEvent = new CalendarModel("-1","", "", this.chatSelector.infoUser._id,date, date.toISOString(), "personal");
         console.log(this.modifyingEvent);
       }
     }
@@ -208,9 +208,7 @@ export class FullCalendarComponent {
   }
 
   deleteEvent() {
-    this.chatSelector.calendarList.splice(this.chatSelector.calendarList.indexOf(this.chatSelector.selectedCalendarEvent!), 1);
-    this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
-    this.chatSelector.triggerCalendarModal = false;
+    this.chatSelector.deleteCalendarEvent();
   }
 
   changeDate(event: MatDatepickerInputEvent<any, any>) {
@@ -287,6 +285,9 @@ export class FullCalendarComponent {
       this.selected = false;
     }
     console.log(this.sharedArray);
+  }
+  checkIfIsShared(chat: Chat) {
+    return this.sharedArray.includes(chat._id);
   }
 
 

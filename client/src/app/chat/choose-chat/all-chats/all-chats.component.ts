@@ -63,7 +63,7 @@ export class AllChatsComponent {
       this.chatSelector.OtherListSerach = [];
     }
     else {
-      this.chatSelector.getSerachUsers(this.txtSearchChat)
+      this.chatSelector.getSearchUsers(this.txtSearchChat)
     }
   }
   GetDateWithoutTime(date: Date) {

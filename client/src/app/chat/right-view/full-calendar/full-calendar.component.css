@@ -411,8 +411,21 @@ tbody {
   font-weight: 500;
 }
 
+.option{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 15px;
+  height: 30px;
+}
+
 .chat_share_type{
   margin-left: auto;
+}
+
+.chat_share_checkbox{
+  width: 20px;
+  height: 100%;
 }
 
 /*********************************************/

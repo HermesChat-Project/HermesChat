@@ -1,4 +1,5 @@
 export class CalendarModel{
+  _id: string;
   title : string;
   dateTime : string;
   date: Date;
@@ -10,8 +11,8 @@ export class CalendarModel{
   idUser: string;
   idChats: Array<string>|null;
 
-  constructor( title: string, description: string, idUser: string,date: Date,  dateTime: string, type: string,  color: string = "#1B7AF7", notify: boolean = true, notifyTime: string = "00:10", idChat: Array<string>|null = null) {
-
+  constructor(id: string, title: string, description: string, idUser: string,date: Date,  dateTime: string, type: string,  color: string = "#1B7AF7", notify: boolean = true, notifyTime: string = "00:10", idChat: Array<string>|null = null) {
+    this._id = id;
     this.title = title;
     this.description = description;
     this.idUser = idUser;

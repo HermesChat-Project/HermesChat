@@ -586,7 +586,7 @@ export class ChatSelectorService {
     })
   }
 
-  getSerachUsers(txtUser: string) {
+  getSearchUsers(txtUser: string) {
     this.dataStorage.getRequest('search?username=' + txtUser, this.getGetOptions()).subscribe({
       next: (response: any) => {
         console.log(response);
@@ -622,6 +622,35 @@ export class ChatSelectorService {
         }
       })
     });
+  }
+
+  deleteCalendarEvent() {
+    this.dataStorage.DeleteRequest('deleteCalendarEvent', this.getDeleteOptions()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.calendarList.splice(this.calendarList.indexOf(this.selectedCalendarEvent!), 1);
+        this.EventsPerMonth = this.getCalendarEventsByMonth();
+        this.triggerCalendarModal = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    });
+  }
+
+  getDeleteOptions() {
+    return {
+      observe: 'response',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      withCredentials: true,
+      body: {
+        idEvent: this.selectedCalendarEvent!._id
+      }
+    };
   }
   getGetOptions() {
     return {
@@ -736,10 +765,10 @@ export class ChatSelectorService {
           return user.idUser != idUser;
         });
       }
-      else if(data.type == "CEA"){//calendar event added
+      else if (data.type == "CEA") {//calendar event added
         let event = data.event;
         let date = new Date(event.date)
-        let eventModel = new CalendarModel(event.title, event.description, event.idUser, date, event.date, event.type, event.color, event.notify, event.notifyTime, event.idChats);
+        let eventModel = new CalendarModel("-1", event.title, event.description, event.idUser, date, event.date, event.type, event.color, event.notify, event.notifyTime, event.idChats);
         this.calendarList.push(eventModel);
         this.getCalendarEventsByMonth()
       }

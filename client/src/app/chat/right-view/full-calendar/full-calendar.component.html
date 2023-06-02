@@ -177,6 +177,7 @@
             <div class="chat_chare_container">
               <div class="chat_share_name option" (click)="updateSharedArray(null)">
                 <p>None</p>
+                <mat-icon *ngIf="sharedArray.length == 0">check</mat-icon>
               </div>
               <div class="chat_share_name">
                 <p>Chat disponibili</p>
@@ -191,7 +192,7 @@
                   <p>{{chat.name}}</p>
                 </div>
                 <div class="chat_share_checkbox">
-
+                  <mat-icon *ngIf="checkIfIsShared(chat)">check</mat-icon>
                 </div>
                 <div class="chat_share_type">
                   <i class="bi bi-person-fill" *ngIf="!chat.flagGroup"></i>

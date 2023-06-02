@@ -8,13 +8,21 @@ export class DataStorageService {
 
   private REST_API_SERVER: string = "https://192.168.1.43:8090/";
   constructor(private httpClient: HttpClient) { }
+  options = {
+    observe : 'response' as 'response',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true
+  }
+
 
   public getRequest(endpoint: string, options: any) {
     return this.httpClient.get(this.REST_API_SERVER + endpoint, options)
   }
 
-  public DeleteRequest(endpoint: string) {
-    return this.httpClient.delete(this.REST_API_SERVER + endpoint)
+  public DeleteRequest(endpoint: string, options: any = this.options) {
+    return this.httpClient.delete(this.REST_API_SERVER + endpoint, options)
   }
 
   public PostRequest(endpoint: string, body: FormData) {
