@@ -65,7 +65,7 @@ func DeleteToken(c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "token",
 		Value:    "",
-		Domain:   "api.hermeschat.it",
+		Domain:   "",
 		Expires:  time.Now().AddDate(0, 0, -1), // Set expiration to a past time
 		Path:     "/",
 		HttpOnly: true,
@@ -148,14 +148,16 @@ func LoginMongoDB(username string, password string, c *gin.Context) {
 	var result bson.M
 	ris.Decode(&result)
 	if result == nil {
-		errr := fmt.Errorf("username not found")
-		SendError(c, errr)
+		c.JSON(http.StatusTeapot, gin.H{
+			"ris": "im a teapot",
+		})
 		return
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(result["password"].(string)), []byte(password))
 	if err != nil {
-		errr := fmt.Errorf("wrong password")
-		SendError(c, errr)
+		c.JSON(http.StatusTeapot, gin.H{
+			"ris": "im a teapot",
+		})
 		return
 	}
 

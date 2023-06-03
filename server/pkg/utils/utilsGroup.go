@@ -41,11 +41,11 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	}
 
 	//create a new document in the collection chat with a vet of messages empty and a vet of users with the user that created the chat and the users that are going to be added
-	collectionUser := config.ClientMongoDB.Database("chat").Collection("user")
+	collectionUser := config.ClientMongoDB.Database("user").Collection("user")
 	if collectionUser == nil {
 		errConn()
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
+			"message": "error while connecting to database2",
 		})
 		return
 	}
@@ -59,7 +59,7 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	ris := collectionUser.FindOne(c, bson.M{"_id": objID})
 	if ris == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
+			"message": "error while connecting to database3",
 		})
 		return
 	}
@@ -67,7 +67,7 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	err := ris.Decode(&result)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
+			"message": "error while connecting to database4",
 		})
 		return
 	}
@@ -101,7 +101,7 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		ris := collectionUser.FindOne(c, bson.M{"_id": objUser})
 		if ris == nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"message": "error while connecting to database",
+				"message": "error while connecting to database5",
 			})
 			return
 		}
@@ -109,7 +109,7 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		err := ris.Decode(&result)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"message": "error while connecting to database",
+				"message": "error while connecting to database6",
 			})
 			return
 		}
@@ -127,15 +127,15 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	id, err := collectionChat.InsertOne(c.Request.Context(), group)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "error while connecting to database",
+			"message": "error while connecting to database7",
 		})
 		return
 	}
 
 	//aggiungo il gruppo alla lista dei gruppi dell'utente
 
-	for _, element := range form.Users {
-		objUser, errObj := primitive.ObjectIDFromHex(element)
+	for _, element := range users {
+		objUser, errObj := primitive.ObjectIDFromHex(element.IdUser)
 		if errObj != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "invalid ObjectID2",
@@ -145,7 +145,7 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		ris3 := collectionUser.FindOne(c.Request.Context(), bson.M{"_id": objUser})
 		if ris3 == nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"message": "error while connecting to database",
+				"message": "error while connecting to database8",
 			})
 			return
 		}
@@ -160,20 +160,27 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 
 		// Add the chat to the array
 
-		chat2 = append(chat2, id.InsertedID.(primitive.ObjectID))
+		//take this id and convert it to string without the ObjectID
+		idString := id.InsertedID.(primitive.ObjectID).Hex()
+		chat2 = append(chat2, idString)
 
 		// Update the document
 
 		_, err = collectionUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$set": bson.M{"ids.0.chats": chat2}})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"message": "error while connecting to database",
+				"message": "error while connecting to database9",
 			})
 			return
 		}
 	}
 
-	for _, friend := range form.Users {
+	aus := []string{}
+
+	aus = append(aus, idAdmin)
+	aus = append(aus, form.Users...)
+
+	for _, friend := range aus {
 
 		type Message struct {
 			Type     string `json:"type"`
@@ -748,6 +755,6 @@ func ChangeGroupInfoDB (index string, form models.ChangeGroupInfoRequest, c *gin
 		}
 	}
 
-	
+
 
 }

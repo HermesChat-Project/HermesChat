@@ -168,7 +168,7 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 	form.IdCalendar = resInsert.InsertedID.(primitive.ObjectID).Hex()
 	
 	vetAus := []string{}
-	vetAus = append(vetAus, index)
+	
 	if form.Type == "shared" {
 		//for each chat get users, if they are not who added the event, send them a notification via websocket
 		
@@ -206,15 +206,19 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 			for _, elem2 := range users {
 				check := false
 				for _, elem3 := range vetAus {
-					if elem2 == elem3 {
+					if elem2.(primitive.M)["idUser"].(string) == elem3 {
 						check = true
 					}
 				}
 				if !check {
-					vetAus = append(vetAus, elem2.(string))
+					//add the id, elem2 contains the whole user
+					id := elem2.(primitive.M)["idUser"].(string)
+					vetAus = append(vetAus, id)
 				}
 			}
 		}
+	}else{
+		vetAus = append(vetAus, index)
 	}
 	for _, elem2 := range vetAus {
 		type Message struct {
@@ -234,6 +238,10 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 		}
 
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "event added",
+	})
 }
 
 func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin.Context) {
@@ -282,6 +290,8 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 		"ris": "event deleted",
 	})
 
+	vetAus := []string{}
+
 	if resultA["type"] == "shared" {
 		//for each chat get users, if they are not who added the event, send them a notification via websocket
 		for _, elem := range resultA["idChats"].(primitive.A) {
@@ -312,26 +322,43 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 			var result bson.M
 			ris.Decode(&result)
 
-			for _, elem2 := range result["users"].(primitive.A) {
-				idel := elem2.(primitive.M)["idUser"].(string)
-					type Message struct {
-						Type     string `json:"type"`
-						Username string `json:"username"`
-						IdEvent  string `json:"idEvent"`
+			users := result["users"].(primitive.A)
+			for _, elem2 := range users {
+				check := false
+				for _, elem3 := range vetAus {
+					if elem2.(primitive.M)["idUser"].(string) == elem3 {
+						check = true
 					}
-
-					msg := Message{Type: "CED", Username: index, IdEvent: resultA["_id"].(string)}
-					fmt.Println(msg)
-					connsId := config.GetUserConnectionsRedis(idel)
-					for _, connId := range connsId {
-						connDest := config.Conns[connId]
-						if connDest != nil {
-							connDest.WriteJSON(msg)
-						}
-					}
+				}
+				if !check {
+					//add the id, elem2 contains the whole user
+					id := elem2.(primitive.M)["idUser"].(string)
+					vetAus = append(vetAus, id)
+				}
 			}
+			
 		}
+	}else{
+		vetAus = append(vetAus, index)
 	}
+
+	for _, elem2 := range vetAus {
+				type Message struct {
+					Type     string `json:"type"`
+					Username string `json:"username"`
+					IdEvent  string `json:"idEvent"`
+				}
+
+				msg := Message{Type: "CED", Username: index, IdEvent: form.IdEvent}
+				fmt.Println(msg)
+				connsId := config.GetUserConnectionsRedis(elem2)
+				for _, connId := range connsId {
+					connDest := config.Conns[connId]
+					if connDest != nil {
+						connDest.WriteJSON(msg)
+					}
+				}
+		}
 }
 
 func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin.Context) {
