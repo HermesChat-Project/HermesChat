@@ -232,10 +232,10 @@ func GetChats(index string, c *gin.Context) {
 
 	for _, elem := range chatIDs {
 		i++;
-
+		fmt.Println("elem:" + elem)
 		idChats, err := primitive.ObjectIDFromHex(elem)
 		if err != nil {
-			errConn()
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "invalid ObjectID9",
 			})
@@ -250,6 +250,7 @@ func GetChats(index string, c *gin.Context) {
 			})
 			return
 		}
+		fmt.Println("idChats:" + idChats.Hex())
 		pipeline := bson.A{
 			bson.M{
 				"$match": bson.M{
