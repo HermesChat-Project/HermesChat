@@ -162,6 +162,56 @@ paths:
           schema:
             type: string
       summary: Blocca utente
+  /changeGroupInfo:
+    post:
+      description: Cambia info di un gruppo passando l'id del gruppo e i nuovi dati
+        (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      - description: Nuovo nome del gruppo
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Nuova descrizione del gruppo
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Nuova immagine del gruppo
+        in: formData
+        name: img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Cambia info gruppo
   /checkOtp:
     post:
       description: Verifica che l'OTP inserito dall'utente sia lo stesso generato
@@ -193,6 +243,22 @@ paths:
           schema:
             type: string
       summary: Verifica OTP
+  /checkToken:
+    get:
+      description: Controlla se il token è valido oppure no, così il client sa se
+        l'utente è loggato o no
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Controlla token
   /createChat:
     post:
       description: Crea una chat tra due utenti
@@ -300,6 +366,40 @@ paths:
           schema:
             type: string
       summary: Elimina un evento dal calendario
+  /deleteGroup:
+    delete:
+      description: Elimina un gruppo passando l'id del gruppo (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Elimina gruppo
   /getBlocked:
     post:
       description: Restituisce tutti gli utenti bloccati dall'utente loggato
@@ -552,6 +652,48 @@ paths:
           schema:
             type: string
       summary: Ricerca richieste di amicizia inviate
+  /getVersion:
+    get:
+      description: Restituisce la versione del server in modo da poterla confrontare
+        con quella del client
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Ottieni versione
+  /leaveGroup:
+    post:
+      description: Abbandona un gruppo passando l'id del gruppo
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Abbandona gruppo
   /login:
     post:
       description: Effettua il login di un utente e crea un token JWT salvato in un
@@ -587,6 +729,92 @@ paths:
           schema:
             type: string
       summary: Login utente
+  /logout:
+    post:
+      description: Effettua il logout di un utente e cancella il cookie http-only
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Logout utente
+  /removeFriend:
+    post:
+      description: Rimuove un amico passando l'id dell'utente da rimuovere, tuttavia
+        le chat non vengono eliminate
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id dell'amico da rimuovere
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rimuovi amico
+  /removeUserFromGroup:
+    post:
+      description: Rimuove un utente da un gruppo passando l'id del gruppo e l'id
+        dell'utente da rimuovere (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      - description: Id dell'utente da rimuovere
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rimuovi utente da un gruppo
   /search:
     get:
       description: Cerca fino a 100 utenti con username che inizia con la stringa

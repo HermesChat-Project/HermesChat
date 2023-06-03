@@ -151,6 +151,31 @@ func CreateChat(index string, form models.CreateChat, c *gin.Context) {
 		return
 	}
 
+	type Message struct {
+		Type     string `json:"type"`
+		ChatId   string `json:"chatId"`
+		FirstNickname string `json:"firstNickname"`
+		FirstImg string `json:"firstImg"`
+		SecondNickname string `json:"secondNickname"`
+	}
+
+	msg := Message{Type: "NCC", ChatId: idChat, FirstNickname: form.FirstNickname, FirstImg: form.FirstImg, SecondNickname: form.SecondNickname}
+	fmt.Println(msg)
+	connsId := config.GetUserConnectionsRedis(index)
+	for _, connId := range connsId {
+		connDest := config.Conns[connId]
+		if connDest != nil {
+			connDest.WriteJSON(msg)
+		}
+	}
+	connsId2 := config.GetUserConnectionsRedis(form.IdUser)
+	for _, connId := range connsId2 {
+		connDest := config.Conns[connId]
+		if connDest != nil {
+			connDest.WriteJSON(msg)
+		}
+	}
+
 
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "chat created",

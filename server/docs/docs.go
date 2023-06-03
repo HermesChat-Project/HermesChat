@@ -238,6 +238,78 @@ const docTemplate = `{
                 }
             }
         },
+        "/changeGroupInfo": {
+            "post": {
+                "description": "Cambia info di un gruppo passando l'id del gruppo e i nuovi dati (se si è admin)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Cambia info gruppo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id del gruppo",
+                        "name": "chatId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nuovo nome del gruppo",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nuova descrizione del gruppo",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Nuova immagine del gruppo",
+                        "name": "img",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/checkOtp": {
             "post": {
                 "description": "Verifica che l'OTP inserito dall'utente sia lo stesso generato dal server e inviato via email",
@@ -276,6 +348,29 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/checkToken": {
+            "get": {
+                "description": "Controlla se il token è valido oppure no, così il client sa se l'utente è loggato o no",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Controlla token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "type": "string"
                         }
@@ -407,6 +502,57 @@ const docTemplate = `{
                         "description": "Id dell'evento da eliminare",
                         "name": "idEvent",
                         "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/deleteGroup": {
+            "delete": {
+                "description": "Elimina un gruppo passando l'id del gruppo (se si è admin)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Elimina gruppo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id del gruppo",
+                        "name": "chatId",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -815,6 +961,68 @@ const docTemplate = `{
                 }
             }
         },
+        "/getVersion": {
+            "get": {
+                "description": "Restituisce la versione del server in modo da poterla confrontare con quella del client",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Ottieni versione",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/leaveGroup": {
+            "post": {
+                "description": "Abbandona un gruppo passando l'id del gruppo",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Abbandona gruppo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id del gruppo",
+                        "name": "chatId",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Effettua il login di un utente e crea un token JWT salvato in un cookie http-only",
@@ -834,6 +1042,132 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Password dell'utente",
                         "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "description": "Effettua il logout di un utente e cancella il cookie http-only",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Logout utente",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/removeFriend": {
+            "post": {
+                "description": "Rimuove un amico passando l'id dell'utente da rimuovere, tuttavia le chat non vengono eliminate",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Rimuovi amico",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'amico da rimuovere",
+                        "name": "userId",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/removeUserFromGroup": {
+            "post": {
+                "description": "Rimuove un utente da un gruppo passando l'id del gruppo e l'id dell'utente da rimuovere (se si è admin)",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Rimuovi utente da un gruppo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Indice dell'utente loggato",
+                        "name": "index",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id del gruppo",
+                        "name": "chatId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id dell'utente da rimuovere",
+                        "name": "userId",
                         "in": "formData",
                         "required": true
                     }

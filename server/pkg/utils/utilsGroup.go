@@ -178,10 +178,14 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		type Message struct {
 			Type     string `json:"type"`
 			ChatId   string `json:"chatId"`
-			Info     string `json:"info"`
+			Name    string `json:"name"`
+			Img    string `json:"img"`
+			Description    string `json:"description"`
+			Users	[]user `json:"users"`
+			Payload  string `json:"payload"`
 		}
 
-		msg := Message{Type: "CNG", ChatId: id.InsertedID.(primitive.ObjectID).Hex(), Info: "You have been added to a group"}
+		msg := Message{Type: "CNG", ChatId: id.InsertedID.(primitive.ObjectID).Hex(), Name: form.Name, Img: form.Img, Description: form.Description, Users: users, Payload: "new group created"}
 		fmt.Println(msg)
 		connsId := config.GetUserConnectionsRedis(friend)
 		for _, connId := range connsId {
@@ -315,7 +319,7 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 			Info     string `json:"info"`
 		}
 
-		msg := Message{Type: "ATG", ChatId: form.ChatId, Info: "sei stato aggiunto al gruppo"}
+		msg := Message{Type: "ATG", ChatId: form.ChatId, Info: "you have been added to the group"}
 		fmt.Println(msg)
 		connsId := config.GetUserConnectionsRedis(friend)
 		for _, connId := range connsId {
@@ -395,6 +399,22 @@ func ChangeRoleGroupDB (idAdmin string, form models.ChangeRoleGroup, c *gin.Cont
 			"message": "error while connecting to database",
 		})
 		return
+	}
+
+	type Message struct {
+		Type     string `json:"type"`
+		ChatId   string `json:"chatId"`
+		Info     string `json:"info"`
+	}
+
+	msg := Message{Type: "CRG", ChatId: form.ChatId, Info: "your role has been changed"}
+	fmt.Println(msg)
+	connsId := config.GetUserConnectionsRedis(form.User)
+	for _, connId := range connsId {
+		connDest := config.Conns[connId]
+		if connDest != nil {
+			connDest.WriteJSON(msg)
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -524,6 +544,22 @@ func RemoveUserFromGroupDB (idAdmin string, form models.RemoveUserFromGroupReque
 			}
 		}
 	}
+
+	type Message struct {
+		Type     string `json:"type"`
+		ChatId   string `json:"chatId"`
+		Info     string `json:"info"`
+	}
+
+	msg := Message{Type: "RFG", ChatId: form.ChatId, Info: "you have been removed from the group"}
+	fmt.Println(msg)
+	connsId := config.GetUserConnectionsRedis(form.UserId)
+	for _, connId := range connsId {
+		connDest := config.Conns[connId]
+		if connDest != nil {
+			connDest.WriteJSON(msg)
+		}
+	}
 }
 
 }
@@ -602,6 +638,22 @@ func DeleteGroupDB (idUser string, chatId string, c *gin.Context){
 				"message": "error while connecting to database",
 			})
 			return
+		}
+
+		type Message struct {
+			Type     string `json:"type"`
+			ChatId   string `json:"chatId"`
+			Info     string `json:"info"`
+		}
+
+		msg := Message{Type: "DGC", ChatId: chatId, Info: "the group has been deleted"}
+		fmt.Println(msg)
+		connsId := config.GetUserConnectionsRedis(elem.IdUser)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
 		}
 	}
 	//remove the group from the database
@@ -695,5 +747,7 @@ func ChangeGroupInfoDB (index string, form models.ChangeGroupInfoRequest, c *gin
 			return
 		}
 	}
+
+	
 
 }
