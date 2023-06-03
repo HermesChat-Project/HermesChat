@@ -9,7 +9,7 @@
 </div>
 <div id="div_chatlist" *ngIf="txtSearchChat.length<3">
   <div class="list_result" *ngIf="chatSelector.chatList.length != 0 && chatSelector.chatList">
-    <div class="row div_chat" *ngFor="let chat of chatSelector.chatList" (click)="showEntireChat(chat)">
+    <div class="row div_chat" *ngFor="let chat of chatSelector.chatList" (click)="showEntireChat(chat)" >
 
       <div class="col-sm-3">
         <div class="img img-fluid">
@@ -21,7 +21,7 @@
           <h5 class="chat-name">{{chat.name}}</h5>
         </div>
         <div class="lastMessage">
-          <span class="text-truncate last-message" [innerHTML]="getLastMessage(chat.messages)"></span>
+          <span class="text-truncate last-message" [innerHTML]="getLastMessage(chat)"></span>
           <span>{{DateAdjustment(getLastMessageTime(chat.messages))}}</span>
         </div>
       </div>

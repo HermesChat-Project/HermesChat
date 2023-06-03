@@ -24,6 +24,7 @@ export class LoginComponent {
       this.loginService.seeMobilePage();
     }
     else {
+      this.loginService.checkToken();
       if (this.translationService.languageSelected == "")
         this.translationService.getLanguage();
       this.loginWords = this.translationService.languageWords["login"];

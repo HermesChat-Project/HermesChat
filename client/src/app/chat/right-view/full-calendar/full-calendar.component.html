@@ -41,7 +41,7 @@
             <div class="date_month">{{getThisDate(1, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(1,i)]"
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
@@ -60,7 +60,7 @@
             <div class="date_month">{{getThisDate(2, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(2,i)]"
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
@@ -79,7 +79,7 @@
             <div class="date_month">{{getThisDate(3, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(3,i)]"
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
@@ -99,7 +99,7 @@
             <div class="date_month">{{getThisDate(4, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(4,i)] "
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span
@@ -119,7 +119,7 @@
             <div class="date_month">{{getThisDate(5, i)}}</div>
             <div class="calendar_day_list">
               <div class="calendar_day_events" *ngFor="let cal_events of chatSelector.EventsPerMonth[getThisDate(5,i)]"
-                [ngStyle]="{'background-color' : cal_events.color}" [title]="cal_events.title"
+                [ngStyle]="{'background-color' : cal_events.color, 'color' : getContrastYIQ(cal_events.color)}" [title]="cal_events.title"
                 (dblclick)="seeEvent(cal_events)">
                 <span class="calendar_day_type">{{checkIfIsPersonalOrShared(cal_events)}}</span>
                 <p class="text-truncate calendar_day_title">{{cal_events.title}}</p><span

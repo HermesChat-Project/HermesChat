@@ -11,17 +11,32 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginService {
   constructor(private dataStorage: DataStorageService, private router: Router, private chatSelector: ChatSelectorService) { }
   loginSuccess: boolean = true;
+  wrongCredentials: boolean = false;
   registerSuccess: boolean = false;
   login(body: any, options: { headers: any; observe: string; withCredentials: boolean }) {
-    console.log("login")
     this.dataStorage.PostRequestWithHeaders(`login`, body, options).subscribe({
       next: (response: any) => {
+        this.loginSuccess = true;
+        this.wrongCredentials = false;
         this.router.navigate(['/chat']);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if(error.error == "{\"ris\":\"check otp\"}{\"ris\":\"ok\"}")
+        if (error.status != 418)
           this.loginSuccess = false;
+        this.wrongCredentials = true;
+      }
+    });
+  }
+
+  checkToken() {
+    this.dataStorage.getRequest(`checkToken`).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.router.navigate(['/chat']);
+      },
+      error: (error: Error) => {
+        console.log(error);
       }
     });
   }
@@ -32,8 +47,8 @@ export class LoginService {
     this.router.navigate(['/signup']);
   }
 
-  checkOtp(email: string, otp: string, username="", password="") {
-    let body = { nickname:email, otp }
+  checkOtp(email: string, otp: string, username = "", password = "") {
+    let body = { nickname: email, otp }
     this.dataStorage.PostRequestWithHeaders(`checkOtp`, body, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -44,7 +59,6 @@ export class LoginService {
       next: (response: any) => {
         console.log(response);
         let body = { username, password }
-        console.log(body);
         this.login(body, {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -52,8 +66,6 @@ export class LoginService {
           observe: "response" as "response",
           withCredentials: true
         })
-
-
       },
       error: (error: Error) => {
         console.log(error);
@@ -61,7 +73,7 @@ export class LoginService {
     });
   }
   registerUser(email: string, password: string, name: string, surname: string, username: string, lang: string) {
-    let body = { email, password, name, surname, username, lang}
+    let body = { email, password, name, surname, username, lang }
     this.dataStorage.PostRequestWithHeaders(`signup`, body, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

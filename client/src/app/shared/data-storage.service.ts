@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "https://192.168.1.43:8090/";
+  private REST_API_SERVER: string = "https://79.24.212.248:8090/";
   constructor(private httpClient: HttpClient) { }
   options = {
     observe : 'response' as 'response',
@@ -17,7 +17,10 @@ export class DataStorageService {
   }
 
 
-  public getRequest(endpoint: string, options: any) {
+  public getRequest(endpoint: string, options: any = {
+    observe : 'response' as 'response',
+    withCredentials: true
+  }) {
     return this.httpClient.get(this.REST_API_SERVER + endpoint, options)
   }
 

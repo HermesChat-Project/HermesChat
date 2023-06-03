@@ -25,7 +25,7 @@
     <!-- actions -->
     <div class="col-md-12">
       <div class="form-group d-flex justify-content-between">
-        <p class="errors" #errors [ngStyle]="{'opacity': loginService.loginSuccess ? '0' : '1'}">
+        <p class="errors" #errors [ngStyle]="{'opacity': loginService.wrongCredentials ? '1' : '0'}">
           {{loginWords["wrong-credentials"]}}</p>
         <a href="#" id="pwd_forgotten">{{loginWords["forgot-password"]}}</a>
       </div>

@@ -106,9 +106,8 @@ export class MessageComponent implements AfterViewInit {
     return true;
   }
   getNameSender(id: string) {
-    let nickname = this.chatSelector.friendList.find((friend) => friend.id == id)?.nickname;
-    if (nickname == undefined)
-      nickname = this.chatSelector.infoUser.nickname;
+    let nickname = this.chatSelector.selectedChat!.users.find((user) => user.idUser == id)?.nickname;
+
     return nickname;
   }
 

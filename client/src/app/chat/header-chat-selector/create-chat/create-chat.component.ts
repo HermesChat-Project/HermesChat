@@ -17,53 +17,72 @@ export class CreateChatComponent {
     this.headerService.generalClosing();
   }
 
-  possibleUser: FriendModel[] = [];
+  possibleUser: string[] = [];
 
   txtGroupDesc: string = '';
   txtGroupName: string = '';
   imgGroup: File | null = null;
+  base64Img: string = '';
 
   changeSelection(type: number) {
     console.log(type);
     this.headerService.chatCreationType = type;
   }
 
-  checkFriend(friend: FriendModel) {
 
-  }
 
-  updatePossibleUserArray(event: {friend: FriendModel, check: boolean }){
-    if(event.check)
-    {
-      this.possibleUser.push(event.friend);
+  updatePossibleUserArray(event: { friend: FriendModel, check: boolean }) {
+    if (event.check) {
+      this.possibleUser.push(event.friend.id);
     }
-    else
-    {
-      this.possibleUser = this.possibleUser.filter((friend) => {
-        return friend.nickname != event.friend.nickname;
+    else {
+      this.possibleUser = this.possibleUser.filter((id) => {
+        return id != event.friend.nickname;
       })
     }
   }
 
-  createGroup(){
-    if(this.possibleUser.length > 0 && this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null)
-    {
+  createGroup() {
+    if (this.possibleUser.length > 0 && this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null) {
       let body = {
-        "groupName": this.txtGroupName,
-        "groupDesc": this.txtGroupDesc,
-        "groupImage": this.imgGroup,
-        "members" : this.possibleUser
+        "name": this.txtGroupName,
+        "description": this.txtGroupDesc,
+        "img": this.base64Img,
+        "users": this.possibleUser
       }
+      console.log(body);
       this.chatSelectorService.createGroupChat(body);
     }
   }
 
-  getImg(event: Event) {
-    if((event.currentTarget as HTMLInputElement).files)
-    {
+  async getImg(event: Event) {
+    if ((event.currentTarget as HTMLInputElement).files) {
       this.imgGroup = (event.currentTarget as HTMLInputElement).files![0];
+      await this.createBase64ImageString(this.imgGroup).then((result) => {
+        this.base64Img = result as string;
+      })
     }
   }
+
+
+  createBase64ImageString(file: File) {
+
+    return new Promise((resolve, reject) => {
+      var reader = new FileReader()
+      reader.readAsDataURL(file);
+
+      reader.onload = function () {
+        console.log(reader.result)
+        resolve(reader.result)
+      }
+      reader.onerror = function (error) {
+        console.log("Error: " + error);
+        reject(error)
+      }
+    })
+
+  }
+
 
   createChat(friend: FriendModel) {
     if (!this.chatSelectorService.chatList.find((chat) => {
@@ -79,12 +98,11 @@ export class CreateChatComponent {
         }
       })
     }
-    else
-    {
+    else {
       this.chatSelectorService.selectedChat = this.chatSelectorService.chatList.find((chat) => {
         return chat.name == friend.nickname && chat.flagGroup == false;
       })!;
-      this.chatSelectorService.getChatMessages({ "idChat": this.chatSelectorService.selectedChat._id, "offset": 1}, this.chatSelectorService.selectedChat._id);
+      this.chatSelectorService.getChatMessages({ "idChat": this.chatSelectorService.selectedChat._id, "offset": 1 }, this.chatSelectorService.selectedChat._id);
 
     }
   }

@@ -36,17 +36,21 @@ export class AllChatsComponent {
     if (dateMessage != dateNow) {
       let diff = Math.abs(today.getTime() - date.getTime());
       // console.log(diff)
-      let diffDays = Math.floor(diff / (1000 * 3600 * 24));
+      let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      if(!isNaN(diffDays))
+      {
+        if (diffDays > 7) {
+          return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        }
+        else {
+          if (diffDays == 1)
+            return 'Ieri'
+          else
+            return diffDays + " giorni fa";
+        }
+      }
+      return '';
 
-      if (diffDays > 7) {
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-      }
-      else {
-        if (diffDays == 1)
-          return 'Ieri'
-        else
-          return diffDays + " giorni fa";
-      }
     }
     else {
       if (hour.length < 2)
@@ -69,10 +73,13 @@ export class AllChatsComponent {
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
-  getLastMessage(message: any){
-    if(message.type == "chart")
+  getLastMessage(chat: Chat){
+    let lastMessage: string = chat.messages?.content
+    if(this.chatSelector.socketMessageList[chat._id]?.length > 0)
+      lastMessage = this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id][this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id].length - 1].messages.content;
+    if(chat.messages?.type == "chart")
       return "&#128200; " + (this.translationService.languageWords["chart"] || "chart");
-    return message.content;
+    return lastMessage;
   }
 
 
