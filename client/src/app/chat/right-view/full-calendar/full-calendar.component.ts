@@ -329,10 +329,7 @@ export class FullCalendarComponent {
       if (shared)
         body.idChats = this.sharedArray;
       this.chatSelector.createCalendarEvent(body)
-        .then(() => {
-          this.chatSelector.calendarList.push(this.modifyingEvent!);
-          this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
-        }).finally(() => {
+      .finally(() => {
           this.chatSelector.triggerCalendarModal = false;
           this.isOnCreatingMode = false;
         });

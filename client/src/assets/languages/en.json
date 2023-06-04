@@ -6,7 +6,6 @@
     "new-to-hermes" : "New to HermesChat?",
     "username" : "Username",
     "password" : "Password",
-    "missing-fields" : "Missing fields",
     "wrong-credentials" : "Wrong credentials",
     "otp-message" : "Enter the code sent to your email"
   },

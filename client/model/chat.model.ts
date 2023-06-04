@@ -1,6 +1,6 @@
 export class Chat {
   public _id: string;
-  public users: { _id: string; image: string; nickname: string; }[];
+  public users: { idUser: string; image: string; nickname: string; }[];
   public flagGroup: boolean;
   //group properties (if flagGroup is true)
   public name: string;
@@ -11,7 +11,7 @@ export class Chat {
   public visibility: string;
   public messages: any;
 
-  constructor(id: string, users: { _id: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", last: string = "", visibility: string = "private", messages: any) {
+  constructor(id: string, users: { idUser: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", last: string = "", visibility: string = "private", messages: any = {}) {
     this._id = id;
     this.users = users;
     this.flagGroup = flagGroup;
