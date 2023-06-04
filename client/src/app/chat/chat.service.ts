@@ -325,20 +325,21 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         this.chatList = response.body.chats;
+
         this.changeName(response.body.chats);
         for (const chat of this.chatList) {
           if (this.messageList[chat._id] == undefined)
             this.messageList[chat._id] = [];
           if (this.socketMessageList[chat._id] == undefined)
             this.socketMessageList[chat._id] = [];
-          this.progress++;
-          this.waitProgress();
-          this.chatList.sort((a, b) => {
-            let aDate = new Date(a.messages!.dateTime);
-            let bDate = new Date(b.messages!.dateTime);
-            return bDate.getTime() - aDate.getTime();
-          })
         }
+        this.chatList.sort((a, b) => {
+          let aDate = new Date(a.messages!.dateTime);
+          let bDate = new Date(b.messages!.dateTime);
+          return bDate.getTime() - aDate.getTime();
+        })
+        this.progress++;
+        this.waitProgress();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -350,6 +351,7 @@ export class ChatSelectorService {
   }
 
   getChatMessages(body: any, id: string, newMsg: boolean = false) {
+    console.log(this.messageList)
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
@@ -374,12 +376,9 @@ export class ChatSelectorService {
               this.messageList[id] = response.body.messages;
               this.sortChats();
             }
-
-
-
-
             this.messageFeature(newMsg, id);
           }
+
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -717,7 +716,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://79.24.212.248:8090/socket');
+    this.socket = new WebSocket('wss://79.40.29.114:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -797,6 +796,8 @@ export class ChatSelectorService {
       else if (data.type == "CNG") {//create new group
         let chat = new Chat(data.chatId, data.user, true, data.name, data.img, data.description);
         this.chatList.push(chat);
+        this.messageList[data.chatId] = [];
+        this.socketMessageList[data.chatId] = [];
       }
     })
     this.socket.addEventListener("close", () => {
@@ -820,8 +821,8 @@ export class ChatSelectorService {
   //progress bar
   seeMain: boolean = false;
   waitProgress() {
-
-    if (this.progress == 5) {
+    console.log(this.progress);
+    if (this.progress == 6) {
       this.seeMain = true;
     }
   }

@@ -7,11 +7,11 @@ export class Chat {
   public image: string;
   public description: string;
   public creationDate: string;
-  public last: string;
+
   public visibility: string;
   public messages: any;
 
-  constructor(id: string, users: { idUser: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", last: string = "", visibility: string = "private", messages: any = {}) {
+  constructor(id: string, users: { idUser: string; image: string; nickname: string; }[], flagGroup: boolean = false, groupName: string = "", groupImage: string = "", description: string = "", creationDate: string = "", visibility: string = "private", messages: any = {}) {
     this._id = id;
     this.users = users;
     this.flagGroup = flagGroup;
@@ -19,7 +19,6 @@ export class Chat {
     this.image = groupImage;
     this.description = description;
     this.creationDate = creationDate;
-    this.last = last;
     this.visibility = visibility;
     this.messages = messages;
   }

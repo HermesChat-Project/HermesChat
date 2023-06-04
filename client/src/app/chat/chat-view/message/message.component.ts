@@ -24,7 +24,7 @@ export class MessageComponent implements AfterViewInit {
   constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit(): void {
-    this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
+    this.text?.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
       img.addEventListener("click", () => {
         this.chatSelector.src = img.src;
 
