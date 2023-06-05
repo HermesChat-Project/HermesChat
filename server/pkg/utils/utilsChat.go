@@ -485,9 +485,18 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 	}
 
 	//remove the user from the group
-	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objID}, bson.M{"$pull": bson.M{"users": index}})
+	fmt.Println(index)
+	fmt.Println(objID)
+	_, err = collection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objID},
+		bson.M{"$pull": bson.M{"users": bson.M{"idUser": index}}},
+	)
 	if err != nil {
-		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		fmt.Println(err)
 		return
 	}
 
@@ -497,7 +506,8 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 		return
 	}
 
-	ris := collection.FindOne(c.Request.Context(), bson.M{"_id": objUser})
+	collectUser := config.ClientMongoDB.Database("user").Collection("user")
+	ris := collectUser.FindOne(c.Request.Context(), bson.M{"_id": objUser})
 	if ris == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
@@ -508,20 +518,20 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 	// Extract the "chat" array from the result
 	result := bson.M{}
 	ris.Decode(&result)
-
+	fmt.Println("result", result)
 	// Extract the "chat" array from the result
 	chat := result["ids"].(primitive.A)[0].(primitive.M)["chats"].(primitive.A)
 
+	chat2 := make([]string, len(chat)-1)
 	// remove the chat to the array
 	for i, elem := range chat {
-		if elem == idGroup {
-			chat = append(chat[:i], chat[i+1:]...)
-			break
+		if elem != idGroup {
+			chat2[i] = elem.(string)
 		}
 	}
 
 	// Update the document
-	_, err = collection.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$set": bson.M{"ids.0.chats": chat}})
+	_, err = collectUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUser}, bson.M{"$set": bson.M{"ids.0.chats": chat2}})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
