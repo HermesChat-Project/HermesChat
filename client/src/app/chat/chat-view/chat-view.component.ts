@@ -31,6 +31,8 @@ export class ChatViewComponent {
 
   audioRecorder: MediaRecorder | undefined = undefined;
 
+  chatOptions: boolean = false;
+
   //for the css style of the buttons
   isBold: boolean = false;
   isItalic: boolean = false;
@@ -97,6 +99,23 @@ export class ChatViewComponent {
   toggleShowChatActions() {
     this.showChatActions = !this.showChatActions;
   }
+  toggleChatOptions() {
+    this.chatOptions = !this.chatOptions;
+  }
+  //#region chat options
+
+  closeChat(){
+    this.chatSelector.selectedChat = null;
+  }
+  leaveGroup() {
+    this.chatSelector.openLeaveGroupDialog(this.chatSelector.selectedChat!._id);
+  }
+
+  showChatInfo() {
+
+  }
+
+  //#endregion
   hideShowChatActions(event: Event) {
     //get the focused element
     let focusedElement = document.activeElement;

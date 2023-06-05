@@ -27,17 +27,18 @@ import { FullCalendarComponent } from './chat/right-view/full-calendar/full-cale
 import { RightViewComponent } from './chat/right-view/right-view.component';
 import { FriendDetailsComponent } from './chat/right-view/friend-details/friend-details.component';
 import { TempChatComponent } from './chat/header-chat-selector/temp-chat/temp-chat.component';
-import { InfoUserComponent } from './chat/header-chat-selector/settings/info-user/info-user.component';
+import { InfoUserComponent } from './left-info/info-user/info-user.component';
 import { DeleteMessageComponent } from './dialog/delete-message/delete-message.component';
 import { ProgressBarComponent } from './chat/progress-bar/progress-bar.component';
 import { SurveyComponent } from './dialog/survey/survey.component';
 import { ChartComponent } from './dialog/chart/chart.component';
-import { InfoChatComponent } from './chat/header-chat-selector/settings/info-chat/info-chat.component';
+import { InfoTypeOptionsComponent } from './left-info/info-type-options/info-type-options.component';
 import { SignupComponent } from './signup/signup.component';
 import { ChatCreationComponent } from './dialog/chat-creation/chat-creation.component';
 import { MobileComponent } from './mobile/mobile.component';
 import { FriendComponent } from './chat/header-chat-selector/create-chat/group-friend/groupFriend.component';
 import { ShareCalendarComponent } from './dialog/share-calendar-list/share-calendar/share-calendar.component';
+import { InfoChatComponent } from './left-info/info-chat/info-chat.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -54,6 +55,7 @@ import { WebcamModule } from 'ngx-webcam';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { LottieModule } from 'ngx-lottie';
 import { ShareCalendarListComponent } from './dialog/share-calendar-list/share-calendar-list.component';
+import { LeaveGroupComponent } from './dialog/leave-group/leave-group.component';
 
 export function playerFactory() {
   return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
@@ -88,13 +90,15 @@ export function playerFactory() {
     ProgressBarComponent,
     SurveyComponent,
     ChartComponent,
-    InfoChatComponent,
+    InfoTypeOptionsComponent,
     SignupComponent,
     ChatCreationComponent,
     MobileComponent,
     FriendComponent,
     ShareCalendarComponent,
     ShareCalendarListComponent,
+    LeaveGroupComponent,
+    InfoChatComponent
   ],
   imports: [
     BrowserModule,

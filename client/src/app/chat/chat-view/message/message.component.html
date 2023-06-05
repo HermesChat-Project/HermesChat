@@ -1,6 +1,6 @@
 <div class="message" (mouseleave)="hideActions()">
   <div class="date" *ngIf="differentDate(index)">
-    <span>{{fullDateView(chatMessage.messages.dateTime)}}</span>
+    <span>{{fullDateView(chatMessage.messages!.dateTime)}}</span>
     <hr>
   </div>
   <div class="message-wrapper">

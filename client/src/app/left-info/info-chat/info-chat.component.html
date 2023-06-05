@@ -1,0 +1,40 @@
+<!-- Show the name of the group/chat, show the image, show if is a group the members, plus at the bottom show two buttons (one to leave, one to report) both red. All the info are in chatSelector.selectedChat  -->
+<div class="container">
+  <div class="header">
+    <div class="title">
+      <p>{{chatSelector.selectedChat?.name}}</p>
+    </div>
+    <div class="close">
+      <mat-icon (click)="closeInfo()">close</mat-icon>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="image">
+      <img src="{{chatSelector.selectedChat?.image}}" alt="image not available">
+    </div>
+    <div class="description" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <p>{{chatSelector.selectedChat?.description}}</p>
+    </div>
+  </div>
+  <div class="members-container" *ngIf="chatSelector.selectedChat?.flagGroup">
+    <div class="members" *ngFor="let member of chatSelector.selectedChat?.users">
+      <div class="image">
+        <img src="{{member.image}}" alt="image not available">
+      </div>
+      <div class="name">
+        <p>{{member.nickname}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <div class="leave" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <button mat-stroked-button color="warn" (click)="leaveGroup()">Leave</button>
+    </div>
+    <div class="report">
+      <button mat-stroked-button color="warn" (click)="report()">Report</button>
+    </div>
+  </div>
+</div>
+

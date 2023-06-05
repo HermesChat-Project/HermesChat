@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
 import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
+import { LeaveGroupComponent } from '../dialog/leave-group/leave-group.component';
 
 
 @Injectable({
@@ -38,7 +39,7 @@ export class ChatSelectorService {
   messageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat
   socketMessageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat from socket (when a new message is received)
 
-  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout -> used to know which dialog to open
+  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout, 7: info chat (not in the header section, ut placed in the same position) -> used to know which dialog to open
   offsetChat: number = 1 //offset for chat list (for retrieving more messages)
   theme: string = "light";
 
@@ -226,6 +227,15 @@ export class ChatSelectorService {
     })
   }
 
+  openLeaveGroupDialog(id:string) {
+    this.dialog.open(LeaveGroupComponent, {
+      panelClass: 'custom-dialog-container'
+    }).afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.leaveGroup(id);
+      }
+    })
+  }
   shareCalendar() {
     if (this.calendarList.length == 0)
       this.getCalendarEvents();
@@ -325,20 +335,21 @@ export class ChatSelectorService {
       next: (response: any) => {
         console.log(response);
         this.chatList = response.body.chats;
+
         this.changeName(response.body.chats);
         for (const chat of this.chatList) {
           if (this.messageList[chat._id] == undefined)
             this.messageList[chat._id] = [];
           if (this.socketMessageList[chat._id] == undefined)
             this.socketMessageList[chat._id] = [];
-          this.progress++;
-          this.waitProgress();
-          this.chatList.sort((a, b) => {
-            let aDate = new Date(a.messages!.dateTime);
-            let bDate = new Date(b.messages!.dateTime);
-            return bDate.getTime() - aDate.getTime();
-          })
         }
+        this.chatList.sort((a, b) => {
+          let aDate = new Date(a.messages!.dateTime);
+          let bDate = new Date(b.messages!.dateTime);
+          return bDate.getTime() - aDate.getTime();
+        })
+        this.progress++;
+        this.waitProgress();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -350,6 +361,7 @@ export class ChatSelectorService {
   }
 
   getChatMessages(body: any, id: string, newMsg: boolean = false) {
+    console.log(this.messageList)
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
@@ -374,12 +386,9 @@ export class ChatSelectorService {
               this.messageList[id] = response.body.messages;
               this.sortChats();
             }
-
-
-
-
             this.messageFeature(newMsg, id);
           }
+
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -523,6 +532,22 @@ export class ChatSelectorService {
           return event.idUser == this.infoUser._id && event.date > new Date();
         })
         this.EventsPerMonth = this.getCalendarEventsByMonth();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+  leaveGroup(id:string = this.selectedChat!._id){
+    this.dataStorage.PostRequestWithHeaders('leaveGroup', {chatId: id}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.chatList = this.chatList.filter((chat: Chat) => {
+          return chat._id != id;
+        })
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -717,7 +742,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://79.24.212.248:8090/socket');
+    this.socket = new WebSocket('wss://10.88.229.127:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;
@@ -797,6 +822,8 @@ export class ChatSelectorService {
       else if (data.type == "CNG") {//create new group
         let chat = new Chat(data.chatId, data.user, true, data.name, data.img, data.description);
         this.chatList.push(chat);
+        this.messageList[data.chatId] = [];
+        this.socketMessageList[data.chatId] = [];
       }
     })
     this.socket.addEventListener("close", () => {
@@ -820,8 +847,8 @@ export class ChatSelectorService {
   //progress bar
   seeMain: boolean = false;
   waitProgress() {
-
-    if (this.progress == 5) {
+    console.log(this.progress);
+    if (this.progress == 6) {
       this.seeMain = true;
     }
   }

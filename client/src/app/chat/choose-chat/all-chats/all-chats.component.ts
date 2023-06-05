@@ -22,7 +22,6 @@ export class AllChatsComponent {
 
 
   ngOnInit() {
-    this.chatSelector.chatList.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime())
     this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
   }
 
@@ -93,6 +92,7 @@ export class AllChatsComponent {
       idChat: selected._id,
       offset: 1,
     }
+    console.log(selected)
 
     this.chatSelector.getChatMessages(body, selected._id);
     // this.chatSelector.getChatMessages(selected);

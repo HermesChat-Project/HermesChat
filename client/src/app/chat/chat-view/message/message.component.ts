@@ -24,7 +24,7 @@ export class MessageComponent implements AfterViewInit {
   constructor(public chatSelector: ChatSelectorService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit(): void {
-    this.text.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
+    this.text?.nativeElement.querySelectorAll("img").forEach((img: HTMLImageElement) => {
       img.addEventListener("click", () => {
         this.chatSelector.src = img.src;
 
@@ -106,9 +106,12 @@ export class MessageComponent implements AfterViewInit {
     return true;
   }
   getNameSender(id: string) {
-    let nickname = this.chatSelector.selectedChat!.users.find((user) => user.idUser == id)?.nickname;
-
-    return nickname;
+    let user = this.chatSelector.selectedChat!.users.find((user) => user.idUser == id)
+    if(user)
+    {
+      return user.nickname;
+    }
+    return "Deleted User :(";
   }
 
   getContent(content: string) {
