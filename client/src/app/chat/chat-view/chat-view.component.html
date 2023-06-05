@@ -8,7 +8,7 @@
       <div id="txtMessage" #textMessage (keydown)="keyAction($event)" [contentEditable]="contentEditable"
         (paste)="pastedMessage($event)">
       </div>
-      <button class="bi " [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}"
+      <button class="bi msg-action" [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}"
         (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
@@ -51,15 +51,18 @@
       <!-- chat Options -->
       <div class="chat-options-list" [ngClass]="{'show-chat-options-list' : chatOptions}">
         <div class="chat-option">
-          <p class="text-chat-option">Informazioni</p>
+          <p class="text-chat-option" (click)="showChatInfo()">Informazioni</p>
         </div>
+        <!-- <div class="chat-option">
+          <p class="text-chat-option" (click)="searchMessage()">Cerca</p>
+        </div> -->
         <div class="chat-option">
-          <p class="text-chat-option">Cerca</p>
+          <p class="text-chat-option" (click)="closeChat()">Chiudi chat</p>
         </div>
-        <div class="chat-option">
+        <!-- <div class="chat-option">
           <p class="text-chat-option">File multimediali</p>
-        </div>
-        <div class="chat-option" (click)="leaveGroup()">
+        </div> -->
+        <div class="chat-option" (click)="leaveGroup()" *ngIf="chatSelector.selectedChat!.flagGroup">
           <p class="text-chat-option" >Esci dal gruppo</p>
         </div>
       </div>

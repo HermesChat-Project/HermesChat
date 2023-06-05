@@ -39,7 +39,7 @@ export class ChatSelectorService {
   messageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat
   socketMessageList: { [key: string]: messageModel[] } = {};//json of message lists for each chat from socket (when a new message is received)
 
-  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout -> used to know which dialog to open
+  user_action: number = -1; //-1 none, 0: info, 2: privacy, 3: graphics, 4: language, 5: theme, 6: logout, 7: info chat (not in the header section, ut placed in the same position) -> used to know which dialog to open
   offsetChat: number = 1 //offset for chat list (for retrieving more messages)
   theme: string = "light";
 
@@ -229,10 +229,7 @@ export class ChatSelectorService {
 
   openLeaveGroupDialog(id:string) {
     this.dialog.open(LeaveGroupComponent, {
-      panelClass: 'custom-dialog-container',
-      width: '40%',
-      minHeight: '50%',
-      maxHeight: '70%',
+      panelClass: 'custom-dialog-container'
     }).afterClosed().subscribe((result: any) => {
       if (result) {
         this.leaveGroup(id);
@@ -544,18 +541,18 @@ export class ChatSelectorService {
     })
   }
 
-  leaveGroup(id:string){
+  leaveGroup(id:string = this.selectedChat!._id){
     this.dataStorage.PostRequestWithHeaders('leaveGroup', {chatId: id}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.getChats();
+        this.chatList = this.chatList.filter((chat: Chat) => {
+          return chat._id != id;
+        })
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
         if (error.status == 401)
           this.logout();
-        else
-          this.getChats();
       }
     })
   }

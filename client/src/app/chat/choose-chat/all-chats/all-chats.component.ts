@@ -92,6 +92,7 @@ export class AllChatsComponent {
       idChat: selected._id,
       offset: 1,
     }
+    console.log(selected)
 
     this.chatSelector.getChatMessages(body, selected._id);
     // this.chatSelector.getChatMessages(selected);

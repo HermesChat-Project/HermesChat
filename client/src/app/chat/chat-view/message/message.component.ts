@@ -106,9 +106,12 @@ export class MessageComponent implements AfterViewInit {
     return true;
   }
   getNameSender(id: string) {
-    let nickname = this.chatSelector.selectedChat!.users.find((user) => user.idUser == id)?.nickname;
-
-    return nickname;
+    let user = this.chatSelector.selectedChat!.users.find((user) => user.idUser == id)
+    if(user)
+    {
+      return user.nickname;
+    }
+    return "Deleted User :(";
   }
 
   getContent(content: string) {

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { ChatSelectorService } from 'src/app/chat/chat.service';
 
 @Component({
-  selector: 'app-info-chat',
-  templateUrl: './info-chat.component.html',
-  styleUrls: ['./info-chat.component.css']
+  selector: 'app-type-options',
+  templateUrl: './info-type-options.component.html',
+  styleUrls: ['./info-type-options.component.css']
 })
-export class InfoChatComponent {
+export class InfoTypeOptionsComponent {
   constructor(public chatSelector:ChatSelectorService) { }
 
   closeInfoUser()

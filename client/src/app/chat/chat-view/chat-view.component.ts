@@ -102,10 +102,20 @@ export class ChatViewComponent {
   toggleChatOptions() {
     this.chatOptions = !this.chatOptions;
   }
+  //#region chat options
 
+  closeChat(){
+    this.chatSelector.selectedChat = null;
+  }
   leaveGroup() {
     this.chatSelector.openLeaveGroupDialog(this.chatSelector.selectedChat!._id);
   }
+
+  showChatInfo() {
+
+  }
+
+  //#endregion
   hideShowChatActions(event: Event) {
     //get the focused element
     let focusedElement = document.activeElement;
