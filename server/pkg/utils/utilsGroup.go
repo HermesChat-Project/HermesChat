@@ -33,9 +33,9 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 		Users        []user   `bson:"users"`
 		Messages     []string `bson:"messages"`
 		CreationDate string   `bson:"creationDate"`
-		FlagGroup    string   `bson:"flagGroup"`
+		FlagGroup    bool   `bson:"flagGroup"`
 		Description  string   `bson:"description"`
-		Visibility   string   `bson:"visibility"`
+		Visibility   bool   `bson:"visibility"`
 		Img          string   `bson:"groupImage"`
 		Name         string   `bson:"groupName"`
 	}
@@ -73,9 +73,8 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	}
 
 	var users []user
-	var messages []string
 	var group grouppo
-	group.Messages = messages
+	group.Messages = []string{}
 	group.CreationDate = time.Now().Format("2019-03-12T15:00:00.000Z")
 	//group.FlagGroup = form.FlagGroup
 	group.Description = form.Description
@@ -121,8 +120,8 @@ func CreateGroupDB(idAdmin string, form models.CreateGroupRequest, c *gin.Contex
 	}
 
 	group.Users = users
-	group.FlagGroup = "true"
-	group.Visibility = "true"
+	group.FlagGroup = true
+	group.Visibility = true
 
 	id, err := collectionChat.InsertOne(c.Request.Context(), group)
 	if err != nil {

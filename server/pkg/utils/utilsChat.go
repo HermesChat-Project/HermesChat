@@ -283,8 +283,13 @@ func GetChats(index string, c *gin.Context) {
 		}
 		ris8.Next(context.Background())
 		ris8.Decode(&result8)
+		 if result8 == nil {
 
-
+			//find one with no options
+			ris10 := collection2.FindOne(c.Request.Context(), bson.M{"_id": idChats})
+			ris10.Decode(&result8)
+			fmt.Println(result8)
+		} 
 		vetChats[i-1] = result8
 
 
