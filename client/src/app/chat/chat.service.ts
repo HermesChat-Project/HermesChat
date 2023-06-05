@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
 import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
+import { LeaveGroupComponent } from '../dialog/leave-group/leave-group.component';
 
 
 @Injectable({
@@ -226,6 +227,18 @@ export class ChatSelectorService {
     })
   }
 
+  openLeaveGroupDialog(id:string) {
+    this.dialog.open(LeaveGroupComponent, {
+      panelClass: 'custom-dialog-container',
+      width: '40%',
+      minHeight: '50%',
+      maxHeight: '70%',
+    }).afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.leaveGroup(id);
+      }
+    })
+  }
   shareCalendar() {
     if (this.calendarList.length == 0)
       this.getCalendarEvents();
@@ -530,6 +543,22 @@ export class ChatSelectorService {
       }
     })
   }
+
+  leaveGroup(id:string){
+    this.dataStorage.PostRequestWithHeaders('leaveGroup', {chatId: id}, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.getChats();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+        else
+          this.getChats();
+      }
+    })
+  }
   sendFriendRequest(user: SearchModel) {
     this.dataStorage.PostRequestWithHeaders('sendFriendRequest', { username: user.nickname }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
@@ -716,7 +745,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://79.40.29.114:8090/socket');
+    this.socket = new WebSocket('wss://10.88.229.127:8090/socket');
     this.socket.addEventListener("open", () => {
       console.log("socket open");
       this.progress++;

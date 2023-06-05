@@ -54,6 +54,7 @@ import { WebcamModule } from 'ngx-webcam';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { LottieModule } from 'ngx-lottie';
 import { ShareCalendarListComponent } from './dialog/share-calendar-list/share-calendar-list.component';
+import { LeaveGroupComponent } from './dialog/leave-group/leave-group.component';
 
 export function playerFactory() {
   return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
@@ -95,6 +96,7 @@ export function playerFactory() {
     FriendComponent,
     ShareCalendarComponent,
     ShareCalendarListComponent,
+    LeaveGroupComponent,
   ],
   imports: [
     BrowserModule,

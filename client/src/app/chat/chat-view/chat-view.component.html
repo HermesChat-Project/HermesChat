@@ -1,14 +1,15 @@
 <div id="selectedChat" (mouseup)="getSelection()">
   <div id="listMessage" #messages (scroll)="scrollMsg($event)">
-    <app-message *ngFor="let messages of chatSelector.messageList[this.chatSelector.selectedChat!._id]; let i = index" [chatMessage]="messages"
-      [index]="i"></app-message>
+    <app-message *ngFor="let messages of chatSelector.messageList[this.chatSelector.selectedChat!._id]; let i = index"
+      [chatMessage]="messages" [index]="i"></app-message>
   </div>
   <div id="messageSend">
     <div id="messageSendText">
       <div id="txtMessage" #textMessage (keydown)="keyAction($event)" [contentEditable]="contentEditable"
         (paste)="pastedMessage($event)">
-        <button class="bi " [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}" (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
       </div>
+      <button class="bi " [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}"
+        (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
         <i class="bi bi-paperclip" id="clip"></i>
       </button>
@@ -25,7 +26,7 @@
       <div class="row-action"
         [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
         <i class="bi bi-bar-chart-fill" (click)="createSurvey()"></i>
-        <label for="txtFile" class="bi bi-file-earmark-fill" ></label>
+        <label for="txtFile" class="bi bi-file-earmark-fill"></label>
         <input type="file" id="txtFile" multiple="multiple" (change)="getFiles($event)">
       </div>
       <div class="row-action"
@@ -36,7 +37,7 @@
       </div>
       <div class="row-action"
         [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-camera-fill"  (click)="showCamera(1)"></i>
+        <i class="bi bi-camera-fill" (click)="showCamera(1)"></i>
         <i class="bi bi-mic-fill" (click)="recordAudio()"></i>
       </div>
     </div>
@@ -45,8 +46,23 @@
         <i class="bi bi-send action" title="Invia"></i>
       </button>
     </div>
-    <div id="messageSendOptions" class="action">
-      <i class="bi bi-three-dots-vertical" title="altre opzioni"></i>
+    <div id="messageSendOptions">
+      <button class="bi bi-three-dots-vertical action" title="altre opzioni" (click)="toggleChatOptions()"></button>
+      <!-- chat Options -->
+      <div class="chat-options-list" [ngClass]="{'show-chat-options-list' : chatOptions}">
+        <div class="chat-option">
+          <p class="text-chat-option">Informazioni</p>
+        </div>
+        <div class="chat-option">
+          <p class="text-chat-option">Cerca</p>
+        </div>
+        <div class="chat-option">
+          <p class="text-chat-option">File multimediali</p>
+        </div>
+        <div class="chat-option" (click)="leaveGroup()">
+          <p class="text-chat-option" >Esci dal gruppo</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -60,9 +76,10 @@
 </div>
 
 <!-- modal -->
-<div class="media_modal" *ngIf="chatSelector.src != ''" [ngClass]="{'show_modal': chatSelector.src != ''}" (click)="closeModal($event)">
+<div class="media_modal" *ngIf="chatSelector.src != ''" [ngClass]="{'show_modal': chatSelector.src != ''}"
+  (click)="closeModal($event)">
   <div (click)="$event.stopPropagation()">
-    <div class="content_modal" >
+    <div class="content_modal">
       <div class="body_modal">
         <img [src]="chatSelector.src" alt="">
       </div>
@@ -72,3 +89,5 @@
 
 <!-- camera component -->
 <app-camera *ngIf="chatSelector.flagCamera > 0" (onMediaEvent)="getMedia($event)"></app-camera>
+
+
