@@ -92,7 +92,7 @@ p {
 
 .right-click-option {
   display: flex;
-  width: fit-content;
+  width: max-content;
   justify-content: space-between;
   flex-direction: column;
   background-color: white;

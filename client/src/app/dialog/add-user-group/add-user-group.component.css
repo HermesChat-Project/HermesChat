@@ -80,7 +80,6 @@
 .add-friend{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
   height: 40px;
@@ -110,4 +109,8 @@
   padding: 0px;
   font-size: 13pt;
   font-weight: bold;
+}
+
+.add-friend-badge{
+  margin-left: auto;
 }

@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "https://192.168.1.43:8090/";
+  private REST_API_SERVER: string = "https://api.hermeschat.it:8090/";
   constructor(private httpClient: HttpClient) { }
   options = {
     observe : 'response' as 'response',
@@ -37,7 +37,9 @@ export class DataStorageService {
     return this.httpClient.post(this.REST_API_SERVER + endpoint, body, options);
   }
 
-
+  public PatchRequest(endpoint: string, body: any, options: any = this.options) {
+    return this.httpClient.patch(this.REST_API_SERVER + endpoint, body, options)
+  }
 
   public PutRequest(endpoint: string, body: any) {
     return this.httpClient.put(this.REST_API_SERVER + endpoint, body)

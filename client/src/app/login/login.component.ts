@@ -66,7 +66,7 @@ export class LoginComponent {
     this.pwd.nativeElement.type = this.showPassword ? 'text' : 'password';
   }
   keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Enter' )
+    if (event.key == 'Enter' && this.loginService.onEndLogin )
       this.login(event);
   }
   onPaste(event: ClipboardEvent){

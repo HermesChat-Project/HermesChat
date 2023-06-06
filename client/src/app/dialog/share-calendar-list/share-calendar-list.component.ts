@@ -11,16 +11,16 @@ import { ChatSelectorService } from 'src/app/chat/chat.service';
 export class ShareCalendarListComponent {
   constructor(public chatSelector: ChatSelectorService, @Inject(MAT_DIALOG_DATA) public cal_list: CalendarModel[]) { }
   check: boolean = false;
-  calendarSharingList: CalendarModel[] = [];
+  calendarSharingList: string[] = [];
 
 
   checkCalendar(event: { calendar: CalendarModel; check: boolean; }) {
     this.check = event.check;
     if (event.check) {
-      this.calendarSharingList.push(event.calendar);
+      this.calendarSharingList.push(event.calendar._id);
     }
     else {
-      this.calendarSharingList.splice(this.calendarSharingList.indexOf(event.calendar), 1);
+      this.calendarSharingList.splice(this.calendarSharingList.indexOf(event.calendar._id), 1);
     }
 
   }

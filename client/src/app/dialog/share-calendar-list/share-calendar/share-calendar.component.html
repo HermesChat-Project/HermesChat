@@ -1,6 +1,8 @@
 <div class="row cal" (click)="checkCalendar()">
-  <div class="col-sm-9" [innerText]="calendar.title">
+  <div class="col-sm-1" >
+    <div class="cal-shared-col" [style]="'background-color:'+calendar.color+';'"></div>
   </div>
+  <div class="col-sm-8 cal-shared-text" [innerText]="calendar.title"></div>
   <div class="col-sm-3 check">
     <ng-lottie *ngIf="check" [options]="options" width="40px" height="40px" > </ng-lottie>
   </div>

@@ -49,9 +49,9 @@
 </div>
 
 <div class="right-click-option" #rcOption>
-  <div class="member-remove" *ngIf="selected_member?.idUser != chatSelector.infoUser._id">
+  <div class="member-remove" *ngIf="selected_member?.idUser != chatSelector.infoUser._id" (click)="removeUser(selected_member!)">
     <p>Elimina utente</p>
-    <mat-icon (click)="removeUser(selected_member!)">remove_circle</mat-icon>
+    <mat-icon >remove_circle</mat-icon>
   </div>
   <div class="member-admin" *ngIf="selected_member?.idUser != chatSelector.infoUser._id && checkAdmin()" (click)="changeRole(selected_member!)">
     <p>Cambia ruolo</p>
