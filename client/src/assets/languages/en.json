@@ -6,8 +6,8 @@
     "new-to-hermes" : "New to HermesChat?",
     "username" : "Username",
     "password" : "Password",
-    "missing-fields" : "Missing fields",
-    "wrong-credentials" : "Wrong credentials"
+    "wrong-credentials" : "Wrong credentials",
+    "otp-message" : "Enter the code sent to your email"
   },
   "signup":{
     "signup" : "Sign Up",
@@ -20,7 +20,8 @@
     "passwords-dont-match" : "Passwords don't match",
     "email-already-exists" : "Email already exists",
     "name": "Name",
-    "last-name": "Last Name"
+    "last-name": "Last Name",
+    "otp-message" : "Enter the code sent to your email"
   },
   "all-chats": "All Chats",
   "friends": "Friends",

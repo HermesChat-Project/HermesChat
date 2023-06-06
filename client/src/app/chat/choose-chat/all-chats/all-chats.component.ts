@@ -5,6 +5,8 @@ import { userModel } from 'model/user.model';
 import { ChatSelectorService } from '../../chat.service';
 import { ViewEncapsulation } from '@angular/core';
 import { Chat } from 'model/chat.model';
+import { TranslationsService } from 'src/app/shared/translations.service';
+
 
 @Component({
   selector: 'app-all-chats',
@@ -16,17 +18,11 @@ export class AllChatsComponent {
   @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
-
-
-
-
-
-  constructor(public chatSelector: ChatSelectorService){}
+  constructor(public chatSelector: ChatSelectorService, public translationService: TranslationsService){}
 
 
   ngOnInit() {
-    this.chatSelector.chatExampleList.sort((a, b) => this.getLastMessageTime(b.last).getTime() - this.getLastMessageTime(a.last).getTime())
-    this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
+    this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
   }
 
   DateAdjustment(date: Date) {
@@ -39,17 +35,21 @@ export class AllChatsComponent {
     if (dateMessage != dateNow) {
       let diff = Math.abs(today.getTime() - date.getTime());
       // console.log(diff)
-      let diffDays = Math.floor(diff / (1000 * 3600 * 24));
+      let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      if(!isNaN(diffDays))
+      {
+        if (diffDays > 7) {
+          return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        }
+        else {
+          if (diffDays == 1)
+            return 'Ieri'
+          else
+            return diffDays + " giorni fa";
+        }
+      }
+      return '';
 
-      if (diffDays > 7) {
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-      }
-      else {
-        if (diffDays == 1)
-          return 'Ieri'
-        else
-          return diffDays + " giorni fa";
-      }
     }
     else {
       if (hour.length < 2)
@@ -62,21 +62,28 @@ export class AllChatsComponent {
 
   showChats() {
     if (this.txtSearchChat.length < 3) {
-      this.chatSelector.PersonalListSearch = this.chatSelector.chatExampleList;
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
       this.chatSelector.OtherListSerach = [];
     }
     else {
-      this.chatSelector.getSerachUsers(this.txtSearchChat)
+      this.chatSelector.getSearchUsers(this.txtSearchChat)
     }
   }
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
+  getLastMessage(chat: Chat){
+    let lastMessage: string = chat.messages?.content
+    if(this.chatSelector.socketMessageList[chat._id]?.length > 0)
+      lastMessage = this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id][this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id].length - 1].messages.content;
+    if(chat.messages?.type == "chart")
+      return "&#128200; " + (this.translationService.languageWords["chart"] || "chart");
+    return lastMessage;
+  }
 
 
-
-  getLastMessageTime(last: string): Date {
-    return new Date(last);
+  getLastMessageTime(message: any): Date {
+    return new Date(message.dateTime);
   }
 
   showEntireChat(selected : Chat){
@@ -85,6 +92,7 @@ export class AllChatsComponent {
       idChat: selected._id,
       offset: 1,
     }
+    console.log(selected)
 
     this.chatSelector.getChatMessages(body, selected._id);
     // this.chatSelector.getChatMessages(selected);

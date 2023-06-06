@@ -26,6 +26,13 @@ export class ChatViewComponent {
   serializer: XMLSerializer = new XMLSerializer();
   serializedStr: string = '';
 
+  contentEditable: boolean = true;
+  audioplay: boolean = false;
+
+  audioRecorder: MediaRecorder | undefined = undefined;
+
+  chatOptions: boolean = false;
+
   //for the css style of the buttons
   isBold: boolean = false;
   isItalic: boolean = false;
@@ -92,6 +99,23 @@ export class ChatViewComponent {
   toggleShowChatActions() {
     this.showChatActions = !this.showChatActions;
   }
+  toggleChatOptions() {
+    this.chatOptions = !this.chatOptions;
+  }
+  //#region chat options
+
+  closeChat(){
+    this.chatSelector.selectedChat = null;
+  }
+  leaveGroup() {
+    this.chatSelector.openLeaveGroupDialog(this.chatSelector.selectedChat!._id);
+  }
+
+  showChatInfo() {
+
+  }
+
+  //#endregion
   hideShowChatActions(event: Event) {
     //get the focused element
     let focusedElement = document.activeElement;
@@ -147,71 +171,86 @@ export class ChatViewComponent {
     this.chatSelector.src = '';
   }
 
+  toggleAudioPlay() {
+    this.audioplay = !this.audioplay;
+    if (this.audioplay)
+      this.audioRecorder?.resume();
+    else
+      this.audioRecorder?.pause();
+  }
+
   recordAudio() {
     let constraints = { audio: true };
     navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      this.contentEditable = false;
       this.audioRecord = true;
-      let mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.start();
+      this.audioplay = true;
+      this.audioRecorder = new MediaRecorder(stream);
+      this.audioRecorder.start();
       let audioChunks: Blob[] = [];
-       mediaRecorder.addEventListener("dataavailable", (event: any) => {
+      this.audioRecorder.addEventListener("dataavailable", (event: any) => {
+        stream.getTracks().forEach(track => track.stop());
         console.log(event.data);
         audioChunks.push(event.data);
         let audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
         let audioUrl = URL.createObjectURL(audioBlob);
+        console.log(audioUrl);
         let file = new File([audioBlob], "audio.mp3", { type: 'audio/mp3' });
         console.log(file);
         let formData = new FormData();
         formData.append('file', file);
         formData.append('chatId', this.chatSelector.selectedChat!._id);
-        this.chatSelector.sendFile(formData).then((file: any) => {
-          this.chatSelector.messageList[this.chatSelector.selectedChat!._id].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: this.chatSelector.infoUser._id, type: "audio", options: { audio: file } }));
-        })
-        .catch((err: HttpErrorResponse) => {
-          console.log(err.message);
-        });
+        this.chatSelector.sendFile(formData)
+          .then((filename: any) => {
+            console.log(filename);
+            this.contentEditable = true;
+            this.audioRecord = false;
+            this.chatSelector.messageList[this.chatSelector.selectedChat!._id].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: this.chatSelector.infoUser._id, type: "audio", options: {audio: audioUrl} }));
+
+            this.chatSelector.sendMessage("", "audio", { audio: filename }, false);
+          })
+          .catch((err: HttpErrorResponse) => {
+            console.log(err.message);
+            this.contentEditable = true;
+            this.audioRecord = false;
+          });
 
       });
-      mediaRecorder.addEventListener("stop", () => {
-        let audioBlob = new Blob(audioChunks);
-        let audioUrl = URL.createObjectURL(audioBlob);
-        let audio = new Audio(audioUrl);
-      });
-      setTimeout(() => {
-        console.log("stop");
-        this.audioRecord = false;
-        stream.getTracks().forEach(track => track.stop());
-        mediaRecorder.stop();
-      }, 3000);
+
     })
       .catch((err: Error) => {
         console.log(err.message);
       });
   }
   sendMsg() {
-    let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
-
-    this.messageSent = this.textMessage.nativeElement.innerHTML;
-    //delete the first <br> tags
-    console.log(this.messageSent);
-    while (this.messageSent.indexOf('<br>') == 0) {
-      this.messageSent = this.messageSent.replace('<br>', '');
+    if (this.audioRecord) {
+      this.audioRecorder?.stop();
     }
-    //delete the last <br> tags
-    while (this.messageSent.lastIndexOf('<br>') == this.messageSent.length - 4 && this.messageSent.length > 4) {
-      this.messageSent = this.messageSent.substring(0, this.messageSent.length - 4);
-    }
+    else {
+      let imgTags = this.textMessage.nativeElement.getElementsByTagName('img');
 
-    if (this.messageSent.length > 0) {
-      //for every img tag add a div tag with the class img-container
-      this.chatSelector.sendMessage(this.messageSent, "text");
-      this.fontStyling.nativeElement.style.display = 'none';
-      this.textMessage.nativeElement.innerHTML = '';
-      this.textMessage.nativeElement.focus();
-      this.chatSelector.sortChats();
-      //go to the bottom of the chat
-      // this.chatSelector.bottomScroll();
-      this.fontStyling.nativeElement.style.display = 'none';
+      this.messageSent = this.textMessage.nativeElement.innerHTML;
+      //delete the first <br> tags
+      console.log(this.messageSent);
+      while (this.messageSent.indexOf('<br>') == 0) {
+        this.messageSent = this.messageSent.replace('<br>', '');
+      }
+      //delete the last <br> tags
+      while (this.messageSent.lastIndexOf('<br>') == this.messageSent.length - 4 && this.messageSent.length > 4) {
+        this.messageSent = this.messageSent.substring(0, this.messageSent.length - 4);
+      }
+
+      if (this.messageSent.length > 0) {
+        //for every img tag add a div tag with the class img-container
+        this.chatSelector.sendMessage(this.messageSent, "text");
+        this.fontStyling.nativeElement.style.display = 'none';
+        this.textMessage.nativeElement.innerHTML = '';
+        this.textMessage.nativeElement.focus();
+        this.chatSelector.sortChats();
+        //go to the bottom of the chat
+        // this.chatSelector.bottomScroll();
+        this.fontStyling.nativeElement.style.display = 'none';
+      }
     }
   }
   getFiles(event: any) {
@@ -223,8 +262,16 @@ export class ChatViewComponent {
       let formData = new FormData();
       formData.append('file', file);
       formData.append('chatId', this.chatSelector.selectedChat!._id);
-      this.chatSelector.sendFile(formData);
+      this.chatSelector.sendFile(formData).then((file: any) => {
+        this.chatSelector.getFile(file, this.chatSelector.selectedChat!._id);
+      }).catch((err: HttpErrorResponse) => {
+        console.log(err.message);
+      });
     }
+  }
+
+  shareCalendar() {
+    this.chatSelector.shareCalendar();
   }
   getImages(event: any) {
     //get the images taken from the input file and convert them to base64

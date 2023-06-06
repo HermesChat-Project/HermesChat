@@ -1,6 +1,6 @@
 <div class="message" (mouseleave)="hideActions()">
   <div class="date" *ngIf="differentDate(index)">
-    <span>{{fullDateView(chatMessage.messages.dateTime)}}</span>
+    <span>{{fullDateView(chatMessage.messages!.dateTime)}}</span>
     <hr>
   </div>
   <div class="message-wrapper">
@@ -14,8 +14,8 @@
       </div>
       <div class="message-get survey-msg" *ngIf="chatMessage.messages.type == 'survey'">
         <div #text class="survey">
-          <h3 class="survey-title">
-            {{chatMessage.messages.content}}
+          <h3 class="survey-title" [innerText]="chatMessage.messages.content">
+
           </h3>
           <form (submit)="noSubmit()"><!-- improve with checkbox... -->
             <div class="survey-option-list" *ngFor="let option of chatMessage.messages.options.options">
@@ -43,7 +43,7 @@
       <div class="message-get audio-msg" *ngIf="chatMessage.messages.type == 'audio'">
         <div #text class="audio">
           <audio controls>
-            <source [src]="sanitize(chatMessage.messages.options.audio)" type="audio/mpeg">
+            <source [src]="sanitize(chatMessage.messages.options.audio)" type="audio/mp3">
           </audio>
         </div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>

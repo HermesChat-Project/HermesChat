@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 
 	"chat/pkg/models"
@@ -29,12 +31,47 @@ func Login(c *gin.Context) {
 
 }
 
+// Logout	godoc
+// @Summary 			Logout utente
+// @Description 		Effettua il logout di un utente e cancella il cookie http-only
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    401 {object} string
+// @Router 		        /logout [post]
+func Logout(c *gin.Context) {
+	utils.DeleteToken(c)
+}
+
+// GetVersion	godoc
+// @Summary 			Ottieni versione
+// @Description 		Restituisce la versione del server in modo da poterla confrontare con quella del client
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Router 		        /getVersion [get]
+func GetVersion(c *gin.Context) {
+	c.JSON(200, gin.H{"version": "1.0.0"})
+}
+
+// CheckToken	godoc
+// @Summary 			Controlla token
+// @Description 		Controlla se il token è valido oppure no, così il client sa se l'utente è loggato o no
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    401 {object} string
+// @Router 		        /checkToken [get]
+func CheckToken(c *gin.Context) {
+	fmt.Println("CheckToken")
+	utils.CheckToken(c)
+}
 // Signup	godoc
 // @Summary 			Registrazione di un utente
 // @Description 		Effettua la registrazione di un utente e crea un codice OTP che verrà inviato via email
 // @Param 			    username formData string true "Username dell'utente"
 // @Param 			    password formData string true "Password dell'utente"
 // @Param 			    email formData string true "Email dell'utente"
+// @Param 			    name formData string true "Nome dell'utente"
+// @Param 			    surname formData string true "Cognome dell'utente"
+// @Param 			    lang formData string true "Lingua dell'utente"
 // @Produce 		    json
 // @Success 		    200 {object} string
 // @Failure 		    400 {object} string
@@ -133,10 +170,10 @@ func GetFiles (c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println(form)
 	//get index from token
 	index, _ := c.Get("index")
-
-	utils.DownloadFile(index.(string), form.Urls, form.ChatId, c)
+	utils.DownloadFile(index.(string), form.Url, form.ChatId, c)
 }
 
 
@@ -159,6 +196,159 @@ func CreateGroup (c *gin.Context) {
 		return
 	}
 	index, _ := c.Get("index")
-
 	utils.CreateGroupDB(index.(string), form, c)
+}
+
+//AddUserToGroup	godoc
+// @Summary 			Aggiungi utente ad un gruppo
+// @Description 		Aggiunge un o più utenti ad un gruppo
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    users formData []string true "Id dei membri da aggiungere al gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /addUserToGroup [post]
+
+func AddUserToGroup(c *gin.Context){
+	var form models.AddUserToGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.AddUserToGroupDB(index.(string), form, c)
+}
+
+//ChangeRoleGroup	godoc
+// @Summary 			Cambia il ruolo di un utente in un gruppo
+// @Description 		Cambia il ruolo di un utente in un gruppo se si è admin
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    user formData string true "Id dell'utente a cui cambiare il ruolo"
+// @Param 			    role formData string true "Ruolo da assegnare all'utente (admin o normal)"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /changeRoleGroup [post]
+
+func ChangeRoleGroup (c *gin.Context){
+	var form models.ChangeRoleGroup;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.ChangeRoleGroupDB(index.(string), form, c)
+}
+
+//RemoveUserFromGroup	godoc
+// @Summary 			Rimuovi utente da un gruppo
+// @Description 		Rimuove un utente da un gruppo passando l'id del gruppo e l'id dell'utente da rimuovere (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    userId formData string true "Id dell'utente da rimuovere"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /removeUserFromGroup [post]
+func RemoveUserFromGroup (c *gin.Context){
+	var form models.RemoveUserFromGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.RemoveUserFromGroupDB(index.(string), form, c)
+}
+
+//RemoveFriend	godoc
+// @Summary 			Rimuovi amico
+// @Description 		Rimuove un amico passando l'id dell'utente da rimuovere, tuttavia le chat non vengono eliminate
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    userId formData string true "Id dell'amico da rimuovere"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /removeFriend [post]
+func RemoveFriend (c *gin.Context){
+	var form models.RemoveFriend;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.RemoveFriendDB(index.(string), form.UserId, c)
+}
+
+//LeaveGroup	godoc
+// @Summary 			Abbandona gruppo
+// @Description 		Abbandona un gruppo passando l'id del gruppo
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /leaveGroup [post]
+func LeaveGroup(c *gin.Context){
+	var form models.LeaveGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.LeaveGroupDB(index.(string), form.ChatId, c)
+}
+
+//DeleteGroup	godoc
+// @Summary 			Elimina gruppo
+// @Description 		Elimina un gruppo passando l'id del gruppo (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /deleteGroup [delete]
+func DeleteGroup (c *gin.Context){
+	var form models.DeleteGroupRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.DeleteGroupDB(index.(string), form.ChatId, c)
+}
+
+//ChangeGroupInfo	godoc
+// @Summary 			Cambia info gruppo
+// @Description 		Cambia info di un gruppo passando l'id del gruppo e i nuovi dati (se si è admin)
+// @Param 			    index formData string true "Indice dell'utente loggato"
+// @Param 			    chatId formData string true "Id del gruppo"
+// @Param 			    name formData string true "Nuovo nome del gruppo"
+// @Param 			    description formData string true "Nuova descrizione del gruppo"
+// @Param 			    img formData file true "Nuova immagine del gruppo"
+// @Produce 		    json
+// @Success 		    200 {object} string
+// @Failure 		    400 {object} string
+// @Failure 		    401 {object} string
+// @Failure 		    500 {object} string
+// @Router 		        /changeGroupInfo [post]
+func ChangeGroupInfo (c *gin.Context){
+	var form models.ChangeGroupInfoRequest;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.ChangeGroupInfoDB(index.(string), form, c)
 }

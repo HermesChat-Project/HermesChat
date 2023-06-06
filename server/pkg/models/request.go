@@ -1,5 +1,6 @@
 package models
 
+
 type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -41,10 +42,11 @@ type AddCalendarEvent struct {
 	Date string `json:"date" binding:"required"`
 	Type string `json:"type" binding:"required"`
 	IdUser string `json:"idUser" binding:"required"`
-	Notify string `json:"notify" binding:"required"`
+	Notify bool `json:"notify" binding:"required"`
 	NotifyTime string `json:"notifyTime" binding:"required"`
 	Color string `json:"color" binding:"required"`
 	IdChats []string `json:"idChats"`
+	IdCalendar string `json:"idCalendar"`
 }
 
 type DeleteCalendarEvent struct {
@@ -78,6 +80,8 @@ type CreateChat struct {
 	IdUser string `json:"idUser" binding:"required"`
 	FirstImg string `json:"img" binding:"required"`
 	SecondImg string `json:"friendImg" binding:"required"`
+	FirstNickname string `json:"nickname" binding:"required"`
+	SecondNickname string `json:"friendNickname" binding:"required"`
 }
 
 type CreateGroup struct {
@@ -91,7 +95,7 @@ type GetMessages struct{
 }
 
 type CheckOtp struct {
-	ID string `json:"id" binding:"required"`
+	Nickname string `json:"nickname" binding:"required"`
 	Otp string `json:"otp" binding:"required"`
 }
 
@@ -118,11 +122,48 @@ type Info struct {
 }
 
 type GetFilesRequest struct {
-	Urls []string `json:"urls"`
-	ChatId []string `json:"chatId"`
+	Url string `json:"urls"`
+	ChatId string `json:"chatId"`
 }
 
 type CreateGroupRequest struct {
 	Name string `json:"name"`
 	Users []string `json:"users"`
+	Description string `json:"description"`
+	Img string `json:"img"`
+}
+
+type AddUserToGroupRequest struct {
+	ChatId string `json:"chatId"`
+	Users []string `json:"users"`
+}
+
+type ChangeRoleGroup struct {
+	ChatId string `json:"chatId"`
+	User string `json:"user"`
+	Role string `json:"role"`
+}
+
+type RemoveUserFromGroupRequest struct {
+	ChatId string `json:"chatId"`
+	UserId string `json:"userId"`
+}
+
+type RemoveFriend struct {
+	UserId string `json:"userId"`
+}
+
+type LeaveGroupRequest struct {
+	ChatId string `json:"chatId"`
+}
+
+type DeleteGroupRequest struct {
+	ChatId string `json:"chatId"`
+}
+
+type ChangeGroupInfoRequest struct {
+	ChatId string `json:"chatId"`
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Img string `json:"img"`
 }

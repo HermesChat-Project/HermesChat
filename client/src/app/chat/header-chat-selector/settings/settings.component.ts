@@ -11,7 +11,7 @@ export class SettingsComponent {
 
 
   constructor(private headerService: HeaderService, public chatSelector:ChatSelectorService) { }
-  user_action: number = -1; //-1 none, 0: info, 1: privacy, 2: chat, 3: language, 4: logout
+
 
   closeSettings()
   {

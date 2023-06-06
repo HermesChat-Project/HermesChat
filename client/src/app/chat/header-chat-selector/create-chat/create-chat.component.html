@@ -22,7 +22,8 @@
     </div>
   </div>
   <div class="single-chat-creation" *ngIf="headerService.chatCreationType == 1">
-    <div class="row" *ngFor="let friend of chatSelectorService.friendList" (click)="createChat(friend)">
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList"
+      (click)="createChat(friend)">
       <div class="col-sm-3">
         <div class="img">
           <img [src]="friend.image" class="img-fluid">
@@ -36,17 +37,31 @@
     </div>
   </div>
   <div class="group-creation" *ngIf="headerService.chatCreationType == 2">
-    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList" (click)="checkFriend(friend)">
-      <div class="col-sm-3">
-        <div class="img">
-          <img [src]="friend.image" class="img-fluid">
+    <div class="group-info">
+      <div class="group-name">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="txtGroupName" placeholder="Nome" [(ngModel)]="txtGroupName"
+            [ngModelOptions]="{standalone: true}">
+          <label for="txtGroupName">Nome del gruppo</label>
         </div>
       </div>
-      <div class="col-sm-9">
-        <div class="friendName">
-          <h5 class="friend-name">{{friend.nickname}}</h5>
+      <div class="group-desc">
+        <div class="form-floating">
+          <textarea class="form-control" placeholder="Leave a comment here" id="txtGroupDesc" style="height: 100px"
+            [(ngModel)]="txtGroupDesc" [ngModelOptions]="{standalone: true}"></textarea>
+          <label for="txtGroupDesc">Descrizione del gruppo</label>
         </div>
       </div>
+      <div class="group-image">
+        <div class="input-group mb-3">
+          <input type="file" class="form-control" id="inputGroupFile02" (change)="getImg($event)">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" (click)="createGroup()">Crea gruppo</button>
+    </div>
+
+    <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">
+        <app-friend [friend]="friend" (checkFriendEvent)="updatePossibleUserArray($event)"></app-friend>
     </div>
 
   </div>

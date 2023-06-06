@@ -15,8 +15,11 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/socket", controllers.SocketConnection) 
 	router.GET("/search", controllers.SearchUsers) 
+	router.GET("/getVersion", controllers.GetVersion)
 
 	router.POST("/login", controllers.Login) 
+	router.POST("/logout", controllers.Logout)
+	router.GET("/checkToken", controllers.CheckToken)
 	router.POST("/signup", controllers.SignUp) 
 	router.POST("/checkOtp", controllers.CheckOtp) 
 	router.POST("/getInfoUser", controllers.GetInfo) 
@@ -30,6 +33,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/acceptFriend", controllers.AcceptFriendRequest) 
 	router.POST("/declineFriend", controllers.DeclineFriendRequest) 
 	router.POST("/blockUser", controllers.BlockUser) 
+	router.POST("/removeFriend", controllers.RemoveFriend)
 
 	router.POST("/getCalendarEvents", controllers.GetCalendarEvents); 
 	router.POST("/addCalendarEvent", controllers.AddCalendarEvent); 
@@ -45,11 +49,12 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/getFiles", controllers.GetFiles)
 
 	router.POST("/createGroup", controllers.CreateGroup)
-	/*
-	router.POST("/removeFriend", controllers.RemoveFriend)
 	router.POST("/addUserToGroup", controllers.AddUserToGroup)
+	router.POST("/changeRole", controllers.ChangeRoleGroup)
 	router.POST("/removeUserFromGroup", controllers.RemoveUserFromGroup)
-	*/
+	router.POST("/leaveGroup", controllers.LeaveGroup)
+	router.DELETE("/deleteGroup", controllers.DeleteGroup)
+	router.POST("/changeGroupInfo", controllers.ChangeGroupInfo)
 }
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -65,7 +70,7 @@ func CORSMiddleware() gin.HandlerFunc {
         c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
         c.Writer.Header().Set("Access-Control-Allow-Headers",
             "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Set-Cookie, Cookie") // Allow all headers
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH") // Allow all these methods
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE") // Allow all these methods
 		c.Writer.Header().Set("Access-Control-Expose-Headers", "Set-Cookie, Cookie, Authorization")
 
         if c.Request.Method == "OPTIONS" {

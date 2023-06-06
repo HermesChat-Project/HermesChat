@@ -1,14 +1,15 @@
-<div class="row" id="wrapper" (keydown)="keyEvent($event)">
+<div class="row" id="wrapper" (keydown)="keyEvent($event)" *ngIf="loginService.loginSuccess">
   <div class="row">
     <div class="col-md-12">
       <p class="title">HermesChat</p>
     </div>
   </div>
-  <div class="row sign-in" >
+  <div class="row sign-in">
     <!-- textbox email -->
     <div class="col-md-12 center">
       <div class="form-floating" id="form_email">
-        <input type="text" class="form-control" id="txtUsername" placeholder="Username" [(ngModel)]="email" name="username">
+        <input type="text" class="form-control" id="txtUsername" placeholder="Username" [(ngModel)]="email"
+          name="username">
         <label for="txtUsername">{{loginWords["username"]}}</label>
       </div>
     </div>
@@ -17,26 +18,59 @@
       <div class="form-floating">
         <input type="password" #pwd class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
         <label for="password">{{loginWords["password"]}}</label>
-        <i class="bi" [ngClass]="{'bi-eye' : !showPassword, 'bi-eye-slash' : showPassword}" id="showPwd" (click)="changeClass()"></i>
+        <i class="bi" [ngClass]="{'bi-eye' : !showPassword, 'bi-eye-slash' : showPassword}" id="showPwd"
+          (click)="changeClass()"></i>
       </div>
     </div>
     <!-- actions -->
     <div class="col-md-12">
       <div class="form-group d-flex justify-content-between">
-        <p class="errors" #errors [ngStyle]="{'opacity': loginService.loginSuccess ? '0' : '1'}">{{loginWords["wrong-credentials"]}}</p>
+        <p class="errors" #errors [ngStyle]="{'opacity': loginService.wrongCredentials ? '1' : '0'}">
+          {{loginWords["wrong-credentials"]}}</p>
         <a href="#" id="pwd_forgotten">{{loginWords["forgot-password"]}}</a>
       </div>
     </div>
     <!-- button login -->
     <div class="col-md-12 d-flex center">
       <div class="form-group d-flex center" id="login_btn">
-        <button type="button" class="btn btn-primary btn-block login-button" (click)="login()">{{loginWords["sign-in"]}}</button>
+        <button type="button" class="btn btn-primary btn-block login-button"
+          (click)="login($event)">{{loginWords["sign-in"]}}</button>
       </div>
     </div>
     <!-- button register -->
     <div class="col-md-12" id="register">
       <div class="form-group">
         <p>{{loginWords["new-to-hermes"]}} <a [routerLink]="['/signup']">{{loginWords["sign-up"]}}</a></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="otp" *ngIf="!loginService.loginSuccess">
+
+  <div class="row" id="wrapper">
+    <div class="row sign-in">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="title">HermesChat</h3>
+          <p class="text">{{loginWords["otp-message"]}}</p>
+        </div>
+      </div>
+      <!-- textbox email -->
+      <div class="col-md-12 center opt-container">
+        <div class="form-floating">
+          <!--6 opt item (textbox) that accept only 1 character-->
+          <input type="text" class="form-control opt-item" id="opt1" maxlength="1" placeholder="1" (keyup)="keyEventOtp($event)" (paste)="onPaste($event)"/>
+          <input type="text" class="form-control  opt-item" id="opt2" maxlength="1" placeholder="2" (keyup)="keyEventOtp($event)"/>
+          <input type="text" class="form-control opt-item" id="opt3" maxlength="1" placeholder="3" (keyup)="keyEventOtp($event)"/>
+          <input type="text" class="form-control opt-item" id="opt4" maxlength="1" placeholder="4" (keyup)="keyEventOtp($event)"/>
+          <input type="text" class="form-control opt-item" id="opt5" maxlength="1" placeholder="5" (keyup)="keyEventOtp($event)"/>
+          <input type="text" class="form-control opt-item" id="opt6" maxlength="1" placeholder="6" (keyup)="keyEventOtp($event)"/>
+        </div>
+        <div class="center">
+          <button class="btn btn-primary" id="btnSubmit" #btnSubmit (click)="getOtp()">Verifica Codice</button>
+        </div>
       </div>
     </div>
   </div>

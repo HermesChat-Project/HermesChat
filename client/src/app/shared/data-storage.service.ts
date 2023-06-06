@@ -6,15 +6,26 @@ import { HttpClient } from "@angular/common/http"
 })
 export class DataStorageService {
 
-  private REST_API_SERVER: string = "https://api.hermeschat.it:8090/";
+  private REST_API_SERVER: string = "https://10.88.229.127:8090/";
   constructor(private httpClient: HttpClient) { }
+  options = {
+    observe : 'response' as 'response',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true
+  }
 
-  public getRequest(endpoint: string, options: any) {
+
+  public getRequest(endpoint: string, options: any = {
+    observe : 'response' as 'response',
+    withCredentials: true
+  }) {
     return this.httpClient.get(this.REST_API_SERVER + endpoint, options)
   }
 
-  public DeleteRequest(endpoint: string) {
-    return this.httpClient.delete(this.REST_API_SERVER + endpoint)
+  public DeleteRequest(endpoint: string, options: any = this.options) {
+    return this.httpClient.delete(this.REST_API_SERVER + endpoint, options)
   }
 
   public PostRequest(endpoint: string, body: FormData) {

@@ -53,4 +53,5 @@
 </div>
 
 <app-info-user class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 0, 'hide_user_action' : chatSelector.user_action != 0}" *ngIf="chatSelector.infoUser"></app-info-user>
-<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 2, 'hide_user_action' : chatSelector.user_action != 2}"></app-info-chat>
+<app-info-type-options class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 2, 'hide_user_action' : chatSelector.user_action != 2}"></app-info-type-options>
+<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 7, 'hide_user_action' : chatSelector.user_action != 2}"></app-info-chat>

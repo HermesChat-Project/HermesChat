@@ -12,29 +12,99 @@ import { ChatCreationComponent } from 'src/app/dialog/chat-creation/chat-creatio
 })
 export class CreateChatComponent {
 
-  constructor(public headerService : HeaderService, public chatSelectorService:ChatSelectorService, private dialog: MatDialog) { }
+  constructor(public headerService: HeaderService, public chatSelectorService: ChatSelectorService, private dialog: MatDialog) { }
   closeCreateChat() {
     this.headerService.generalClosing();
   }
 
-  changeSelection(type : number) {
+  possibleUser: string[] = [];
+
+  txtGroupDesc: string = '';
+  txtGroupName: string = '';
+  imgGroup: File | null = null;
+  base64Img: string = '';
+
+  changeSelection(type: number) {
     console.log(type);
     this.headerService.chatCreationType = type;
   }
 
-  checkFriend(friend: FriendModel){
 
+
+  updatePossibleUserArray(event: { friend: FriendModel, check: boolean }) {
+    if (event.check) {
+      this.possibleUser.push(event.friend.id);
+    }
+    else {
+      this.possibleUser = this.possibleUser.filter((id) => {
+        return id != event.friend.nickname;
+      })
+    }
   }
 
-  createChat(friend:FriendModel){
-    this.dialog.open(ChatCreationComponent,{
-      "autoFocus": true,
-      "data": friend.nickname
-    }).afterClosed().subscribe((result)=>{
-      console.log(result);
-      if(result){
-        this.chatSelectorService.createChat(friend);
+  createGroup() {
+    if (this.possibleUser.length > 0 && this.txtGroupName != '' && this.txtGroupDesc != '' && this.imgGroup != null) {
+      let body = {
+        "name": this.txtGroupName,
+        "description": this.txtGroupDesc,
+        "img": this.base64Img,
+        "users": this.possibleUser
+      }
+      console.log(body);
+      this.chatSelectorService.createGroupChat(body);
+    }
+  }
+
+  async getImg(event: Event) {
+    if ((event.currentTarget as HTMLInputElement).files) {
+      this.imgGroup = (event.currentTarget as HTMLInputElement).files![0];
+      await this.createBase64ImageString(this.imgGroup).then((result) => {
+        this.base64Img = result as string;
+      })
+    }
+  }
+
+
+  createBase64ImageString(file: File) {
+
+    return new Promise((resolve, reject) => {
+      var reader = new FileReader()
+      reader.readAsDataURL(file);
+
+      reader.onload = function () {
+        console.log(reader.result)
+        resolve(reader.result)
+      }
+      reader.onerror = function (error) {
+        console.log("Error: " + error);
+        reject(error)
       }
     })
+
   }
+
+
+  createChat(friend: FriendModel) {
+    if (!this.chatSelectorService.chatList.find((chat) => {
+      return chat.name == friend.nickname && chat.flagGroup == false;
+    })) {
+      this.dialog.open(ChatCreationComponent, {
+        "autoFocus": true,
+        "data": friend.nickname
+      }).afterClosed().subscribe((result) => {
+        console.log(result);
+        if (result) {
+          this.chatSelectorService.createChat(friend);
+        }
+      })
+    }
+    else {
+      this.chatSelectorService.selectedChat = this.chatSelectorService.chatList.find((chat) => {
+        return chat.name == friend.nickname && chat.flagGroup == false;
+      })!;
+      this.chatSelectorService.getChatMessages({ "idChat": this.chatSelectorService.selectedChat._id, "offset": 1 }, this.chatSelectorService.selectedChat._id);
+
+    }
+  }
+
 }

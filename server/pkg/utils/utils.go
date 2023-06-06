@@ -46,9 +46,9 @@ func CreateToken(index string, c *gin.Context) {
 	cookie := &http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
+		Domain:   "",
 		Expires:  time.Now().Add(24 * time.Hour * 30),
 		Path:     "/",
-		Domain:   "api.hermeschat.it",
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -61,6 +61,36 @@ func CreateToken(index string, c *gin.Context) {
 	})
 }
 
+func DeleteToken(c *gin.Context) {
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Domain:   "",
+		Expires:  time.Now().AddDate(0, 0, -1), // Set expiration to a past time
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	}
+
+	http.SetCookie(c.Writer, cookie)
+
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "ok",
+	})
+}
+
+func CheckToken(c *gin.Context) {
+	cookie, err := c.Cookie("token")
+	if cookie == "" || err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"ris": "no token",
+		})
+		c.Abort()
+		return
+	}
+}
+
 func VerifyToken(c *gin.Context) {
 	cookie, err := c.Cookie("token")
 
@@ -68,7 +98,7 @@ func VerifyToken(c *gin.Context) {
 	//check if token is empty or null
 	if cookie == "" || err != nil {
 		//redirect to login page
-		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs") {
+		if c.Request.URL.Path == "/login" || c.Request.URL.Path == "/signup" || c.Request.URL.Path == "/favicon.ico" || c.Request.URL.Path == "/checkOtp" || strings.HasPrefix(c.Request.URL.Path, "/docs") || c.Request.URL.Path == "/getVersion" || c.Request.URL.Path == "/checkToken" {
 			c.Next()
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -91,7 +121,7 @@ func VerifyToken(c *gin.Context) {
 		return
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	if !ok || !token.Valid || claims["exp"] == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"ris": "Unauthorized",
 		})
@@ -118,14 +148,16 @@ func LoginMongoDB(username string, password string, c *gin.Context) {
 	var result bson.M
 	ris.Decode(&result)
 	if result == nil {
-		errr := fmt.Errorf("username not found")
-		SendError(c, errr)
+		c.JSON(http.StatusTeapot, gin.H{
+			"ris": "im a teapot",
+		})
 		return
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(result["password"].(string)), []byte(password))
 	if err != nil {
-		errr := fmt.Errorf("wrong password")
-		SendError(c, errr)
+		c.JSON(http.StatusTeapot, gin.H{
+			"ris": "im a teapot",
+		})
 		return
 	}
 
@@ -232,6 +264,7 @@ func checkUsername(username string, password string, email string, lang string, 
 	otp := generateOTP()
 
 	go sendEmail(email, otp)
+	//add a field ids which is an array of string, that in the 0 contains a json called "chats" which contains an array of string
 
 	collection.InsertOne(
 		context.Background(),
@@ -247,46 +280,90 @@ func checkUsername(username string, password string, email string, lang string, 
 			"otp":       otp,
 			"flagOtp":   false,
 			"otpExpire": time.Now().Add(time.Minute * 10),
+			"ids": []struct {
+				Chat []string `bson:"chats"`
+			}{
+				{
+					Chat: []string{},
+				},
+			},
 		},
 	)
 	//print the id of the user created
 
 	id := GetId(username)
+
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	fmt.Println("obj:" + objID.Hex())
 	//create a collection with the id of the user
 	collection = config.ClientMongoDB.Database("user").Collection("blocked")
-	collection.InsertOne(
+	_, err1 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":     objID,
 			"blocked": []string{},
 		},
 	)
+	if err1 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("friendship")
 	//insert id and friends which is an array of object
-	collection.InsertOne(
+	_, err2 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":     objID,
 			"friends": []string{},
 		},
 	)
+	if err2 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("sentFriendship")
-	collection.InsertOne(
+	_, err3 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":     id,
+			"_id":    objID,
 			"sentTo": []string{},
 		},
 	)
+	if err3 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	collection = config.ClientMongoDB.Database("user").Collection("toAcceptFriendship")
-	collection.InsertOne(
+	_, err4 := collection.InsertOne(
 		context.Background(),
 		bson.M{
-			"id":      id,
+			"_id":     objID,
 			"pending": []string{},
 		},
 	)
-
+	if err4 != nil {
+		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "error while creating collection",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "user created",
 	})
@@ -553,7 +630,7 @@ func GetRequestSentDB(i string, c *gin.Context) {
 	if err != nil {
 		errConn()
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
+			"message": "invalid ObjectID 1",
 		})
 		return
 	}
@@ -563,7 +640,7 @@ func GetRequestSentDB(i string, c *gin.Context) {
 	if result2 == nil {
 		errConn()
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid ObjectID",
+			"message": "invalid ObjectID 2",
 		})
 		return
 	}
@@ -1133,9 +1210,18 @@ func CheckOtpDB(form models.CheckOtp, c *gin.Context) {
 		})
 		return
 	}
-	objID, err := primitive.ObjectIDFromHex(form.ID)
-	if err != nil {
+	ris1 := collection.FindOne(context.Background(), bson.M{"nickname": form.Nickname})
+	var result1 bson.M
+	ris1.Decode(&result1)
+	if result1 == nil {
 		errConn()
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid email",
+		})
+		return
+	}
+	objID, err := primitive.ObjectIDFromHex(result1["_id"].(primitive.ObjectID).Hex())
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID",
 		})
@@ -1151,7 +1237,12 @@ func CheckOtpDB(form models.CheckOtp, c *gin.Context) {
 		})
 		return
 	}
-	if result["otpDate"].(string) < time.Now().Format("2020-05-28T15:00:00.000+00:00") {
+	//check if otp is expired (24 hours)
+	otpDate := result["otpExpire"].(primitive.DateTime)
+	otpDateGo := otpDate.Time()
+	now := time.Now()
+	diff := now.Sub(otpDateGo)
+	if diff.Hours() > 24 {
 		//delete
 		collection.FindOneAndDelete(context.Background(), bson.M{"_id": objID})
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -1227,4 +1318,68 @@ func SearchUsersDB(username string, c *gin.Context) {
 	var result []bson.M
 	cursor.All(context.Background(), &result)
 	c.JSON(http.StatusOK, result)
+}
+
+func RemoveFriendDB(index string, idFriend string, c *gin.Context) {
+	objId, err := primitive.ObjectIDFromHex(index)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	objIdFriend, err := primitive.ObjectIDFromHex(idFriend)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "invalid ObjectID",
+		})
+		return
+	}
+	//remove the friend from both users
+	collection := config.ClientMongoDB.Database("user").Collection("friendship")
+	if collection == nil {
+		errConn()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//remove friend from user 1
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objId}, bson.M{"$pull": bson.M{"friends": idFriend}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+	//remove friend from user 2
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objIdFriend}, bson.M{"$pull": bson.M{"friends": index}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "error while connecting to database",
+		})
+		return
+	}
+
+	type Message struct {
+		Type string `json:"type"`
+		Payload string `json:"payload"`
+	}
+	msg := Message{
+		Type: "RFR",
+		Payload: index,
+	}
+
+	connsId := config.GetUserConnectionsRedis(idFriend)
+	for _, connId := range connsId {
+		connDest := config.Conns[connId]
+		if connDest != nil {
+			connDest.WriteJSON(msg)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"ris": "friend removed",
+	})
+
 }

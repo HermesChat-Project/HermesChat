@@ -14,7 +14,7 @@ export class CameraComponent {
   @ViewChild("media_scrolling") media_scrolling!: ElementRef;
   @ViewChild("media_changing") media_changing!: ElementRef;
   @ViewChild("container_webcam") container_webcam!: ElementRef;
-  @Output() onMediaEvent: EventEmitter<{ src: string , type: string }[]> = new EventEmitter<{ src: string, type: string }[]>();
+  @Output() onMediaEvent: EventEmitter<{ src: string, type: string }[]> = new EventEmitter<{ src: string, type: string }[]>();
   constructor(public chatSelector: ChatSelectorService, public sanitizer: DomSanitizer) {
     this.onResize();
   }
@@ -83,7 +83,7 @@ export class CameraComponent {
         else
           this.video.start();
 
-        this.video.ondataavailable = (event) => {
+        this.video.ondataavailable = (event: BlobEvent) => {
           console.log(event);
           let recordedBlob: Blob = new Blob([event.data], { type: "video/webm" });
           let recordedSrc = URL.createObjectURL(recordedBlob);
@@ -188,7 +188,12 @@ export class CameraComponent {
   }
 
   addPhoto() {
-    this.showMediaList = false;
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+      this.chatSelector.stream = stream;
+      this.showMediaList = false;
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   CheckIfShouldBeShown() {

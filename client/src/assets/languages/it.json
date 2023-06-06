@@ -6,8 +6,8 @@
     "new-to-hermes" : "Nuovo su HermesChat?",
     "username" : "Username",
     "password" : "Password",
-    "missing-fields" : "Compila tutti i campi",
-    "wrong-credentials" : "Username o password errati"
+    "wrong-credentials" : "Username o password errati",
+    "otp-message" : "Inserisci il codice che hai ricevuto via mail"
   },
   "signup":{
     "signup" : "Registrati",
@@ -21,7 +21,8 @@
     "email-already-exists" : "Email già registrata",
     "invalid-email" : "Email non valida",
     "name" : "Nome",
-    "last-name" : "Cognome"
+    "last-name" : "Cognome",
+    "otp-message" : "Inserisci il codice che hai ricevuto via mail"
   },
   "all-chats": "Tutte le chat",
   "friends": "Amici",

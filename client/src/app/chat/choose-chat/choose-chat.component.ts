@@ -19,15 +19,15 @@ export class ChooseChatComponent {
 
   day = new Date().getDate();
   width_section = 350;
-  firstCalendarClick: boolean = true;
+
 
   changeSelection(type: number, event: Event) {
     let target = event.currentTarget as HTMLElement;
     if (target.classList.contains("calendar")) {
       this.chatSelector.calendarSectionClicked = true;
-      if (this.firstCalendarClick) {
+      if (this.chatSelector.firstCalendarClick) {
         this.chatSelector.getCalendarEvents();
-        this.firstCalendarClick = false;
+        this.chatSelector.firstCalendarClick = false;
       }
 
     }

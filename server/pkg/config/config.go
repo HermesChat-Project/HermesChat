@@ -28,7 +28,8 @@ var Conns = make(map[string]*websocket.Conn);
 var ClientRedis *redis.Client;
 var API_KEY_GODADDY string;
 var API_SECRET_GODADDY string;
-
+var REDIS_ADDR string;
+var REDIS_PWD string;
 
 func LoadConfig() {
 	err := godotenv.Load()
@@ -45,12 +46,19 @@ func LoadConfig() {
 	PWDGMAIL = os.Getenv("PWDGMAIL")
 	API_KEY_GODADDY = os.Getenv("API_KEY_GODADDY")
 	API_SECRET_GODADDY = os.Getenv("API_SECRET_GODADDY")
+	REDIS_ADDR = os.Getenv("REDIS_ADDR")
+	REDIS_PWD = os.Getenv("REDIS_PWD")
+	if (PORT == 0){
+		PORT = 8090;
+	}
 	go CreateFileLog()
 }
 
 func ConnectToRedis(){
 	ClientRedis = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", 
+		Addr:     REDIS_ADDR, // Replace with your Redis host and port
+		Password: REDIS_PWD,                               // Replace with your Redis password, if applicable
+		DB:       0,                                                               // Redis database index
 	})
 	
 	// Ping the Redis server to check the connection

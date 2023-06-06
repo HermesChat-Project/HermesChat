@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
@@ -501,6 +502,11 @@ app-login, app-signup {
     border: none !important;
   }
 
+  input, textarea{
+    background-color: #333 !important;
+    color: whitesmoke !important;
+  }
+
   .survey_options input{
     background-color: #333 !important;
     color: whitesmoke !important;
@@ -529,3 +535,9 @@ app-login, app-signup {
 .example-panel-dark.mat-mdc-select-panel span{
   color: whitesmoke !important;
 }
+
+.no-chk .mat-pseudo-checkbox{
+  display: none !important;
+}
+
+
