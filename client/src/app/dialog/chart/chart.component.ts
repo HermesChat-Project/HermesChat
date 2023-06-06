@@ -82,7 +82,6 @@ export class ChartComponent {
           colors.push(color.value);
         }
       }
-      console.log(colors);
       data = {chart: chart, series: series, title: title, xaxis: xaxis, colors: colors};
 
     }

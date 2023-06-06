@@ -223,7 +223,7 @@ export class ChatSelectorService {
       maxHeight: '70%',
     }).afterClosed().subscribe((result: any) => {
       if (result) {
-        console.log(result);
+
         this.sendMessage("", "chart", result.data)
       }
     })
@@ -263,7 +263,7 @@ export class ChatSelectorService {
         data: chatEvent
       }).afterClosed().subscribe((result: string[] | null) => {
         if (result) {
-          console.log(result);
+
           this.updateCalendarEvents(result);
         }
       })
@@ -348,7 +348,7 @@ export class ChatSelectorService {
   getInfo() {
     this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.infoUser = response.body;
         this.progress++;
         this.waitProgress();
@@ -363,7 +363,7 @@ export class ChatSelectorService {
   getChats() {
     this.dataStorage.PostRequestWithHeaders(`getChats`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.chatList = response.body.chats;
 
         this.changeName(response.body.chats);
@@ -387,7 +387,7 @@ export class ChatSelectorService {
         this.waitProgress();
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
+
         if (error.status == 401)
           this.logout();
         if (error.status == 400) {
@@ -403,7 +403,7 @@ export class ChatSelectorService {
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-          console.log(response.body);
+
           if (response.body.messages) {
 
             response.body.messages.forEach(async (message: messageModel) => {
@@ -441,7 +441,7 @@ export class ChatSelectorService {
   getFriends() {
     this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         if (response.body.friends) {
           this.friendList = response.body.friends;
           if (this.friendList.length > 0)
@@ -463,7 +463,7 @@ export class ChatSelectorService {
   getReceivedRequests() {
     this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.receivedList = response.body.requests;
         this.progress++;
         this.waitProgress();
@@ -479,7 +479,7 @@ export class ChatSelectorService {
   getSentRequest() {
     this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.sentList = response.body.requests;
         this.progress++;
         this.waitProgress();
@@ -495,7 +495,7 @@ export class ChatSelectorService {
   acceptRequest(body: any) {
     this.dataStorage.PostRequestWithHeaders('acceptFriend', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -508,7 +508,7 @@ export class ChatSelectorService {
   denyRequest(request: string) {
     this.dataStorage.PostRequestWithHeaders('declineFriend', { idUser: request }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -532,7 +532,7 @@ export class ChatSelectorService {
 
     this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -557,7 +557,7 @@ export class ChatSelectorService {
   getCalendarEvents(openDialog: boolean = false) {
     this.dataStorage.PostRequestWithHeaders('getCalendarEvents', {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.calendarList = response.body.events;
         this.calendarList.forEach((event: CalendarModel) => {
           event.date = new Date(event.dateTime);
@@ -578,7 +578,7 @@ export class ChatSelectorService {
             data: chatEvent
           }).afterClosed().subscribe((result: string[] | null) => {
             if (result) {
-              console.log(result);
+
               this.updateCalendarEvents(result);
             }
           })
@@ -595,7 +595,7 @@ export class ChatSelectorService {
   leaveGroup(id: string = this.selectedChat!._id) {
     this.dataStorage.PostRequestWithHeaders('leaveGroup', { chatId: id }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.chatList = this.chatList.filter((chat: Chat) => {
           return chat._id != id;
         })
@@ -610,7 +610,7 @@ export class ChatSelectorService {
   sendFriendRequest(user: SearchModel) {
     this.dataStorage.PostRequestWithHeaders('sendFriendRequest', { username: user.nickname }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.sentList.push({ idUser: user._id, image: user.image, nickname: user.nickname });
       },
       error: (error: HttpErrorResponse) => {
@@ -623,11 +623,10 @@ export class ChatSelectorService {
   }
 
   updateCalendarEvents(events: string[]) {
-    console.log(events[0]);
-    console.log([this.selectedChat?._id]);
+
     this.dataStorage.PatchRequest('updateCalendarEvent', { idEvent: events[0], idChats: [this.selectedChat?._id], type: "shared" }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -642,7 +641,7 @@ export class ChatSelectorService {
     return new Promise((resolve, reject) => {
       this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
         next: (response: any) => {
-          console.log(response);
+
           resolve(response.body.url[0]);
         },
         error: (error: HttpErrorResponse) => {
@@ -676,7 +675,7 @@ export class ChatSelectorService {
   getSearchUsers(txtUser: string) {
     this.dataStorage.getRequest('search?username=' + txtUser, this.getGetOptions()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         if (response.body) {
           this.OtherListSerach = response.body;
           if (this.OtherListSerach.length > 10)
@@ -714,7 +713,7 @@ export class ChatSelectorService {
     return new Promise((resolve, reject) => {
       this.dataStorage.PostRequestWithHeaders('addCalendarEvent', body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-          console.log(response);
+
           resolve(response.body.event);
         },
         error: (error: HttpErrorResponse) => {
@@ -730,7 +729,7 @@ export class ChatSelectorService {
   deleteCalendarEvent() {
     this.dataStorage.DeleteRequest('deleteCalendarEvent', this.getDeleteOptions()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.calendarList.splice(this.calendarList.indexOf(this.selectedCalendarEvent!), 1);
         this.EventsPerMonth = this.getCalendarEventsByMonth();
         this.triggerCalendarModal = false;
@@ -746,7 +745,7 @@ export class ChatSelectorService {
   removeUser(userId: string, chatId: string = this.selectedChat!._id) {
     this.dataStorage.PostRequestWithHeaders('removeUserFromGroup', { userId: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.selectedChat!.users = this.selectedChat!.users.filter((user: { idUser: string; image: string; nickname: string; role: string }) => {
           return user.idUser != userId;
         }
@@ -761,10 +760,10 @@ export class ChatSelectorService {
   }
 
   addUserToGroup(userId: string, chatId: string = this.selectedChat!._id) {
-    console.log(userId);
+
     this.dataStorage.PostRequestWithHeaders('addUserToGroup', { users: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.selectedChat!.users.push({ idUser: userId, image: response.body.image, nickname: response.body.nickname, role: 'normal' });
       },
       error: (error: HttpErrorResponse) => {
@@ -776,10 +775,10 @@ export class ChatSelectorService {
   }
 
   changeRole(body: { user: string, chatId: string, role: string }) {
-    console.log(body);
+
     this.dataStorage.PostRequestWithHeaders('changeRole', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.selectedChat!.users.find((user: { idUser: string; image: string; nickname: string; role: string }) => {
           return user.idUser == body.user;
         })!.role = body.role;
@@ -887,13 +886,13 @@ export class ChatSelectorService {
   startSocket() {
     this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
     this.socket.addEventListener("open", () => {
-      console.log("socket open");
+
       this.progress++;
       this.waitProgress();
     });
     this.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
-      console.log(data);
+
       if (data.type == "MSG") {
         if (data.typeMSG == "audio") {
           let opt = JSON.parse(data.options);
@@ -964,14 +963,14 @@ export class ChatSelectorService {
         }
       }
       else if (data.type == "CEM") {//calendar event modified
-        console.log("modificato");
+
         if (!this.firstCalendarClick) {
-          console.log("modificato");
+
           let evento = data.evento;
           let event = data.eventChanges;
-          console.log(evento);
+
           let cal_event = this.calendarList.find((ev) => ev._id == evento);
-          console.log(cal_event);
+
           if (event.color)
             cal_event!.color = event.color;
           if (event.dateTime) {
@@ -990,7 +989,7 @@ export class ChatSelectorService {
             cal_event!.type = event.type;
           if (event.idChats)
             cal_event!.idChats!.push(event.idChats);
-          console.log(cal_event);
+
           this.EventsPerMonth = this.getCalendarEventsByMonth();
         }
       }
@@ -1064,7 +1063,7 @@ export class ChatSelectorService {
   //progress bar
   seeMain: boolean = false;
   waitProgress() {
-    console.log(this.progress);
+
     if (this.progress == 6) {
       this.seeMain = true;
     }
@@ -1108,7 +1107,7 @@ export class ChatSelectorService {
       this.offsetChat = Math.floor(this.messageList[id].length / 50) + 1;
       if (this.messageList[id].length % 50 != 0)
         this.offsetChat++;
-      console.log(this.offsetChat);
+
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve

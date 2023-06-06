@@ -175,12 +175,12 @@
           </button>
           <div class="cal_modal_share_list" [ngClass]="{'animation': selected, 'hideanimation': !selected}">
             <div class="chat_chare_container">
-              <div class="chat_share_name option" (click)="updateSharedArray(null)">
+              <div class="chat_share_name option" (click)="updateSharedArray(null)" *ngIf="isOnCreatingMode || isOnModifyingMode">
                 <p>None</p>
                 <mat-icon *ngIf="sharedArray.length == 0">check</mat-icon>
               </div>
               <div class="chat_share_name">
-                <p>Chat disponibili</p>
+                <p>{{seeTextOfShareEvent()}}</p>
               </div>
             </div>
             <ul class="chat_share_list">
@@ -224,7 +224,10 @@
       <button class="cal_modal_modify btn btn-secondary" *ngIf="isOnModifyingMode "
         (click)="exitModifyingMode($event)">Annulla</button>
       <button class="cal_modal_modify btn "
-        [ngClass]="{'btn-primary' : !isOnModifyingMode, 'btn-success': isOnModifyingMode || isOnCreatingMode}"
-        *ngIf="checkIfThaEventCanBeModified() " (click)="modifyEvent($event)">{{modifyingOrCreation()}}</button>
+        [ngClass]="{'btn-primary' : !isOnModifyingMode, 'btn-success': isOnModifyingMode}"
+        *ngIf="checkIfThaEventCanBeModified() " (click)="modifyEvent($event)">Modfica</button>
+        <button class="cal_modal_modify btn "
+        [ngClass]="{'btn-success':  isOnCreatingMode}"
+        *ngIf="checkIfThaEventCanBeCreated() " (click)="createNewEvent($event)">Crea</button>
     </div>
   </div>
