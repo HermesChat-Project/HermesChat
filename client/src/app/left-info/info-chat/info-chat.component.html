@@ -53,7 +53,7 @@
     <p>Elimina utente</p>
     <mat-icon (click)="removeUser(selected_member!)">remove_circle</mat-icon>
   </div>
-  <div class="member-admin" *ngIf="selected_member?.idUser != chatSelector.infoUser._id && checkAdmin()">
+  <div class="member-admin" *ngIf="selected_member?.idUser != chatSelector.infoUser._id && checkAdmin()" (click)="changeRole(selected_member!)">
     <p>Cambia ruolo</p>
   </div>
 </div>

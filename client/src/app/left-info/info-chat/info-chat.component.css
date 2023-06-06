@@ -110,6 +110,11 @@ p {
   column-gap: 10px;
   display: flex;
   width: max-content;
+  width: 100%;
+}
+
+.right-click-option > *:hover {
+  background-color: #ddd;
 }
 
 .add-user {

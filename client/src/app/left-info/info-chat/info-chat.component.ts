@@ -57,4 +57,15 @@ export class InfoChatComponent {
     this.chatSelector.userNonChatFriendList = this.chatSelector.friendList.filter(friend => !this.chatSelector.selectedChat?.users.find(member => member.idUser == friend.id));
     this.chatSelector.openAddUserDialog();
   }
+
+  changeRole(member: { idUser: string; image: string; nickname: string; role:string }){
+    let role = member.role == "normal" ? "admin" : "normal";
+    console.log(role);
+    let body = {
+      user: member.idUser,
+      role: role,
+      chatId: this.chatSelector.selectedChat!._id
+    }
+    this.chatSelector.changeRole(body);
+  }
 }

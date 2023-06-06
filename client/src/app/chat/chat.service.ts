@@ -743,6 +743,23 @@ export class ChatSelectorService {
     })
   }
 
+  changeRole(body: { user: string, chatId: string, role: string }) {
+    console.log(body);
+    this.dataStorage.PostRequestWithHeaders('changeRole', body, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.selectedChat!.users.find((user: { idUser: string; image: string; nickname: string; role: string }) => {
+          return user.idUser == body.user;
+        })!.role = body.role;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
 
 
 
@@ -915,9 +932,20 @@ export class ChatSelectorService {
         this.messageList[data.chatId] = [];
         this.socketMessageList[data.chatId] = [];
       }
-      else if (data.type == "ATG") {
+      else if (data.type == "ATG") {//add to group
         let chat = new Chat(data.chatId, data.user, true, data.name, data.img, data.description);
         this.chatList.push(chat);
+      }
+      else if (data.type == "CRG") {//change role group
+        let user = this.selectedChat?.users.find((user) => {
+          return user.idUser == this.infoUser._id
+        });
+        console.log(user);
+        if (user) {
+          user.role = user.role == "normal" ? "admin" : "normal";
+        }
+
+
       }
     })
     this.socket.addEventListener("close", () => {
