@@ -308,7 +308,13 @@ export class ChatSelectorService {
     if (this.selectedChat) {
       if (localpush) {
         this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
+        this.chatList[this.chatList.findIndex((chat: Chat) => { return chat._id == this.selectedChat!._id })].messages = { content: message, dateTime: new Date().toISOString() }
         this.chatList.sort((a, b) => {
+          if(a.messages.dateTime && !b.messages.dateTime)
+            return -1;
+          if(!a.messages.dateTime && b.messages.dateTime)
+            return 1;
+
           let aDate = new Date(a.messages!.dateTime);
           let bDate = new Date(b.messages!.dateTime);
           return bDate.getTime() - aDate.getTime();
@@ -368,6 +374,11 @@ export class ChatSelectorService {
             this.socketMessageList[chat._id] = [];
         }
         this.chatList.sort((a, b) => {
+          if(a.messages.dateTime && !b.messages.dateTime)
+            return -1;
+          if(!a.messages.dateTime && b.messages.dateTime)
+            return 1;
+
           let aDate = new Date(a.messages!.dateTime);
           let bDate = new Date(b.messages!.dateTime);
           return bDate.getTime() - aDate.getTime();
@@ -910,7 +921,12 @@ export class ChatSelectorService {
           }
 
         }
-        this.sortChats();
+        this.chatList[this.chatList.findIndex((chat) => chat._id == data.idDest)].messages = { content: data.payload, dateTime: new Date().toISOString() }
+        this.chatList.sort((a, b) => {
+          let aDate = new Date(a.messages.dateTime);
+          let bDate = new Date(b.messages.dateTime);
+          return bDate.getTime() - aDate.getTime();
+        });
       }
       else if (data.type == "FRA") {//friend request accepted
         let request: requestModel = data.friend;

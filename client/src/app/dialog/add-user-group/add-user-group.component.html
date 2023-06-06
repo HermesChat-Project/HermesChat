@@ -1,4 +1,4 @@
-<div class="dialog_container">
+<div class="dialog_container" [ngClass]="{'dark-theme': chatSelector.theme == 'dark'}">
   <div class="dialog_header" mat-dialog-title>
     <div class="dialog_title">
       <h1>Aggiungi utente</h1>
@@ -9,27 +9,30 @@
       </button>
     </div>
   </div>
-  <div class="body">
-    <div class="add-friend-list">
-      <div class="add-friend" *ngFor="let friend of friendList" (click)="checkFriend(friend)">
-        <div class="add-friend-image">
-          <img src="{{friend.image}}" alt="image not available">
-        </div>
-        <div class="add-friend-name">
-          <p>{{friend.nickname}}</p>
-        </div>
-        <div class="add-friend-badge">
-          <mat-icon *ngIf="friendAdded.includes(friend.id)">done</mat-icon>
+  <mat-dialog-content>
+    <div class="body">
+      <div class="add-friend-list">
+        <div class="add-friend" *ngFor="let friend of friendList" (click)="checkFriend(friend)">
+          <div class="add-friend-image">
+            <img src="{{friend.image}}" alt="image not available">
+          </div>
+          <div class="add-friend-name">
+            <p>{{friend.nickname}}</p>
+          </div>
+          <div class="add-friend-badge">
+            <mat-icon *ngIf="friendAdded.includes(friend.id)">done</mat-icon>
+          </div>
         </div>
       </div>
     </div>
-    <mat-dialog-actions class="row">
-      <div class="col-sm-6 warning">
-        <button mat-raised-button color="warn" [mat-dialog-close]="null">Annulla</button>
-      </div>
-      <div class="col-sm-6 done">
-        <button mat-raised-button color="primary" [disabled]="friendAdded.length == 0"
-          [mat-dialog-close]="friendAdded">Aggiungi</button>
-      </div>
-    </mat-dialog-actions>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="row">
+    <div class="col-sm-6 warning">
+      <button mat-raised-button color="warn" [mat-dialog-close]="null">Annulla</button>
+    </div>
+    <div class="col-sm-6 done">
+      <button mat-raised-button color="primary" [disabled]="friendAdded.length == 0"
+        [mat-dialog-close]="friendAdded">Aggiungi</button>
+    </div>
+  </mat-dialog-actions>
+</div>

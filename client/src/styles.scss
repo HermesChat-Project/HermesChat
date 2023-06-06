@@ -66,7 +66,12 @@ app-login, app-signup {
 
 .dark-theme {
   background-color: #222222 !important;
-
+  .add-friend-name{
+    color: white !important;
+  }
+  .add-friend:hover{
+    background-color: #444 !important;
+  }
   app-header-chat-selector {
     background-color: #444 !important;
     color: white !important;
@@ -341,6 +346,20 @@ app-login, app-signup {
 
       .chat-options-list > div:hover{
         background-color: #444 !important;
+      }
+
+      app-info-chat{
+        background-color: #444 !important;
+        color: whitesmoke !important;
+
+        .right-click-option{
+          background-color: #222 !important;
+          color: whitesmoke !important;
+          border: 1px solid transparent !important;
+        }
+        .right-click-option > div:hover{
+          background-color: #333 !important;
+        }
       }
 
       app-message {
