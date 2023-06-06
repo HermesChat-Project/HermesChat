@@ -24,7 +24,7 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 	//check if in user db there is a chat with that id
 	collection2 := config.ClientMongoDB.Database("user").Collection("user")
 	if collection2 == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -33,7 +33,7 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 
 	objID, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID7",
 		})
@@ -46,7 +46,7 @@ func UploadFile(index string, chatID string, files []*multipart.FileHeader, c *g
 	ris7 := collection4.FindOne(context.Background(), bson.M{"_id": objID}, opt)
 	ris7.Decode(&result7)
 	if result7 == nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID8",
 		})
@@ -114,7 +114,7 @@ func getExtension(header multipart.FileHeader) (string, error) {
 func DownloadFile (index string, url string, chat string, c *gin.Context){
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -134,7 +134,7 @@ func DownloadFile (index string, url string, chat string, c *gin.Context){
 	ris7 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
 	ris7.Decode(&result7)
 	if result7 == nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID8",
 		})

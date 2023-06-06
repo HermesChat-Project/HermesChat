@@ -9,7 +9,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
@@ -51,7 +50,6 @@ func LoadConfig() {
 	if (PORT == 0){
 		PORT = 80;
 	}
-	go CreateFileLog()
 }
 
 func ConnectToRedis(){
@@ -74,7 +72,6 @@ func ConnectToDBMongoDB(){
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(CONNECTION_STRING_MONGODB))
 	if err != nil {
-		WriteFileLog(err)
 		panic(err)
 	}
 	err = client.Connect(context.Background())
@@ -85,24 +82,6 @@ func ConnectToDBMongoDB(){
 	ClientMongoDB = client
 }
 
-func CreateFileLog() {
-	if _, err := os.Stat("log.txt"); os.IsNotExist(err) {
-		file, err := os.Create("log.txt")
-		if err != nil {
-			panic(err)
-		}
-		defer file.Close()
-	}
-}
-func WriteFileLog(errF error) {
-	file, err := os.OpenFile("log.txt", os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	//write time and error
-	file.WriteString(time.Now().Format("2006-01-02 15:04:05") + " " + errF.Error() + "\n")
-}
 
 func GetMyIP() string {
 	var ip string
