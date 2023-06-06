@@ -18,7 +18,7 @@ func GetCalendarEvents(index string, c *gin.Context) {
 
 	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -30,14 +30,14 @@ func GetCalendarEvents(index string, c *gin.Context) {
 	events := []bson.M{}
 	cursor, err := collection.Find(c.Request.Context(), bson.M{"idUser": index})
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while getting events",
 		})
 		return
 	}
 	if err = cursor.All(c.Request.Context(), &events); err != nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while getting events",
 		})
@@ -48,7 +48,7 @@ func GetCalendarEvents(index string, c *gin.Context) {
 
 	collection2 := config.ClientMongoDB.Database("user").Collection("user")
 	if collection2 == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -57,7 +57,7 @@ func GetCalendarEvents(index string, c *gin.Context) {
 
 	objID, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID7",
 		})
@@ -70,7 +70,7 @@ func GetCalendarEvents(index string, c *gin.Context) {
 	ris7 := collection4.FindOne(context.Background(), bson.M{"_id": objID}, opt)
 	ris7.Decode(&result7)
 	if result7 == nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID8",
 		})
@@ -146,7 +146,7 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 
 	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -157,7 +157,7 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 
 	resInsert, err := collection.InsertOne(c.Request.Context(), bson.M{"title": form.Title, "description": form.Description, "dateTime": form.Date, "type": form.Type, "notify": form.Notify, "notifyTime": form.NotifyTime, "color": form.Color, "idUser": index, "idChats": form.IdChats})
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while adding event",
 		})
@@ -174,7 +174,7 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 		for _, elem := range form.IdChats {
 			collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
 			if collection2 == nil {
-				errConn()
+				
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"message": "error while connecting to database",
 				})
@@ -247,7 +247,7 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 
 	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -258,7 +258,7 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 
 	objID, err := primitive.ObjectIDFromHex(form.IdEvent)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID",
 		})
@@ -277,7 +277,7 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 
 	_, err = collection.DeleteOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index})
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while deleting event",
 		})
@@ -295,7 +295,7 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 		for _, elem := range resultA["idChats"].(primitive.A) {
 			collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
 			if collection2 == nil {
-				errConn()
+				
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"message": "error while connecting to database",
 				})
@@ -363,7 +363,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 
 	collection := config.ClientMongoDB.Database("chat").Collection("calendar")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -372,103 +372,116 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 
 	objID, err := primitive.ObjectIDFromHex(form.IdEvent)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID",
 		})
 		return
 	}
 
+	//array of modified fields (it contains like the key and the new value)
+	modified := []bson.M{}
 	if form.Title != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"title": form.Title}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"title": form.Title})
 	}
 
 	if form.Description != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"description": form.Description}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"description": form.Description})
 	}
 
 	if form.Date != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"dateTime": form.Date}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"dateTime": form.Date})
 	}
 
 	if form.Type != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"type": form.Type}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"type": form.Type})
 	}
 
 	if form.Notify != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"notify": form.Notify}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"notify": form.Notify})
 	}
 
 	if form.NotifyTime != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"notifyTime": form.NotifyTime}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"notifyTime": form.NotifyTime})
 	}
 
 	if form.Color != "" {
 		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$set": bson.M{"color": form.Color}})
 		if err != nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
+		modified = append(modified, bson.M{"color": form.Color})
 	}
 
 	if form.IdChats != nil {
 		//push the new chats ids in the array of the event
-		_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$push": bson.M{"idChats": form.IdChats}})
-		if err != nil {
-			errConn()
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"message": "error while updating event",
-			})
-			return
+		for _, elem := range form.IdChats {
+			_, err := collection.UpdateOne(c.Request.Context(), bson.M{"_id": objID, "idUser": index}, bson.M{"$push": bson.M{"idChats": elem}})
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": "error while updating event",
+				})
+				return
+			}
+		}
+		for _, elem := range form.IdChats {
+			modified = append(modified, bson.M{"idChats": elem})
 		}
 	}
 
-	risChat, err := collection.Find(c.Request.Context(), bson.M{"_id": objID})
+	risChat := collection.FindOne(c.Request.Context(), bson.M{"_id": objID})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while updating event",
@@ -481,7 +494,7 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 	vetAus := []string{}
 	vetAus = append(vetAus, index)
 	for _, elem := range resultA["idChats"].(primitive.A) {
-		idChat := elem.(primitive.M)["idChat"].(string)
+		idChat := elem.(string)
 		objIDChat, err := primitive.ObjectIDFromHex(idChat)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -489,36 +502,45 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 			})
 			return
 		}
-		risChat, err := config.ClientMongoDB.Database("chat").Collection("chats").Find(c.Request.Context(), bson.M{"_id": objIDChat})
+		risChat := config.ClientMongoDB.Database("chat").Collection("chat").FindOne(c.Request.Context(), bson.M{"_id": objIDChat})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while updating event",
 			})
 			return
 		}
-		var resultB bson.M
+		type user struct {
+			IdUser string `json:"idUser"`
+		}
+		type gruppo struct {
+			Users []user `json:"users"`
+		}
+		var resultB gruppo
 		risChat.Decode(&resultB)
-		for _, elem := range resultB["idUsers"].(primitive.A) {
+		for _, elem := range resultB.Users {
 			check := false
 			for _, elem2 := range vetAus {
-				if elem2 == elem.(string) {
+				if elem2 == elem.IdUser {
 					check = true
 				}
 			}
 			if !check{
-				vetAus = append(vetAus, elem.(string))
+				vetAus = append(vetAus, elem.IdUser)
 			}
 		}
 	}
 
+	//modified is []bson.M{}
 	for _, elem2 := range vetAus {
 		type Message struct {
 			Type     string                  `json:"type"`
 			Username string                  `json:"username"`
-			Event    models.UpdateCalendarEvent `json:"event"`
+			Evento string `json:"evento"`
+			Modified []bson.M `json:"eventChanges"`
 		}
 
-		msg := Message{Type: "CEM", Username: index, Event: form}
+		
+		msg := Message{Type: "CEM", Username: index,Modified: modified,Evento: form.IdEvent}
 		connsId := config.GetUserConnectionsRedis(elem2)
 		for _, connId := range connsId {
 			connDest := config.Conns[connId]
@@ -528,11 +550,6 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 		}
 
 	}
-
-
-
-		
-
 	c.JSON(http.StatusOK, gin.H{
 		"ris": "event updated",
 	})

@@ -20,7 +20,7 @@ import (
 func CreateChat(index string, form models.CreateChat, c *gin.Context) {
 	collection := config.ClientMongoDB.Database("chat").Collection("chat")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -186,7 +186,7 @@ func GetChats(index string, c *gin.Context) {
 
 	collection := config.ClientMongoDB.Database("user").Collection("user")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -195,7 +195,7 @@ func GetChats(index string, c *gin.Context) {
 
 	objID, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID7",
 		})
@@ -208,7 +208,7 @@ func GetChats(index string, c *gin.Context) {
 	ris7 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
 	ris7.Decode(&result7)
 	if result7 == nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID8",
 		})
@@ -242,7 +242,7 @@ func GetChats(index string, c *gin.Context) {
 
 		collection2 := config.ClientMongoDB.Database("chat").Collection("chat")
 		if collection2 == nil {
-			errConn()
+			
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while connecting to database",
 			})
@@ -308,7 +308,7 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 
 	collection := config.ClientMongoDB.Database("chat").Collection("chat")
 	if collection == nil {
-		errConn()
+		
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
@@ -317,7 +317,7 @@ func GetMessages (index string, form models.GetMessages, c *gin.Context) {
 
 	objID, err := primitive.ObjectIDFromHex(form.IdChat)
 	if err != nil {
-		errConn()
+		
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "invalid ObjectID11",
 		})
@@ -389,13 +389,13 @@ func GetUsersFromGroup (idGroup string) [] string{
 
 	collection := config.ClientMongoDB.Database("chat").Collection("chat")
 	if collection == nil {
-		errConn()
+		
 		return nil
 	}
 
 	objID, err := primitive.ObjectIDFromHex(idGroup)
 	if err != nil {
-		errConn()
+		
 		return nil
 	}
 
@@ -405,7 +405,7 @@ func GetUsersFromGroup (idGroup string) [] string{
 	ris7 := collection.FindOne(context.Background(), bson.M{"_id": objID}, opt)
 	ris7.Decode(&result7)
 	if result7 == nil {
-		errConn()
+		
 		return nil
 	}
 	// Extract the "chat" array from the result7
@@ -435,13 +435,13 @@ func SaveMessage(request models.Request) {
 
 	collection := config.ClientMongoDB.Database("chat").Collection("chat")
 	if collection == nil {
-		errConn()
+		
 		return
 	}
 
 	objID, err := primitive.ObjectIDFromHex(request.IdDest)
 	if err != nil {
-		errConn()
+		
 		return
 	}
 
@@ -459,7 +459,7 @@ func SaveMessage(request models.Request) {
 	//update the chat
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": objID}, bson.M{"$push": bson.M{"messages": message}})
 	if err != nil {
-		errConn()
+		
 		return
 	}
 
@@ -470,13 +470,13 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 
 	collection := config.ClientMongoDB.Database("chat").Collection("chat")
 	if collection == nil {
-		errConn()
+		
 		return
 	}
 
 	objID, err := primitive.ObjectIDFromHex(idGroup)
 	if err != nil {
-		errConn()
+		
 		return
 	}
 
@@ -495,7 +495,7 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 
 	objUser, err := primitive.ObjectIDFromHex(index)
 	if err != nil {
-		errConn()
+		
 		return
 	}
 
@@ -531,6 +531,6 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 		return
 	}
 
-	
+
 
 }
