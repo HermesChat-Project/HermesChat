@@ -50,7 +50,7 @@
       <button class="bi bi-three-dots-vertical action" title="altre opzioni" (click)="toggleChatOptions()"></button>
       <!-- chat Options -->
       <div class="chat-options-list" [ngClass]="{'show-chat-options-list' : chatOptions}">
-        <div class="chat-option">
+        <div class="chat-option" *ngIf="chatSelector.selectedChat!.flagGroup">
           <p class="text-chat-option" (click)="showChatInfo()">Informazioni</p>
         </div>
         <!-- <div class="chat-option">
@@ -93,4 +93,5 @@
 <!-- camera component -->
 <app-camera *ngIf="chatSelector.flagCamera > 0" (onMediaEvent)="getMedia($event)"></app-camera>
 
-
+<!-- info chat component -->
+<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 7, 'hide_user_action' : chatSelector.user_action != 7}"></app-info-chat>

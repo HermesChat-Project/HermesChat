@@ -30,7 +30,7 @@ export class CameraComponent {
   trigger: Subject<void> = new Subject<void>();
 
   //media
-  media: { src: string, type: string }[] = [];
+  media: { src: string | SafeResourceUrl, type: string }[] = [];
 
   video: MediaRecorder | null = null;
 
@@ -72,16 +72,13 @@ export class CameraComponent {
       this.trigger.next();
     }
     else {
+      console.log(this.timer)
       if (!this.timer) {
-        if (!this.video) {
-          this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
-        }
-        console.log(this.video.stream);
-        if (this.video.state == "recording" || this.video.state == "paused") {
-          this.video.resume();
-        }
-        else
-          this.video.start();
+
+        this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
+
+
+        this.video.start();
 
         this.video.ondataavailable = (event: BlobEvent) => {
           console.log(event);
@@ -211,10 +208,15 @@ export class CameraComponent {
     return { "display": this.seeMedia };
   }
 
-  getMedia(media: { src: string, type: string }, index: number) {
-    let sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(media.src);
-    this.media[index].src = sanitized.toString();
-    return sanitized;
+  getMedia(media: { src: string | SafeResourceUrl, type: string }, index: number) {
+    if (media.src instanceof String) {
+      let sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(media.src as string);
+      this.media[index].src = sanitized;
+      return sanitized;
+    }
+    else {
+      return media.src;
+    }
   }
 
   changeMediaSelected(index: number) {

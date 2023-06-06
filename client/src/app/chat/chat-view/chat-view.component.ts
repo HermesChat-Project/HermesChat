@@ -112,7 +112,7 @@ export class ChatViewComponent {
   }
 
   showChatInfo() {
-
+    this.chatSelector.user_action = 7;
   }
 
   //#endregion

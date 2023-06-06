@@ -227,7 +227,7 @@ export class ChatSelectorService {
     })
   }
 
-  openLeaveGroupDialog(id:string) {
+  openLeaveGroupDialog(id: string) {
     this.dialog.open(LeaveGroupComponent, {
       panelClass: 'custom-dialog-container'
     }).afterClosed().subscribe((result: any) => {
@@ -541,8 +541,8 @@ export class ChatSelectorService {
     })
   }
 
-  leaveGroup(id:string = this.selectedChat!._id){
-    this.dataStorage.PostRequestWithHeaders('leaveGroup', {chatId: id}, this.getOptionsForRequest()).subscribe({
+  leaveGroup(id: string = this.selectedChat!._id) {
+    this.dataStorage.PostRequestWithHeaders('leaveGroup', { chatId: id }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
         this.chatList = this.chatList.filter((chat: Chat) => {
@@ -660,6 +660,28 @@ export class ChatSelectorService {
     });
   }
 
+  removeUser(userId: string, chatId: string = this.selectedChat!._id) {
+    this.dataStorage.PostRequestWithHeaders('removeUserFromGroup', { userId: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.selectedChat!.users = this.selectedChat!.users.filter((user: { idUser: string; image: string; nickname: string; role:string }) => {
+          return user.idUser != userId;
+        }
+        )
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+
+
+
+
+
   getDeleteOptions() {
     return {
       observe: 'response',
@@ -672,6 +694,10 @@ export class ChatSelectorService {
       }
     };
   }
+
+
+
+
   getGetOptions() {
     return {
       observe: 'response',
