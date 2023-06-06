@@ -60,7 +60,7 @@ p {
   height: 50px;
   border-bottom: 1px solid #0b2f5e;
   column-gap: 10px;
-  padding: 0 10px;
+  padding: 10px;
 }
 
 .header p {

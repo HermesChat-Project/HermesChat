@@ -86,7 +86,10 @@
   height: 40px;
   padding: 0px 10px;
   cursor: pointer;
+  width: 100%;
 }
+
+
 
 .add-friend:hover{
   background-color: #eee;
@@ -97,4 +100,14 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-friend p{
+  margin: 0px;
+  padding: 0px;
+  font-size: 13pt;
+  font-weight: bold;
 }

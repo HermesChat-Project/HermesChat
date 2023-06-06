@@ -16,7 +16,7 @@
     <div class="description" *ngIf="chatSelector.selectedChat?.flagGroup">
       <p>{{chatSelector.selectedChat?.description}}</p>
     </div>
-    <div class="add-user" *ngIf="chatSelector.selectedChat?.flagGroup && checkAdmin()">
+    <div class="add-user" *ngIf="chatSelector.selectedChat?.flagGroup">
       <button (click)="addUser()">
         <mat-icon>person_add</mat-icon>
         Add user

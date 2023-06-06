@@ -84,9 +84,9 @@ export class AllChatsComponent {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
   getLastMessage(chat: Chat){
-    let lastMessage: string = chat.messages?.content
+    let lastMessage: string = chat.messages?.content;
     if(this.chatSelector.socketMessageList[chat._id]?.length > 0)
-      lastMessage = this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id][this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id].length - 1].messages.content;
+      lastMessage = this.chatSelector.socketMessageList[chat._id][this.chatSelector.socketMessageList[chat._id].length - 1].messages.content;
     else if(this.chatSelector.messageList[chat._id]?.length > 0)
       lastMessage = this.chatSelector.messageList[chat._id][this.chatSelector.messageList[chat._id].length - 1].messages.content;
     if(chat.messages?.type == "chart")

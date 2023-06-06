@@ -1,9 +1,9 @@
-<div class="container">
-  <div class="header" mat-dialog-title>
-    <div class="title">
+<div class="dialog_container">
+  <div class="dialog_header" mat-dialog-title>
+    <div class="dialog_title">
       <h1>Aggiungi utente</h1>
     </div>
-    <div class="close-dialog">
+    <div class="dialog_close">
       <button mat-icon-button mat-dialog-close>
         <mat-icon>close</mat-icon>
       </button>
@@ -19,7 +19,7 @@
           <p>{{friend.nickname}}</p>
         </div>
         <div class="add-friend-badge">
-          <mat-icon *ngIf="friendAdded.includes(friend)">done</mat-icon>
+          <mat-icon *ngIf="friendAdded.includes(friend.id)">done</mat-icon>
         </div>
       </div>
     </div>

@@ -10,12 +10,14 @@ import { ChatSelectorService } from 'src/app/chat/chat.service';
 })
 export class AddUserGroupComponent {
   constructor(public chatSelector: ChatSelectorService, @Inject(MAT_DIALOG_DATA) public friendList: FriendModel[]) { }
-  friendAdded: FriendModel[] = [];
+  friendAdded: string[] = [];
 
   checkFriend(friend: FriendModel) {
-    if (this.friendAdded.find(f => f.id == friend.id)) {
-      return true;
+    if (this.friendAdded.includes(friend.id)) {
+      this.friendAdded.splice(this.friendAdded.indexOf(friend.id), 1);
     }
-    return false;
+    else {
+      this.friendAdded.push(friend.id);
+    }
   }
 }

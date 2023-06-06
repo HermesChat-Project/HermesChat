@@ -33,6 +33,7 @@ export class FullCalendarComponent {
 
   selected: boolean = false;
   sharedArray: string[] = [];
+  shareChatList: Chat[] = [];
 
   readonly_disabled() {
     return !this.isOnModifyingMode && !this.isOnCreatingMode;
@@ -131,11 +132,13 @@ export class FullCalendarComponent {
 
   createEvent(event: MouseEvent, rows: number, cols: number) {
     let elClicked = event.target as HTMLElement;
+
     this.confirmExit = false;
     if (elClicked.tagName == "P" || elClicked.tagName == "SPAN") {
       event.stopPropagation();
     }
     else {
+      this.shareChatList = [...this.chatSelector.chatList];
       this.today = new Date();
       this.clickedDate = new Date(this.chatSelector.selectedYear, this.chatSelector.selectedMonth, parseInt(this.chatSelector.selectedDate.split("-")[2]));
       if (this.clickedDate >= new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate())) {
@@ -148,6 +151,7 @@ export class FullCalendarComponent {
     }
   }
   seeEvent(sel_event: CalendarModel) {
+    this.shareChatList = [...this.chatSelector.chatList.filter(x => sel_event.idChats?.includes(x._id))];
     this.chatSelector.triggerCalendarModal = true;
     this.chatSelector.selectedCalendarEvent = sel_event;
     this.modifyingEvent = { ...sel_event };
