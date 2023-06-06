@@ -237,7 +237,7 @@ export class ChatSelectorService {
       }
     })
   }
-  openAddUserDialog(){
+  openAddUserDialog() {
     this.dialog.open(AddUserGroupComponent, {
       panelClass: 'custom-dialog-container',
       "data": this.userNonChatFriendList
@@ -372,7 +372,6 @@ export class ChatSelectorService {
   }
 
   getChatMessages(body: any, id: string, newMsg: boolean = false) {
-    console.log(this.messageList)
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
@@ -388,15 +387,12 @@ export class ChatSelectorService {
                   message.messages.options.audio = audioUrl;
                 })
             });
-            if (this.messageList[id]) {
-              this.sortChats(response.body.messages)
-              let array = response.body.messages.concat(this.messageList[id]);
-              this.messageList[id] = array;
-            }
-            else {
-              this.messageList[id] = response.body.messages;
-              this.sortChats();
-            }
+
+            this.sortChats(response.body.messages)
+            let array = response.body.messages.concat(this.messageList[id]);
+            this.messageList[id] = array;
+
+
             this.messageFeature(newMsg, id);
           }
 
@@ -625,6 +621,22 @@ export class ChatSelectorService {
           this.OtherListSerach = response.body;
           if (this.OtherListSerach.length > 10)
             this.OtherListSerach = this.OtherListSerach.slice(0, 10);
+          //sort putting at the top the friends
+          this.OtherListSerach.sort((a: SearchModel, b: SearchModel) => {
+            if (this.friendList.find((friend: FriendModel) => {
+              return friend.id == a._id;
+            })) {
+              return -1;
+            }
+            else if (this.friendList.find((friend: FriendModel) => {
+              return friend.id == b._id;
+            })) {
+              return 1;
+            }
+            else {
+              return 0;
+            }
+          })
         }
         else {
           this.OtherListSerach = [];
@@ -675,7 +687,7 @@ export class ChatSelectorService {
     this.dataStorage.PostRequestWithHeaders('removeUserFromGroup', { userId: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.selectedChat!.users = this.selectedChat!.users.filter((user: { idUser: string; image: string; nickname: string; role:string }) => {
+        this.selectedChat!.users = this.selectedChat!.users.filter((user: { idUser: string; image: string; nickname: string; role: string }) => {
           return user.idUser != userId;
         }
         )
@@ -810,9 +822,7 @@ export class ChatSelectorService {
             let audioUrl = URL.createObjectURL(blob);
             if (this.messageList[data.idDest].length > 0) {
               this.messageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
-              setTimeout(() => {
-                this.bottomScroll(-1);
-              }, 0);//to improve
+
             }
             else {
               this.socketMessageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
@@ -937,9 +947,9 @@ export class ChatSelectorService {
       return users[1].image;
   }
 
-  messageFeature(newMsg: boolean, id: string = "") {
+  messageFeature(newMsg: boolean, id: string = "", number_of_msg: number = 50) {
     if (!newMsg) {
-      this.offsetChat = Math.floor(this.messageList[id].length / 50) + 1;
+      this.offsetChat = Math.floor(this.messageList[id].length / number_of_msg) + 1;
       console.log(this.offsetChat);
       setTimeout(() => {
         this.bottomScroll();
