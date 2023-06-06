@@ -259,8 +259,7 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 		})
 		return
 	}
-	var gruppo2 group
-	collectionUser := config.ClientMongoDB.Database("chat").Collection("user")
+	collectionUser := config.ClientMongoDB.Database("user").Collection("user")
 	if collectionUser == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
@@ -282,7 +281,7 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 			})
 			return
 		}
-		_, errUpload := collectionUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUtente}, bson.M{"$push": bson.M{"ids.0.chats": objGroup}})
+		_, errUpload := collectionUser.UpdateOne(c.Request.Context(), bson.M{"_id": objUtente}, bson.M{"$push": bson.M{"ids.0.chats": form.ChatId}})
 		if errUpload != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "error while connecting to database",
@@ -303,19 +302,19 @@ func AddUserToGroupDB (idadmin string, form models.AddUserToGroupRequest, c *gin
 		utente.Image = result2.Image
 		utente.Nickname = result2.Nickname
 		utente.Role = "normal"
-
-		gruppo2.Users = append(gruppo2.Users, utente)
-
-	}
-
-	//aggiungo il gruppo alla lista dei gruppi dell'utente
-	_, errUpload := collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objGroup}, bson.M{"$push": bson.M{"users": gruppo2.Users}})
-	if errUpload != nil {
+		fmt.Println(utente)
+		_, errUpload = collecChat.UpdateOne(c.Request.Context(), bson.M{"_id": objGroup}, bson.M{"$push": bson.M{"users": utente}})
+		if errUpload != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "error while connecting to database",
 		})
 		return
 	}
+
+	}
+
+	//aggiungo il gruppo alla lista dei gruppi dell'utente
+	
 
 	for _, friend := range form.Users {
 
@@ -753,7 +752,32 @@ func ChangeGroupInfoDB (index string, form models.ChangeGroupInfoRequest, c *gin
 			return
 		}
 	}
+	type Info struct {
+		Name string `json:"name"`
+		Description string `json:"description"`
+		Img string `json:"img"`
+	}
 
+	type Message struct {
+		Type     string `json:"type"`
+		ChatId   string `json:"chatId"`
+		Info     Info `json:"info"`
+	}
 
+	
+
+	msg := Message{Type: "CGI", ChatId: form.ChatId, Info: Info{Name: form.Name, Description: form.Description, Img: form.Img}}
+	for _, elem := range result1.Users{
+		connsId := config.GetUserConnectionsRedis(elem.IdUser)
+		for _, connId := range connsId {
+			connDest := config.Conns[connId]
+			if connDest != nil {
+				connDest.WriteJSON(msg)
+			}
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "group info changed successfully",
+	})
 
 }

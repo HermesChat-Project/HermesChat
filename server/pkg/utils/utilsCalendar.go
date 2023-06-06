@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -228,7 +227,6 @@ func AddCalendarEventDB(index string, form models.AddCalendarEvent, c *gin.Conte
 		}
 
 		msg := Message{Type: "CEA", Username: index, Event: form}
-		fmt.Println(msg)
 		connsId := config.GetUserConnectionsRedis(elem2)
 		for _, connId := range connsId {
 			connDest := config.Conns[connId]
@@ -350,7 +348,6 @@ func DeleteCalendarEventDB(index string, form models.DeleteCalendarEvent, c *gin
 				}
 
 				msg := Message{Type: "CED", Username: index, IdEvent: form.IdEvent}
-				fmt.Println(msg)
 				connsId := config.GetUserConnectionsRedis(elem2)
 				for _, connId := range connsId {
 					connDest := config.Conns[connId]
@@ -522,7 +519,6 @@ func UpdateCalendarEventDB(index string, form models.UpdateCalendarEvent, c *gin
 		}
 
 		msg := Message{Type: "CEM", Username: index, Event: form}
-		fmt.Println(msg)
 		connsId := config.GetUserConnectionsRedis(elem2)
 		for _, connId := range connsId {
 			connDest := config.Conns[connId]

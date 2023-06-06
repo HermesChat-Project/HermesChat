@@ -49,7 +49,7 @@ func LoadConfig() {
 	REDIS_ADDR = os.Getenv("REDIS_ADDR")
 	REDIS_PWD = os.Getenv("REDIS_PWD")
 	if (PORT == 0){
-		PORT = 8090;
+		PORT = 80;
 	}
 	go CreateFileLog()
 }
