@@ -160,7 +160,6 @@ func CreateChat(index string, form models.CreateChat, c *gin.Context) {
 	}
 
 	msg := Message{Type: "NCC", ChatId: idChat, FirstNickname: form.FirstNickname, FirstImg: form.FirstImg, SecondNickname: form.SecondNickname}
-	fmt.Println(msg)
 	connsId := config.GetUserConnectionsRedis(index)
 	for _, connId := range connsId {
 		connDest := config.Conns[connId]
@@ -232,7 +231,6 @@ func GetChats(index string, c *gin.Context) {
 
 	for _, elem := range chatIDs {
 		i++;
-		fmt.Println("elem:" + elem)
 		idChats, err := primitive.ObjectIDFromHex(elem)
 		if err != nil {
 			fmt.Println(err)
@@ -250,7 +248,6 @@ func GetChats(index string, c *gin.Context) {
 			})
 			return
 		}
-		fmt.Println("idChats:" + idChats.Hex())
 		pipeline := bson.A{
 			bson.M{
 				"$match": bson.M{
@@ -288,7 +285,6 @@ func GetChats(index string, c *gin.Context) {
 			//find one with no options
 			ris10 := collection2.FindOne(c.Request.Context(), bson.M{"_id": idChats})
 			ris10.Decode(&result8)
-			fmt.Println(result8)
 		} 
 		vetChats[i-1] = result8
 
@@ -484,9 +480,6 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 		return
 	}
 
-	//remove the user from the group
-	fmt.Println(index)
-	fmt.Println(objID)
 	_, err = collection.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": objID},
@@ -518,7 +511,6 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 	// Extract the "chat" array from the result
 	result := bson.M{}
 	ris.Decode(&result)
-	fmt.Println("result", result)
 	// Extract the "chat" array from the result
 	chat := result["ids"].(primitive.A)[0].(primitive.M)["chats"].(primitive.A)
 
@@ -538,5 +530,7 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 		})
 		return
 	}
+
+	
 
 }

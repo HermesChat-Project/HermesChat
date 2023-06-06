@@ -222,7 +222,7 @@ func AddUserToGroup(c *gin.Context){
 	utils.AddUserToGroupDB(index.(string), form, c)
 }
 
-//ChangeRoleGroup	godoc
+//ChangeRoleGroup	    godoc
 // @Summary 			Cambia il ruolo di un utente in un gruppo
 // @Description 		Cambia il ruolo di un utente in un gruppo se si è admin
 // @Param 			    index formData string true "Indice dell'utente loggato"
@@ -234,7 +234,7 @@ func AddUserToGroup(c *gin.Context){
 // @Failure 		    400 {object} string
 // @Failure 		    401 {object} string
 // @Failure 		    500 {object} string
-// @Router 		        /changeRoleGroup [post]
+// @Router 		        /changeRoleGroup [patch]
 
 func ChangeRoleGroup (c *gin.Context){
 	var form models.ChangeRoleGroup;
