@@ -1,1 +1,35 @@
-<p>add-user-group works!</p>
+<div class="container">
+  <div class="header" mat-dialog-title>
+    <div class="title">
+      <h1>Aggiungi utente</h1>
+    </div>
+    <div class="close-dialog">
+      <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="body">
+    <div class="add-friend-list">
+      <div class="add-friend" *ngFor="let friend of friendList" (click)="checkFriend(friend)">
+        <div class="add-friend-image">
+          <img src="{{friend.image}}" alt="image not available">
+        </div>
+        <div class="add-friend-name">
+          <p>{{friend.nickname}}</p>
+        </div>
+        <div class="add-friend-badge">
+          <mat-icon *ngIf="friendAdded.includes(friend)">done</mat-icon>
+        </div>
+      </div>
+    </div>
+    <mat-dialog-actions class="row">
+      <div class="col-sm-6 warning">
+        <button mat-raised-button color="warn" [mat-dialog-close]="null">Annulla</button>
+      </div>
+      <div class="col-sm-6 done">
+        <button mat-raised-button color="primary" [disabled]="friendAdded.length == 0"
+          [mat-dialog-close]="friendAdded">Aggiungi</button>
+      </div>
+    </mat-dialog-actions>
+  </div>

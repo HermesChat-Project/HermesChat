@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
 import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
 import { LeaveGroupComponent } from '../dialog/leave-group/leave-group.component';
+import { AddUserGroupComponent } from '../dialog/add-user-group/add-user-group.component';
 
 
 @Injectable({
@@ -233,6 +234,16 @@ export class ChatSelectorService {
     }).afterClosed().subscribe((result: any) => {
       if (result) {
         this.leaveGroup(id);
+      }
+    })
+  }
+  openAddUserDialog(){
+    this.dialog.open(AddUserGroupComponent, {
+      panelClass: 'custom-dialog-container',
+      "data": this.userNonChatFriendList
+    }).afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.addUserToGroup(result);
       }
     })
   }
@@ -668,6 +679,20 @@ export class ChatSelectorService {
           return user.idUser != userId;
         }
         )
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+  addUserToGroup(userId: string, chatId: string = this.selectedChat!._id) {
+    this.dataStorage.PostRequestWithHeaders('addUserToGroup', { userId: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.selectedChat!.users.push({ idUser: userId, image: response.body.image, nickname: response.body.nickname, role: response.body.role });
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);

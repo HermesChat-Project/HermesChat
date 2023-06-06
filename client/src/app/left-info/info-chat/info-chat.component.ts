@@ -54,6 +54,7 @@ export class InfoChatComponent {
     // this.chatSelector.makeAdmin(member.idUser, this.chatSelector.selectedChat!._id);
   }
   addUser(){
-
+    this.chatSelector.userNonChatFriendList = this.chatSelector.friendList.filter(friend => !this.chatSelector.selectedChat?.users.find(member => member.idUser == friend.id));
+    this.chatSelector.openAddUserDialog();
   }
 }
