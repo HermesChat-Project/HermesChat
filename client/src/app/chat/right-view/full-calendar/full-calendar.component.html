@@ -166,7 +166,7 @@
           <textarea class="form-control" placeholder="Description" id="cal_modal_desc" [readOnly]="readonly_disabled()"
             [value]="modifyingEvent?.description" (input)="chengeDesc($event)"></textarea>
         </div>
-        <div class="cal_modal_share" *ngIf="this.chatSelector.selectedCalendarEvent?.idUser == this.chatSelector.infoUser._id">
+        <div class="cal_modal_share" *ngIf="this.chatSelector.selectedCalendarEvent?.idUser == this.chatSelector.infoUser._id || isOnCreatingMode">
 
           <button class="cal_modal_share_toggle" (click)="toggleList()"
             [ngClass]="{'sel' : selected, 'not_sel' : !selected}">

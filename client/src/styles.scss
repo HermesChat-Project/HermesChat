@@ -329,6 +329,20 @@ app-login, app-signup {
         color: #333;
       }
 
+      .bi-three-dots-vertical {
+        color: whitesmoke !important;
+      }
+
+      .chat-options-list{
+        background-color: #333 !important;
+        color: whitesmoke !important;
+        border: 1px solid transparent !important;
+      }
+
+      .chat-options-list > div:hover{
+        background-color: #444 !important;
+      }
+
       app-message {
         background-color: #333;
         .message-get{
@@ -407,6 +421,20 @@ app-login, app-signup {
             border: 1px solid whitesmoke !important;
           }
         }
+
+        .media_container {
+          background-color: #222 !important;
+          color: whitesmoke !important;
+        }
+
+        .camera-actions{
+          color: whitesmoke !important;
+          border: 1px solid transparent !important;
+        }
+
+        .camera-actions button{
+          color: whitesmoke !important;
+        }
       }
     }
 
@@ -475,6 +503,18 @@ app-login, app-signup {
           .mat-datepicker{
             background-color: #222 !important;
             color: whitesmoke !important;
+            border: none !important;
+          }
+
+          .cal_modal_share_toggle{
+            background-color: #222 !important;
+            color: white !important;
+            border: none !important;
+          }
+
+          .cal_modal_share_list{
+            background-color: #222 !important;
+            color: white !important;
             border: none !important;
           }
 

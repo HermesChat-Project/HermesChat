@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ChatSelectorService } from 'src/app/chat/chat.service';
 
 @Component({
-  selector: 'app-type-options',
+  selector: 'app-info-type-options',
   templateUrl: './info-type-options.component.html',
   styleUrls: ['./info-type-options.component.css']
 })

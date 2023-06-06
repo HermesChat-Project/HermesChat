@@ -953,7 +953,8 @@ export class ChatSelectorService {
           console.log("modificato");
           let evento = data.evento;
           let event = data.eventChanges;
-          let cal_event = this.calendarList.find((ev) => ev._id == evento.idEvent);
+          console.log(evento);
+          let cal_event = this.calendarList.find((ev) => ev._id == evento);
           console.log(cal_event);
           if (event.color)
             cal_event!.color = event.color;
