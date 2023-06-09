@@ -298,3 +298,25 @@ app-camera{
 .text-chat-option{
   margin: 0;
 }
+
+.info_of_the_user{
+  display: inline-block;
+  transform: translateX(-100%);
+  width: 350px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 7;
+}
+
+.show_user_action{
+  transform: translateX(0%);
+  transition: transform 0.2s ease-in-out;
+}
+
+.hide_user_action{
+  transform: translateX(-100%);
+  transition: transform 0.2s ease-in-out;
+}

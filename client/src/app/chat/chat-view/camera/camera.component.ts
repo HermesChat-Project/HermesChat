@@ -30,7 +30,7 @@ export class CameraComponent {
   trigger: Subject<void> = new Subject<void>();
 
   //media
-  media: { src: string, type: string }[] = [];
+  media: { src: string | SafeResourceUrl, type: string }[] = [];
 
   video: MediaRecorder | null = null;
 
@@ -47,7 +47,7 @@ export class CameraComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event?: Event) {
     const win = !!event ? (event.target as Window) : window;
-    console.log(win.innerWidth, win.innerHeight);
+
     this.width = win.innerWidth - 100;
     this.height = win.innerHeight - 100;
   }
@@ -72,19 +72,16 @@ export class CameraComponent {
       this.trigger.next();
     }
     else {
+
       if (!this.timer) {
-        if (!this.video) {
-          this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
-        }
-        console.log(this.video.stream);
-        if (this.video.state == "recording" || this.video.state == "paused") {
-          this.video.resume();
-        }
-        else
-          this.video.start();
+
+        this.video = new MediaRecorder(this.chatSelector.stream as MediaStream);
+
+
+        this.video.start();
 
         this.video.ondataavailable = (event: BlobEvent) => {
-          console.log(event);
+
           let recordedBlob: Blob = new Blob([event.data], { type: "video/webm" });
           let recordedSrc = URL.createObjectURL(recordedBlob);
           this.showMediaList = true;
@@ -95,7 +92,6 @@ export class CameraComponent {
 
         }
 
-        console.log(this.media);
         this.seconds = this.minutes = this.hours = 0;
         this.videoOnGoing = true;
         this.timer = setInterval(() => {
@@ -117,13 +113,13 @@ export class CameraComponent {
         this.timer = null;
         this.video?.stop();
         this.videoOnGoing = false;
-        console.log(this.video);
+
       }
     }
   }
 
   showAllMedia() {
-    console.log(this.media);
+
     this.media_scrolling.nativeElement.innerHTML = "";
     for (let i = 0; i < this.media.length; i++) {
       let div = document.createElement("div")
@@ -211,14 +207,19 @@ export class CameraComponent {
     return { "display": this.seeMedia };
   }
 
-  getMedia(media: { src: string, type: string }, index: number) {
-    let sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(media.src);
-    this.media[index].src = sanitized.toString();
-    return sanitized;
+  getMedia(media: { src: string | SafeResourceUrl, type: string }, index: number) {
+    if (media.src instanceof String) {
+      let sanitized = this.sanitizer.bypassSecurityTrustResourceUrl(media.src as string);
+      this.media[index].src = sanitized;
+      return sanitized;
+    }
+    else {
+      return media.src;
+    }
   }
 
   changeMediaSelected(index: number) {
-    console.log(index);
+
     let left = index * (-670) + "px";
     let keyFrames = [
       { transform: "translateX(" + this.media_position * (-670) + "px)" },
@@ -230,7 +231,7 @@ export class CameraComponent {
       { transform: "translateX(" + this.scroll_position * (-71.66) + "px)" },
       { transform: "translateX(" + index * (-71.66) + "px)" }
     ];
-    console.log(keyFrames2)
+
     let options: object = {
       duration: 200,
       iterations: 1,

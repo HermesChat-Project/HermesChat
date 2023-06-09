@@ -33,6 +33,7 @@ export class FullCalendarComponent {
 
   selected: boolean = false;
   sharedArray: string[] = [];
+  shareChatList: Chat[] = [];
 
   readonly_disabled() {
     return !this.isOnModifyingMode && !this.isOnCreatingMode;
@@ -131,27 +132,30 @@ export class FullCalendarComponent {
 
   createEvent(event: MouseEvent, rows: number, cols: number) {
     let elClicked = event.target as HTMLElement;
+
     this.confirmExit = false;
     if (elClicked.tagName == "P" || elClicked.tagName == "SPAN") {
       event.stopPropagation();
     }
     else {
+      this.shareChatList = [...this.chatSelector.chatList];
       this.today = new Date();
       this.clickedDate = new Date(this.chatSelector.selectedYear, this.chatSelector.selectedMonth, parseInt(this.chatSelector.selectedDate.split("-")[2]));
       if (this.clickedDate >= new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate())) {
         this.chatSelector.triggerCalendarModal = true;
         this.isOnCreatingMode = true;
         let date = new Date(this.clickedDate.setHours(this.today.getHours(), this.today.getMinutes()))
-        this.modifyingEvent = new CalendarModel("-1","", "", this.chatSelector.infoUser._id,date, date.toISOString(), "personal");
-        console.log(this.modifyingEvent);
+        this.modifyingEvent = new CalendarModel("-1", "", "", this.chatSelector.infoUser._id, date, date.toISOString(), "personal");
+
       }
     }
   }
   seeEvent(sel_event: CalendarModel) {
+    this.shareChatList = [...this.chatSelector.chatList.filter(x => sel_event.idChats?.includes(x._id))];
     this.chatSelector.triggerCalendarModal = true;
     this.chatSelector.selectedCalendarEvent = sel_event;
     this.modifyingEvent = { ...sel_event };
-    console.log(this.modifyingEvent);
+
     this.chatSelector.selectedNotifyTime = sel_event.notifyTime;
   }
 
@@ -231,11 +235,23 @@ export class FullCalendarComponent {
   }
 
   checkIfThaEventCanBeModified() {
+
     //create date withouth seconds and milliseconds to compare it with the date of the event
     let date = new Date();
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
 
-    if ((this.chatSelector.selectedCalendarEvent?.date! >= date) || this.isOnCreatingMode)
+    if ((this.chatSelector.selectedCalendarEvent?.date! >= date) && !this.isOnCreatingMode)
+      return true;
+    else
+      return false;
+  }
+
+  checkIfThaEventCanBeCreated(){
+    //create date withouth seconds and milliseconds to compare it with the date of the event
+    let date = new Date();
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+
+    if (this.modifyingEvent?.date! >= date && this.isOnCreatingMode)
       return true;
     else
       return false;
@@ -278,13 +294,22 @@ export class FullCalendarComponent {
   }
 
   updateSharedArray(chat: Chat | null) {
+    if (!this.isOnCreatingMode)
+      return;
     if (chat)
       this.sharedArray.includes(chat._id) ? this.sharedArray.splice(this.sharedArray.indexOf(chat._id), 1) : this.sharedArray.push(chat._id);
     else {
       this.sharedArray = [];
       this.selected = false;
     }
-    console.log(this.sharedArray);
+
+  }
+
+  seeTextOfShareEvent() {
+    if (this.isOnCreatingMode)
+      return "Seleziona chat";
+    else
+      return "Chat condivise";
   }
   checkIfIsShared(chat: Chat) {
     return this.sharedArray.includes(chat._id);
@@ -292,49 +317,49 @@ export class FullCalendarComponent {
 
 
 
+  createNewEvent(event: MouseEvent) {
+    let shared: string = "personal";
 
+    let notify = this.modifyingEvent?.notifyTime == "00:00" ? false : true
+    if (this.sharedArray.length > 0) {
+      shared = "shared";
+    }
+    let body: any = {
+      title: this.modifyingEvent!.title,
+      description: this.modifyingEvent!.description,
+      date: this.modifyingEvent!.dateTime,
+      color: this.modifyingEvent!.color,
+      notifyTime: this.chatSelector.selectedNotifyTime,
+      type: shared,
+      notify: notify,
+      idUser: this.chatSelector.infoUser._id,
+
+    }
+    if (shared)
+      body.idChats = this.sharedArray;
+    this.chatSelector.createCalendarEvent(body)
+      .finally(() => {
+        this.chatSelector.triggerCalendarModal = false;
+        this.isOnCreatingMode = false;
+      });
+  }
 
   modifyEvent(event: MouseEvent) {
     let el = event.target as HTMLElement;
-    if (!this.isOnCreatingMode) {
-      if (el.classList.contains("btn-success")) {
-        this.isOnModifyingMode = false;
-        el.innerHTML = "Modifica";
-        this.chatSelector.calendarList[this.chatSelector.calendarList.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
-        this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
-        this.chatSelector.triggerCalendarModal = false;
-      }
-      else {
-        el.innerHTML = "Salva"
-        this.isOnModifyingMode = true;
-      }
+
+    if (el.classList.contains("btn-success")) {
+      this.isOnModifyingMode = false;
+      el.innerHTML = "Modifica";
+      this.chatSelector.calendarList[this.chatSelector.calendarList.indexOf(this.chatSelector.selectedCalendarEvent!)] = this.modifyingEvent!;
+      this.chatSelector.EventsPerMonth = this.chatSelector.getCalendarEventsByMonth();
+      this.chatSelector.triggerCalendarModal = false;
     }
     else {
-      let shared: string = "personal";
-      let notify = this.modifyingEvent?.notifyTime == "00:00" ? false : true
-      if (this.sharedArray.length > 0) {
-        shared = "shared";
-      }
-      let body: any = {
-        title: this.modifyingEvent!.title,
-        description: this.modifyingEvent!.description,
-        date: this.modifyingEvent!.dateTime,
-        color: this.modifyingEvent!.color,
-        notifyTime: this.chatSelector.selectedNotifyTime,
-        type: shared,
-        notify: notify,
-        idUser: this.chatSelector.infoUser._id,
-
-      }
-      if (shared)
-        body.idChats = this.sharedArray;
-      this.chatSelector.createCalendarEvent(body)
-      .finally(() => {
-          this.chatSelector.triggerCalendarModal = false;
-          this.isOnCreatingMode = false;
-        });
-
+      el.innerHTML = "Salva"
+      this.isOnModifyingMode = true;
     }
+
+
   }
 
   returnMinutes(min: number | undefined) {

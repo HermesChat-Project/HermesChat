@@ -133,7 +133,6 @@ export class MessageComponent implements AfterViewInit {
 
   copyToClipboard() {
     navigator.clipboard.writeText(this.chatMessage.messages.content).then(() => {
-      console.log("copied");
       this.copy.nativeElement.classList.add("bi-clipboard-check-fill");
       this.copy.nativeElement.classList.remove("bi-clipboard-plus-fill");
     })

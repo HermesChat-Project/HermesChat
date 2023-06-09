@@ -67,7 +67,7 @@
     <div class="accordion-item" *ngIf="chatSelector.OtherListSerach.length != 0">
       <span class="chatFound accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
           data-bs-target="#others" aria-expanded="true" aria-controls="collapseOne">
-          Chat trovate
+          Utenti trovate
         </button></span>
       <div id="others" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">
@@ -81,7 +81,7 @@
             <div class="col-sm-9">
               <div class="chatName">
                 <h5 class="chat-name">{{OthersChats.nickname}}</h5>
-                <button class="options bi bi-person-fill-add"(click)="sendRequest(OthersChats)"></button>
+                <button class="options bi bi-person-fill-add"(click)="sendRequest(OthersChats)" *ngIf="checkUser(OthersChats) == 0"></button>
               </div>
             </div>
           </div>

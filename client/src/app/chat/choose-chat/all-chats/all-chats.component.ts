@@ -69,15 +69,30 @@ export class AllChatsComponent {
       this.chatSelector.getSearchUsers(this.txtSearchChat)
     }
   }
+
+  checkUser(user: SearchModel) {
+    if(this.chatSelector.friendList.find(x => x.id == user._id))
+      return 1
+    if(this.chatSelector.receivedList.find(x => x.idUser == user._id))
+      return 2;
+    if(this.chatSelector.sentList.find(x => x.idUser == user._id))
+      return 3;
+    return 0;
+  }
+
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
   getLastMessage(chat: Chat){
-    let lastMessage: string = chat.messages?.content
+    let lastMessage: string = chat.messages?.content;
     if(this.chatSelector.socketMessageList[chat._id]?.length > 0)
-      lastMessage = this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id][this.chatSelector.socketMessageList[this.chatSelector.selectedChat!._id].length - 1].messages.content;
+      lastMessage = this.chatSelector.socketMessageList[chat._id][this.chatSelector.socketMessageList[chat._id].length - 1].messages.content;
+    else if(this.chatSelector.messageList[chat._id]?.length > 0)
+      lastMessage = this.chatSelector.messageList[chat._id][this.chatSelector.messageList[chat._id].length - 1].messages.content;
     if(chat.messages?.type == "chart")
       return "&#128200; " + (this.translationService.languageWords["chart"] || "chart");
+    else if(chat.messages?.type == "survey")
+      return "&#128200; " + (this.translationService.languageWords["survey"] || "survey");
     return lastMessage;
   }
 
@@ -92,7 +107,6 @@ export class AllChatsComponent {
       idChat: selected._id,
       offset: 1,
     }
-    console.log(selected)
 
     this.chatSelector.getChatMessages(body, selected._id);
     // this.chatSelector.getChatMessages(selected);

@@ -24,6 +24,7 @@ export class LoginComponent {
       this.loginService.seeMobilePage();
     }
     else {
+      this.loginService.onEndLogin = false;
       this.loginService.checkToken();
       if (this.translationService.languageSelected == "")
         this.translationService.getLanguage();
@@ -36,6 +37,7 @@ export class LoginComponent {
     }
     //log email password
     if (this.email != '' && this.password != '') {
+      this.loginService.onEndLogin = false;
       let body = {
         password: this.password.toString(),
         username: this.email.toString()
@@ -64,7 +66,7 @@ export class LoginComponent {
     this.pwd.nativeElement.type = this.showPassword ? 'text' : 'password';
   }
   keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Enter' )
+    if (event.key == 'Enter' && this.loginService.onEndLogin )
       this.login(event);
   }
   onPaste(event: ClipboardEvent){

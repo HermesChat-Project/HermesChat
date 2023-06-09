@@ -25,7 +25,7 @@ export class CreateChatComponent {
   base64Img: string = '';
 
   changeSelection(type: number) {
-    console.log(type);
+
     this.headerService.chatCreationType = type;
   }
 
@@ -50,7 +50,7 @@ export class CreateChatComponent {
         "img": this.base64Img,
         "users": this.possibleUser
       }
-      console.log(body);
+
       this.chatSelectorService.createGroupChat(body);
     }
   }
@@ -72,11 +72,11 @@ export class CreateChatComponent {
       reader.readAsDataURL(file);
 
       reader.onload = function () {
-        console.log(reader.result)
+
         resolve(reader.result)
       }
       reader.onerror = function (error) {
-        console.log("Error: " + error);
+
         reject(error)
       }
     })
@@ -92,7 +92,7 @@ export class CreateChatComponent {
         "autoFocus": true,
         "data": friend.nickname
       }).afterClosed().subscribe((result) => {
-        console.log(result);
+
         if (result) {
           this.chatSelectorService.createChat(friend);
         }

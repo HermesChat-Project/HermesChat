@@ -48,7 +48,7 @@ export class ChatViewComponent {
 
   constructor(public chatSelector: ChatSelectorService) { }
   getMedia(event: any) {
-    console.log(event);
+
     this.chatSelector.stream?.getTracks().forEach(track => track.stop());
     this.chatSelector.flagCamera = 0;
     let innerHTML = this.textMessage.nativeElement.innerrHTML == "" ? "" : "<br>";
@@ -65,6 +65,8 @@ export class ChatViewComponent {
   //#region messages type
   showCamera(type: number) {
     //check if the camera is permitted
+    if(type == 2)
+     return;
     if (navigator.mediaDevices) {
       if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
@@ -112,16 +114,14 @@ export class ChatViewComponent {
   }
 
   showChatInfo() {
-
+    this.chatSelector.user_action = 7;
   }
 
   //#endregion
   hideShowChatActions(event: Event) {
     //get the focused element
     let focusedElement = document.activeElement;
-    console.log(focusedElement);
-    console.log(this.textMessage.nativeElement);
-    console.log(event.target);
+
     // this.showChatActions = this.textMessage.nativeElement.contains(focusedElement);
   }
 
@@ -132,7 +132,6 @@ export class ChatViewComponent {
       this.contents = this.selection.getRangeAt(0).cloneContents();//get the html content of the selection
     else
       this.contents = undefined;
-    console.log(this.contents);
     if (this.contents != undefined && this.contents) {//check if the selection is not empty
 
       if (!this.checkIfFontStylingDivShouldBeShown()) {
@@ -172,21 +171,21 @@ export class ChatViewComponent {
   }
 
   toggleAudioPlay() {
-    this.audioplay = !this.audioplay;
-    if (this.audioplay)
-      this.audioRecorder?.resume();
-    else
-      this.audioRecorder?.pause();
+    // this.audioplay = !this.audioplay;
+    // if (this.audioplay)
+    //   this.audioRecorder?.resume();
+    // else
+    //   this.audioRecorder?.pause();
   }
 
   recordAudio() {
     let constraints = { audio: true };
     navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      this.contentEditable = false;
-      this.audioRecord = true;
-      this.audioplay = true;
+      // this.contentEditable = false;
+      // this.audioRecord = true;
+      // this.audioplay = true;
       this.audioRecorder = new MediaRecorder(stream);
-      this.audioRecorder.start();
+      // this.audioRecorder.start();
       let audioChunks: Blob[] = [];
       this.audioRecorder.addEventListener("dataavailable", (event: any) => {
         stream.getTracks().forEach(track => track.stop());
@@ -231,7 +230,7 @@ export class ChatViewComponent {
 
       this.messageSent = this.textMessage.nativeElement.innerHTML;
       //delete the first <br> tags
-      console.log(this.messageSent);
+
       while (this.messageSent.indexOf('<br>') == 0) {
         this.messageSent = this.messageSent.replace('<br>', '');
       }
@@ -254,20 +253,20 @@ export class ChatViewComponent {
     }
   }
   getFiles(event: any) {
-    //get the files taken from the input file and convert them to binary
-    let files = event.target?.files || event.dataTransfer.files;
-    if (files) {
-      let file = files[0];
-      console.log(file);
-      let formData = new FormData();
-      formData.append('file', file);
-      formData.append('chatId', this.chatSelector.selectedChat!._id);
-      this.chatSelector.sendFile(formData).then((file: any) => {
-        this.chatSelector.getFile(file, this.chatSelector.selectedChat!._id);
-      }).catch((err: HttpErrorResponse) => {
-        console.log(err.message);
-      });
-    }
+    // //get the files taken from the input file and convert them to binary
+    // let files = event.target?.files || event.dataTransfer.files;
+    // if (files) {
+    //   let file = files[0];
+    //   console.log(file);
+    //   let formData = new FormData();
+    //   formData.append('file', file);
+    //   formData.append('chatId', this.chatSelector.selectedChat!._id);
+    //   this.chatSelector.sendFile(formData).then((file: any) => {
+    //     this.chatSelector.getFile(file, this.chatSelector.selectedChat!._id);
+    //   }).catch((err: HttpErrorResponse) => {
+    //     console.log(err.message);
+    //   });
+    // }
   }
 
   shareCalendar() {
@@ -364,7 +363,7 @@ export class ChatViewComponent {
   getStartOffset(offsetStartOfNode: number, startContainer: Node, fontType: string) {
     let offset = offsetStartOfNode;
     let el = startContainer;
-    console.log(el);
+
     let parent = el;
     while (parent.nodeName != fontType.toUpperCase()) {
       el = parent;
@@ -393,7 +392,7 @@ export class ChatViewComponent {
       while (commonAncestorContainer?.nodeName != fonttype.toUpperCase() && commonAncestorContainer?.nodeName != 'DIV') {
         commonAncestorContainer = commonAncestorContainer?.parentNode!;
       }
-      console.log(commonAncestorContainer.nodeName);
+
       if (commonAncestorContainer?.nodeName != 'DIV') {
         let newRange = this.selection?.getRangeAt(0).cloneRange();
         let startContainer = this.selection?.getRangeAt(0).startContainer;
@@ -438,7 +437,7 @@ export class ChatViewComponent {
             }
             newStr += string_lines[startingLine][i];
           }
-          console.log(newStr);
+
 
           string_lines[startingLine] = newStr;
         }
@@ -471,7 +470,7 @@ export class ChatViewComponent {
         html = string_lines.join("<br>");
         this.selection?.getRangeAt(0).deleteContents();
         let newFragment = document.createRange().createContextualFragment("<" + fonttype + ">" + html + "</" + fonttype + ">" as string);
-        console.log(newFragment);
+
         this.selection?.getRangeAt(0).insertNode(newFragment);
         this.contents = this.selection?.getRangeAt(0).cloneContents();
 
@@ -486,7 +485,7 @@ export class ChatViewComponent {
         let arrayContainer: any[] = [];
         let length_of_start_text = 0;
         let fullText = this.selection?.toString();
-        console.log(fullText);
+
         let firstContainer = this.selection?.getRangeAt(0).startContainer;
         let lastContainer = this.selection?.getRangeAt(0).endContainer;
         let startOffset = this.getStartOffset(this.textSelectedOffsetStart, firstContainer as Node, fonttype);
@@ -508,21 +507,21 @@ export class ChatViewComponent {
           arrayContainer.push(nextSibling);
           text_remaining_length -= nextSibling?.textContent?.length!;
         }
-        // console.log(commonFistContainer, commonLastContainer);
-        console.log(arrayContainer);
+
+
 
         let final_html = "";
         let cont = 0;
         let wait = false;
         let number_of_lines = this.selection?.toString().split("\n").length;
         text_remaining_length = this.selection!.toString().length - number_of_lines! + 1;
-        console.log(text_remaining_length);
+
         for (let i = 0; i < arrayContainer.length; i++) {
           let htmlString = arrayContainer[i]?.innerHTML;
           if (i != 0 && i != arrayContainer.length - 1) {
             htmlString = "<" + fonttype + "></" + fonttype + ">" + htmlString + "</" + fonttype + "><" + fonttype + ">";
             final_html += htmlString;
-            console.log(arrayContainer[i].innerText.length);
+
             text_remaining_length -= arrayContainer[i].innerText.length;
           }
           else {
@@ -569,10 +568,10 @@ export class ChatViewComponent {
         }
         this.selection?.getRangeAt(0).setStart(firstContainer!, 0);
         this.selection?.getRangeAt(0).setEnd(lastContainer!, lastContainer?.childNodes?.length!);
-        console.log(final_html);
+
         this.selection?.getRangeAt(0).deleteContents();
         let newFragment = document.createRange().createContextualFragment("<" + fonttype + ">" + final_html + "</" + fonttype + ">" as string);
-        console.log(newFragment);
+
         this.selection?.getRangeAt(0).insertNode(newFragment);
         this.contents = this.selection?.getRangeAt(0).cloneContents();
       }
@@ -764,8 +763,7 @@ export class ChatViewComponent {
   }
 
   insertStyle(fonttype: string) {
-    console.log(this.serializedStr);
-    console.log(this.contents)
+
     if (this.serializedStr.indexOf('<' + fonttype) != 0 && this.serializedStr.indexOf('</' + fonttype + '>') != this.serializedStr.length - ('</' + fonttype + '>').length) {
       this.serializedStr = this.serializedStr.replaceAll('<' + fonttype + ">", '');
       this.serializedStr = this.serializedStr.replaceAll('</' + fonttype + '>', '');
@@ -788,7 +786,7 @@ export class ChatViewComponent {
     }
 
     this.toggleSelect(fonttype);
-    console.log(this.contents)
+
   }
 
 

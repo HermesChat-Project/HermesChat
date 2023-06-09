@@ -31,4 +31,12 @@ export class ChatSelectorComponent {
     else
      return false;
   }
+
+  mouseEvent(event: MouseEvent){
+    // console.log(event.target);
+    // if(this.chatSelector.openOption)
+    //   this.chatSelector.openOption = false;
+    // if(this.chatSelector.user_action == 7)
+    //   this.chatSelector.user_action = -1;
+  }
 }

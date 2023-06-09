@@ -13,18 +13,25 @@ export class LoginService {
   loginSuccess: boolean = true;
   wrongCredentials: boolean = false;
   registerSuccess: boolean = false;
+  onEndLogin: boolean = false;
   login(body: any, options: { headers: any; observe: string; withCredentials: boolean }) {
     this.dataStorage.PostRequestWithHeaders(`login`, body, options).subscribe({
       next: (response: any) => {
         this.loginSuccess = true;
         this.wrongCredentials = false;
         this.router.navigate(['/chat']);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
-        if (error.status != 418)
+        if (error.status == 401)
           this.loginSuccess = false;
-        this.wrongCredentials = true;
+        else{
+          this.onEndLogin = true;
+          this.wrongCredentials = true;
+        }
+
+
       }
     });
   }
@@ -37,6 +44,7 @@ export class LoginService {
       },
       error: (error: Error) => {
         console.log(error);
+        this.onEndLogin = true;
       }
     });
   }

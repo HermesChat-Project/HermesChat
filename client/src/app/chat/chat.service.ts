@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { SearchModel } from 'model/search.model';
 import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
 import { LeaveGroupComponent } from '../dialog/leave-group/leave-group.component';
+import { AddUserGroupComponent } from '../dialog/add-user-group/add-user-group.component';
 
 
 @Injectable({
@@ -49,6 +50,7 @@ export class ChatSelectorService {
     new callsModel(2, 2, 1, new Date(), 0),
     new callsModel(3, 2, 3, new Date(), 1),
   ];
+  openOption: boolean = false;//right click option
 
   selectedChat: Chat | null = null;
   calendarSectionClicked: boolean = false;
@@ -221,13 +223,13 @@ export class ChatSelectorService {
       maxHeight: '70%',
     }).afterClosed().subscribe((result: any) => {
       if (result) {
-        console.log(result);
+
         this.sendMessage("", "chart", result.data)
       }
     })
   }
 
-  openLeaveGroupDialog(id:string) {
+  openLeaveGroupDialog(id: string) {
     this.dialog.open(LeaveGroupComponent, {
       panelClass: 'custom-dialog-container'
     }).afterClosed().subscribe((result: any) => {
@@ -236,20 +238,36 @@ export class ChatSelectorService {
       }
     })
   }
-  shareCalendar() {
-    if (this.calendarList.length == 0)
-      this.getCalendarEvents();
-    this.dialog.open(ShareCalendarListComponent, {
+  openAddUserDialog() {
+    this.dialog.open(AddUserGroupComponent, {
       panelClass: 'custom-dialog-container',
-      width: '40%',
-      minHeight: '50%',
-      maxHeight: '70%',
-    }).afterClosed().subscribe((result: CalendarModel[] | null) => {
+      "data": this.userNonChatFriendList
+    }).afterClosed().subscribe((result: any) => {
       if (result) {
-        console.log(result);
-
+        this.addUserToGroup(result);
       }
     })
+  }
+  shareCalendar() {
+    if (this.calendarList.length == 0)
+      this.getCalendarEvents(true);
+    else {
+      let chatEvent = this.personalCalendarList.filter((event: CalendarModel) => {
+        return !event.idChats?.includes(this.selectedChat!._id);
+      })
+      this.dialog.open(ShareCalendarListComponent, {
+        panelClass: 'custom-dialog-container',
+        width: '40%',
+        minHeight: '50%',
+        maxHeight: '70%',
+        data: chatEvent
+      }).afterClosed().subscribe((result: string[] | null) => {
+        if (result) {
+
+          this.updateCalendarEvents(result);
+        }
+      })
+    }
   }
 
 
@@ -288,13 +306,24 @@ export class ChatSelectorService {
 
   sendMessage(message: string, type: string = 'text', options: any = null, localpush: boolean = true) {
     if (this.selectedChat) {
-      if (localpush)
+      if (localpush) {
         this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
+        this.chatList[this.chatList.findIndex((chat: Chat) => { return chat._id == this.selectedChat!._id })].messages = { content: message, dateTime: new Date().toISOString() }
+        this.chatList.sort((a, b) => {
+          if(a.messages.dateTime && !b.messages.dateTime)
+            return -1;
+          if(!a.messages.dateTime && b.messages.dateTime)
+            return 1;
 
+          let aDate = new Date(a.messages!.dateTime);
+          let bDate = new Date(b.messages!.dateTime);
+          return bDate.getTime() - aDate.getTime();
+        })
+        setTimeout(() => {
+          this.bottomScroll();
+        }, 0);//to improve
+      }
       this.socket?.send(JSON.stringify({ "type": "MSG", "idDest": this.selectedChat._id, "payload": message, "flagGroup": this.selectedChat.flagGroup, typeMSG: type, options: JSON.stringify(options) }));
-      setTimeout(() => {
-        this.bottomScroll();
-      }, 0);//to improve
 
     }
   }
@@ -319,6 +348,7 @@ export class ChatSelectorService {
   getInfo() {
     this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
+
         this.infoUser = response.body;
         this.progress++;
         this.waitProgress();
@@ -333,7 +363,7 @@ export class ChatSelectorService {
   getChats() {
     this.dataStorage.PostRequestWithHeaders(`getChats`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.chatList = response.body.chats;
 
         this.changeName(response.body.chats);
@@ -344,6 +374,11 @@ export class ChatSelectorService {
             this.socketMessageList[chat._id] = [];
         }
         this.chatList.sort((a, b) => {
+          if(a.messages.dateTime && !b.messages.dateTime)
+            return -1;
+          if(!a.messages.dateTime && b.messages.dateTime)
+            return 1;
+
           let aDate = new Date(a.messages!.dateTime);
           let bDate = new Date(b.messages!.dateTime);
           return bDate.getTime() - aDate.getTime();
@@ -352,20 +387,23 @@ export class ChatSelectorService {
         this.waitProgress();
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
+
         if (error.status == 401)
           this.logout();
+        if (error.status == 400) {
+          this.progress++
+          this.waitProgress();
+        }
       }
     });
 
   }
 
   getChatMessages(body: any, id: string, newMsg: boolean = false) {
-    console.log(this.messageList)
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-          console.log(response.body);
+
           if (response.body.messages) {
 
             response.body.messages.forEach(async (message: messageModel) => {
@@ -377,16 +415,13 @@ export class ChatSelectorService {
                   message.messages.options.audio = audioUrl;
                 })
             });
-            if (this.messageList[id]) {
-              this.sortChats(response.body.messages)
-              let array = response.body.messages.concat(this.messageList[id]);
-              this.messageList[id] = array;
-            }
-            else {
-              this.messageList[id] = response.body.messages;
-              this.sortChats();
-            }
-            this.messageFeature(newMsg, id);
+
+            this.sortChats(response.body.messages)
+            let array = response.body.messages.concat(this.messageList[id]);
+            this.messageList[id] = array;
+
+
+            this.messageFeature(newMsg, id, response.body.messages.length);
           }
 
         },
@@ -406,7 +441,7 @@ export class ChatSelectorService {
   getFriends() {
     this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         if (response.body.friends) {
           this.friendList = response.body.friends;
           if (this.friendList.length > 0)
@@ -428,7 +463,7 @@ export class ChatSelectorService {
   getReceivedRequests() {
     this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.receivedList = response.body.requests;
         this.progress++;
         this.waitProgress();
@@ -444,7 +479,7 @@ export class ChatSelectorService {
   getSentRequest() {
     this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.sentList = response.body.requests;
         this.progress++;
         this.waitProgress();
@@ -460,7 +495,7 @@ export class ChatSelectorService {
   acceptRequest(body: any) {
     this.dataStorage.PostRequestWithHeaders('acceptFriend', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -473,7 +508,7 @@ export class ChatSelectorService {
   denyRequest(request: string) {
     this.dataStorage.PostRequestWithHeaders('declineFriend', { idUser: request }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -497,8 +532,7 @@ export class ChatSelectorService {
 
     this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
-        this.chatList.push(response.body.chat);
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -520,18 +554,35 @@ export class ChatSelectorService {
     })
   }
 
-  getCalendarEvents() {
+  getCalendarEvents(openDialog: boolean = false) {
     this.dataStorage.PostRequestWithHeaders('getCalendarEvents', {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.calendarList = response.body.events;
         this.calendarList.forEach((event: CalendarModel) => {
           event.date = new Date(event.dateTime);
         })
         this.personalCalendarList = this.calendarList.filter((event: CalendarModel) => {
-          return event.idUser == this.infoUser._id && event.date > new Date();
+          return event.idUser == this.infoUser._id && event.date > new Date()
         })
         this.EventsPerMonth = this.getCalendarEventsByMonth();
+        if (openDialog) {
+          let chatEvent = this.personalCalendarList.filter((event: CalendarModel) => {
+            return !event.idChats?.includes(this.selectedChat!._id);
+          })
+          this.dialog.open(ShareCalendarListComponent, {
+            panelClass: 'custom-dialog-container',
+            width: '40%',
+            minHeight: '50%',
+            maxHeight: '70%',
+            data: chatEvent
+          }).afterClosed().subscribe((result: string[] | null) => {
+            if (result) {
+
+              this.updateCalendarEvents(result);
+            }
+          })
+        }
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -541,10 +592,10 @@ export class ChatSelectorService {
     })
   }
 
-  leaveGroup(id:string = this.selectedChat!._id){
-    this.dataStorage.PostRequestWithHeaders('leaveGroup', {chatId: id}, this.getOptionsForRequest()).subscribe({
+  leaveGroup(id: string = this.selectedChat!._id) {
+    this.dataStorage.PostRequestWithHeaders('leaveGroup', { chatId: id }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.chatList = this.chatList.filter((chat: Chat) => {
           return chat._id != id;
         })
@@ -559,8 +610,23 @@ export class ChatSelectorService {
   sendFriendRequest(user: SearchModel) {
     this.dataStorage.PostRequestWithHeaders('sendFriendRequest', { username: user.nickname }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.sentList.push({ idUser: user._id, image: user.image, nickname: user.nickname });
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+
+      }
+    })
+  }
+
+  updateCalendarEvents(events: string[]) {
+
+    this.dataStorage.PatchRequest('updateCalendarEvent', { idEvent: events[0], idChats: [this.selectedChat?._id], type: "shared" }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -575,7 +641,7 @@ export class ChatSelectorService {
     return new Promise((resolve, reject) => {
       this.dataStorage.PostRequestWithHeaders('sendFile', file, this.getFormDataOptions()).subscribe({
         next: (response: any) => {
-          console.log(response);
+
           resolve(response.body.url[0]);
         },
         error: (error: HttpErrorResponse) => {
@@ -609,11 +675,27 @@ export class ChatSelectorService {
   getSearchUsers(txtUser: string) {
     this.dataStorage.getRequest('search?username=' + txtUser, this.getGetOptions()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         if (response.body) {
           this.OtherListSerach = response.body;
           if (this.OtherListSerach.length > 10)
             this.OtherListSerach = this.OtherListSerach.slice(0, 10);
+          //sort putting at the top the friends
+          this.OtherListSerach.sort((a: SearchModel, b: SearchModel) => {
+            if (this.friendList.find((friend: FriendModel) => {
+              return friend.id == a._id;
+            })) {
+              return -1;
+            }
+            else if (this.friendList.find((friend: FriendModel) => {
+              return friend.id == b._id;
+            })) {
+              return 1;
+            }
+            else {
+              return 0;
+            }
+          })
         }
         else {
           this.OtherListSerach = [];
@@ -631,7 +713,7 @@ export class ChatSelectorService {
     return new Promise((resolve, reject) => {
       this.dataStorage.PostRequestWithHeaders('addCalendarEvent', body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-          console.log(response);
+
           resolve(response.body.event);
         },
         error: (error: HttpErrorResponse) => {
@@ -647,7 +729,7 @@ export class ChatSelectorService {
   deleteCalendarEvent() {
     this.dataStorage.DeleteRequest('deleteCalendarEvent', this.getDeleteOptions()).subscribe({
       next: (response: any) => {
-        console.log(response);
+
         this.calendarList.splice(this.calendarList.indexOf(this.selectedCalendarEvent!), 1);
         this.EventsPerMonth = this.getCalendarEventsByMonth();
         this.triggerCalendarModal = false;
@@ -659,6 +741,60 @@ export class ChatSelectorService {
       }
     });
   }
+
+  removeUser(userId: string, chatId: string = this.selectedChat!._id) {
+    this.dataStorage.PostRequestWithHeaders('removeUserFromGroup', { userId: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+
+        this.selectedChat!.users = this.selectedChat!.users.filter((user: { idUser: string; image: string; nickname: string; role: string }) => {
+          return user.idUser != userId;
+        }
+        )
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+  addUserToGroup(userId: string, chatId: string = this.selectedChat!._id) {
+
+    this.dataStorage.PostRequestWithHeaders('addUserToGroup', { users: userId, chatId: chatId }, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+
+        this.selectedChat!.users.push({ idUser: userId, image: response.body.image, nickname: response.body.nickname, role: 'normal' });
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+  changeRole(body: { user: string, chatId: string, role: string }) {
+
+    this.dataStorage.PostRequestWithHeaders('changeRole', body, this.getOptionsForRequest()).subscribe({
+      next: (response: any) => {
+
+        this.selectedChat!.users.find((user: { idUser: string; image: string; nickname: string; role: string }) => {
+          return user.idUser == body.user;
+        })!.role = body.role;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 401)
+          this.logout();
+      }
+    })
+  }
+
+
+
+
+
 
   getDeleteOptions() {
     return {
@@ -672,6 +808,10 @@ export class ChatSelectorService {
       }
     };
   }
+
+
+
+
   getGetOptions() {
     return {
       observe: 'response',
@@ -722,6 +862,8 @@ export class ChatSelectorService {
     this.socketMessageList = {};
     this.chatList = [];
     this.progress = 0;
+    this.triggerCalendarModal = false;
+    this.seeMain = false;
     this.PersonalListSearch = [];
     this.OtherListSerach = [];
     this.calendarList = [];
@@ -742,15 +884,15 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://10.88.229.127:8090/socket');
+    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
     this.socket.addEventListener("open", () => {
-      console.log("socket open");
+
       this.progress++;
       this.waitProgress();
     });
     this.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
-      console.log(data);
+
       if (data.type == "MSG") {
         if (data.typeMSG == "audio") {
           let opt = JSON.parse(data.options);
@@ -759,14 +901,11 @@ export class ChatSelectorService {
             let audioUrl = URL.createObjectURL(blob);
             if (this.messageList[data.idDest].length > 0) {
               this.messageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
-              setTimeout(() => {
-                this.bottomScroll(-1);
-              }, 0);//to improve
+
             }
             else {
               this.socketMessageList[data.idDest].push(new messageModel({ content: "", dateTime: new Date().toISOString(), idUser: data.index, type: 'audio', options: { audio: audioUrl } }));
             }
-
           });
         }
         else {
@@ -775,14 +914,18 @@ export class ChatSelectorService {
             opt = JSON.parse(data.options);
           if (this.messageList[data.idDest].length > 0) {
             this.messageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
-            setTimeout(() => {
-              this.bottomScroll(-1);
-            }, 0);//to improve
           }
           else {
             this.socketMessageList[data.idDest].push(new messageModel({ content: data.payload, dateTime: new Date().toISOString(), idUser: data.index, type: 'text', options: opt }));
           }
+
         }
+        this.chatList[this.chatList.findIndex((chat) => chat._id == data.idDest)].messages = { content: data.payload, dateTime: new Date().toISOString() }
+        this.chatList.sort((a, b) => {
+          let aDate = new Date(a.messages.dateTime);
+          let bDate = new Date(b.messages.dateTime);
+          return bDate.getTime() - aDate.getTime();
+        });
       }
       else if (data.type == "FRA") {//friend request accepted
         let request: requestModel = data.friend;
@@ -819,11 +962,84 @@ export class ChatSelectorService {
           this.EventsPerMonth = this.getCalendarEventsByMonth();
         }
       }
+      else if (data.type == "CEM") {//calendar event modified
+
+        if (!this.firstCalendarClick) {
+
+          let evento = data.evento;
+          let event = data.eventChanges;
+
+          let cal_event = this.calendarList.find((ev) => ev._id == evento);
+
+          if (event.color)
+            cal_event!.color = event.color;
+          if (event.dateTime) {
+            cal_event!.date = new Date(event.dateTime);
+            cal_event!.dateTime = event.dateTime;
+          }
+          if (event.description)
+            cal_event!.description = event.description;
+          if (event.notify)
+            cal_event!.notify = event.notify;
+          if (event.notifyTime)
+            cal_event!.notifyTime = event.notifyTime;
+          if (event.title)
+            cal_event!.title = event.title;
+          if (event.type)
+            cal_event!.type = event.type;
+          if (event.idChats)
+            cal_event!.idChats!.push(event.idChats);
+
+          this.EventsPerMonth = this.getCalendarEventsByMonth();
+        }
+      }
       else if (data.type == "CNG") {//create new group
         let chat = new Chat(data.chatId, data.user, true, data.name, data.img, data.description);
         this.chatList.push(chat);
         this.messageList[data.chatId] = [];
         this.socketMessageList[data.chatId] = [];
+      }
+      else if (data.type == "ATG") {//add to group
+        let dataChat = data.chat;
+        let chat = new Chat(dataChat._id, dataChat.users, true, dataChat.groupName, dataChat.groupImage, dataChat.description, dataChat.creationDate, dataChat.visibility, dataChat.messages);
+        this.chatList.push(chat);
+        this.messageList[dataChat._id] = [];
+        this.socketMessageList[dataChat._id] = [];
+      }
+      else if (data.type == "CRG") {//change role group
+        let user = this.selectedChat?.users.find((user) => {
+          return user.idUser == this.infoUser._id
+        });
+        if (user) {
+          user.role = user.role == "normal" ? "admin" : "normal";
+        }
+      }
+      else if (data.type == "RFG") {//removed from group
+        let chatId = data.chatId;
+        this.chatList = this.chatList.filter((chat) => chat._id != chatId);
+        if (this.selectedChat?._id == chatId) {
+          this.selectedChat = null;
+        }
+      }
+      else if (data.type == "NCC") {//new chat created
+        let friendNickname = data.firstNickname == this.infoUser.nickname ? data.secondNickname : data.firstNickname;
+        let user = [{
+          idUser: this.infoUser._id,
+          image: this.infoUser.image,
+          nickname: this.infoUser.nickname,
+          role: "normal"
+        },
+        {
+          idUser: this.friendList.find((friend) => friend.nickname == friendNickname)?.id,
+          image: this.friendList.find((friend) => friend.nickname == friendNickname)?.image,
+          nickname: this.friendList.find((friend) => friend.nickname == friendNickname)?.nickname,
+          role: "normal"
+        }]
+        let chat = new Chat(data.chatId, user, false, friendNickname, this.friendList.find((friend) => friend.nickname == friendNickname)?.image, "");
+        this.chatList.push(chat);
+        this.messageList[data.chatId] = [];
+        this.socketMessageList[data.chatId] = [];
+
       }
     })
     this.socket.addEventListener("close", () => {
@@ -847,7 +1063,7 @@ export class ChatSelectorService {
   //progress bar
   seeMain: boolean = false;
   waitProgress() {
-    console.log(this.progress);
+
     if (this.progress == 6) {
       this.seeMain = true;
     }
@@ -886,10 +1102,12 @@ export class ChatSelectorService {
       return users[1].image;
   }
 
-  messageFeature(newMsg: boolean, id: string = "") {
+  messageFeature(newMsg: boolean, id: string = "", number_of_msg: number = 50) {
     if (!newMsg) {
       this.offsetChat = Math.floor(this.messageList[id].length / 50) + 1;
-      console.log(this.offsetChat);
+      if (this.messageList[id].length % 50 != 0)
+        this.offsetChat++;
+
       setTimeout(() => {
         this.bottomScroll();
       }, 0);//to improve
