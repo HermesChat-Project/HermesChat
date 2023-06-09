@@ -272,6 +272,7 @@ func checkUsername(username string, password string, email string, lang string, 
 			"surname":   surname,
 			"email":     email,
 			"password":  string(hash),
+			"image":    "",
 			"visible":   true,
 			"info":      infoUser,
 			"language":  lang,
@@ -691,7 +692,9 @@ func SendFriendRequestDB(i string, username string, c *gin.Context) bool {
 	fmt.Println(username)
 	objCheck, err := primitive.ObjectIDFromHex(i)
 	if err != nil {
-		
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "invalid obj1",
+		})
 		return false
 	}
 	risCheck := collection3.FindOne(context.Background(), bson.M{"_id": objCheck, "friends.idUser": username})

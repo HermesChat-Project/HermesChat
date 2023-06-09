@@ -55,6 +55,8 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/leaveGroup", controllers.LeaveGroup)
 	router.DELETE("/deleteGroup", controllers.DeleteGroup)
 	router.POST("/changeGroupInfo", controllers.ChangeGroupInfo)
+
+	router.POST("/sendRequestChatbot", controllers.SendRequestChatbot)
 }
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -65,13 +67,26 @@ func AuthMiddleware() gin.HandlerFunc {
 
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
-        //setta l'origin con quello che arriva dalla richiesta
-		c.Writer.Header().Set("Access-Control-Allow-Origin", c.Request.Header.Get("Origin"))
+        origin := c.Request.Header.Get("Origin")
+        allowedOrigins := []string{
+            "https://chat.hermeschat.it",
+            "https://hermeschat-project.web.app",
+            "https://hermeschat-project.firebaseapp.com",
+			"https://hermeschat-project.firebaseapp.com/",
+        }
+
+        for _, allowedOrigin := range allowedOrigins {
+            if origin == allowedOrigin {
+                c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
+                break
+            }
+        }
+
         c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
         c.Writer.Header().Set("Access-Control-Allow-Headers",
-            "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Set-Cookie, Cookie") // Allow all headers
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE") // Allow all these methods
-		c.Writer.Header().Set("Access-Control-Expose-Headers", "Set-Cookie, Cookie, Authorization")
+            "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Set-Cookie, Cookie")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE")
+        c.Writer.Header().Set("Access-Control-Expose-Headers", "Set-Cookie, Cookie, Authorization")
 
         if c.Request.Method == "OPTIONS" {
             c.AbortWithStatus(204)

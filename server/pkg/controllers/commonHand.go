@@ -49,7 +49,7 @@ func Logout(c *gin.Context) {
 // @Success 		    200 {object} string
 // @Router 		        /getVersion [get]
 func GetVersion(c *gin.Context) {
-	c.JSON(200, gin.H{"version": "1.0.0"})
+	c.JSON(200, gin.H{"version": "1.0.1"})
 }
 
 // CheckToken	godoc
