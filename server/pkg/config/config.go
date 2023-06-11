@@ -29,6 +29,8 @@ var API_KEY_GODADDY string;
 var API_SECRET_GODADDY string;
 var REDIS_ADDR string;
 var REDIS_PWD string;
+var API_KEY_OPENAI string;
+var ORGANIZATION_ID_OPENAI string;
 
 func LoadConfig() {
 	err := godotenv.Load()
@@ -48,8 +50,11 @@ func LoadConfig() {
 	REDIS_ADDR = os.Getenv("REDIS_ADDR")
 	REDIS_PWD = os.Getenv("REDIS_PWD")
 	if (PORT == 0){
-		PORT = 80;
+		PORT = 443;
 	}
+	API_KEY_OPENAI = os.Getenv("API_KEY_OPENAI")
+	ORGANIZATION_ID_OPENAI = os.Getenv("ORGANIZATION_ID_OPENAI")
+	
 }
 
 func ConnectToRedis(){

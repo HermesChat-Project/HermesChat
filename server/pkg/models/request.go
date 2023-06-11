@@ -171,3 +171,7 @@ type ChangeGroupInfoRequest struct {
 type ChatBotRequest struct {
 	Msg string `json:"msg"`
 }
+
+type ChangePfp struct {
+	Image string `json:"image"`
+}

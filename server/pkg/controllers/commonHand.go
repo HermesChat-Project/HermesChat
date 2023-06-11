@@ -352,3 +352,13 @@ func ChangeGroupInfo (c *gin.Context){
 	index, _ := c.Get("index")
 	utils.ChangeGroupInfoDB(index.(string), form, c)
 }
+
+func ChangePfp (c *gin.Context){
+	var form models.ChangePfp;
+	if err := c.ShouldBind(&form); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	index, _ := c.Get("index")
+	utils.ChangePfp(index.(string), form.Image, c)
+}

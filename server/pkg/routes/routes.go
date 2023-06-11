@@ -23,6 +23,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/signup", controllers.SignUp) 
 	router.POST("/checkOtp", controllers.CheckOtp) 
 	router.POST("/getInfoUser", controllers.GetInfo) 
+	router.PATCH("/changePfp", controllers.ChangePfp)
 
 	router.PATCH("/updateInfo", controllers.UpdateInfo) 
 	router.POST("/getFriends", controllers.GetFriends) 
