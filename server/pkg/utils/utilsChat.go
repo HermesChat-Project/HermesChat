@@ -534,3 +534,4 @@ func LeaveGroupDB (index string, idGroup string, c *gin.Context) {
 
 
 }
+
