@@ -19,15 +19,15 @@ export class LoginComponent {
   constructor(public loginService: LoginService, public translationService: TranslationsService) { }
 
   ngOnInit() {
-    //check if the width is less than 600px
-    if (window.innerWidth < 600) {
+    //check the width of a mobile device
+    if (window.innerWidth < 768) {
       this.loginService.seeMobilePage();
     }
     else {
       this.loginService.onEndLogin = false;
       this.loginService.checkToken();
       if (this.translationService.languageSelected == "")
-        this.translationService.getLanguage();
+        this.translationService.getLanguage(navigator.language.split('-')[0]);
       this.loginWords = this.translationService.languageWords["login"];
     }
   }

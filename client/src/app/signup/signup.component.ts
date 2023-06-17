@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { TranslationsService } from '../shared/translations.service';
 import { LoginService } from '../login/login.service';
+import { AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -9,85 +10,125 @@ import { LoginService } from '../login/login.service';
 })
 export class SignupComponent {
   @ViewChild("btnSubmit") btnSubmit!: ElementRef;
+  @ViewChild("picture") picture!: ElementRef;
   txtEmail: string = "";
   txtPassword: string = "";
-  txtConfirmPassword: string = "";
-  txtName: string = "";
-  txtSurname: string = "";
   txtNickname: string = "";
-
-  progress: number = 0;
 
   registerWords: any = {};
 
-  constructor(private translationService: TranslationsService, public loginService: LoginService) { }
+  eyeCheckPwd: boolean = false;
+  eyePwd: boolean = false;
+  constructor(private translationService: TranslationsService, public loginService: LoginService, private _formBuilder: FormBuilder) { }
+  firstFormGroup = this._formBuilder.group(
+    {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}")]],
+      confirmPassword: ['', [Validators.required, Validators.pattern("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}")]],
+    },
+    {
+      validator: this.ConfirmedValidator('password', 'confirmPassword')
+    } as AbstractControlOptions);
+  secondFormGroup = this._formBuilder.group({
+    nome: ['', [Validators.required, Validators.pattern("^[a-zA-Z]{3,}$")]],
+    cognome: ['', [Validators.required, Validators.pattern("^[a-zA-Z]{3,}$")]],
+    nickname: ['', [Validators.required, Validators.pattern("^[A-Za-z][A-Za-z0-9_]{2,}$")]]
+  });
+  thirdFormGroup = this._formBuilder.group({
+    image: [''],
+  });
 
   ngOnInit() {
-    if (window.innerWidth < 600) {
+    if (window.innerWidth < 768) {
       this.loginService.seeMobilePage();
     }
     else {
       if (this.translationService.languageSelected == "")
-        this.translationService.getLanguage();
+        this.translationService.getLanguage(navigator.language.split('-')[0]);
       this.registerWords = this.translationService.languageWords["signup"];
     }
+
+    //regex for username (at least 3 characters, only letters and numbers and _, no spaces and cannot start with a number)
+    let regexUsername = /^[a-zA-Z0-9_]{3,}$/;
+
   }
 
-
-  getWidth() {
-    this.progress = 0;
-    if (this.checkMail(this.txtEmail))
-      this.progress++;
-    if (this.checkName(this.txtName))
-      this.progress++;
-    if (this.checkName(this.txtSurname))
-      this.progress++;
-    if (this.checkNickname(this.txtNickname))
-      this.progress++;
-    if (this.checkPassword(this.txtPassword))
-      this.progress++;
-    if (this.txtConfirmPassword != "" && this.txtConfirmPassword == this.txtPassword)
-      this.progress++;
-
-    return this.progress * 16.66666667 + "%"
+  showPwd() {
+    this.eyePwd = !this.eyePwd;
   }
 
-  checkMail(mail: string): boolean {
-    let mailRegex = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-    return mailRegex.test(mail);
+  showCheckPwd() {
+    this.eyeCheckPwd = !this.eyeCheckPwd;
   }
 
-  checkName(name: string): boolean {
-    let nameRegex = new RegExp("^[a-zA-Z]{2,}$");
-    return nameRegex.test(name);
-  }
-
-  checkNickname(nickname: string): boolean {
-    //atleast 3 characters, no spaces
-    let nicknameRegex = new RegExp("^[a-zA-Z0-9]{3,}$");
-    return nicknameRegex.test(nickname);
-  }
-
-  checkPassword(password: string): boolean {
-    //atleast 8 characters, atleast 1 uppercase, atleast 1 lowercase, atleast 1 number
-    let passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    return passwordRegex.test(password);
-  }
-
-  register(e: Event) {
-    if(e instanceof KeyboardEvent){
-      e.preventDefault();
+  addImg(event: Event) {
+    console.log(event);
+    let img = (event.target as HTMLInputElement).files![0];
+    if (img) {
+      this.convertToBase64(img).then((base64: any) => {
+        this.thirdFormGroup.controls['image'].setValue(base64);
+        this.picture.nativeElement.src = base64;
+      });
     }
-    console.log("register");
-    this.loginService.registerUser(this.txtEmail, this.txtPassword, this.txtName, this.txtSurname, this.txtNickname, this.translationService.getLanguage());
+
   }
+
+  convertToBase64(file: File) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve((reader.result as string));
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  ConfirmedValidator(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (
+        matchingControl.errors &&
+        !matchingControl.errors["confirmedValidator"]
+      ) {
+        return;
+      }
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ confirmedValidator: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
+  }
+
+  signup() {
+    let email = this.firstFormGroup.value.email;
+    let password = this.firstFormGroup.value.password;
+    let name = this.secondFormGroup.value.nome;
+    let surname = this.secondFormGroup.value.cognome;
+    let nickname = this.secondFormGroup.value.nickname;
+    let image = this.thirdFormGroup.value.image;
+    this.txtNickname = nickname!;
+    this.txtPassword = password!;
+
+    this.loginService.registerUser(email!, password!, name!, surname!, nickname!, this.translationService.getLanguage(), image!);
+  }
+
+  disablePaste() {
+    return false;
+  }
+
+
+
+
+
 
   keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Enter' && this.progress == 6)
-      this.register(event);
+    if (event.key == 'Enter'){
+
+    }
   }
 
-  onPaste(event: ClipboardEvent){
+  onPaste(event: ClipboardEvent) {
     let pastedData = event.clipboardData!.getData("text/plain");
     pastedData = pastedData.trim();
     console.log(pastedData);
@@ -104,8 +145,7 @@ export class SignupComponent {
   keyEventOtp(event: KeyboardEvent) {
     let el = event.target as HTMLInputElement;
     if (event.key.length == 1 && !event.shiftKey) {
-      if(el.value.length == 1)
-      {
+      if (el.value.length == 1) {
         el.value = event.key;
       }
       //check if the input is the last one

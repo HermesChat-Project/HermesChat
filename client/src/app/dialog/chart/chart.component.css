@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 15px 20px 0px 20px;
 }
 
 .dialog_title i {
@@ -30,10 +31,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  border-bottom: 1px solid #ccc;
 }
 .chart_type {
   flex-grow: 1;
-  height: 100%;
+  height: 40px;
   display: flex;
   align-items: center;
   width: 100%;
@@ -54,59 +56,106 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  padding: 0 10%;
 }
 
-.chart_data {
+.chart_field {
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 10px 0 0 0;
+  padding: 0px 0 20px 0;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
 }
-.chart_data * {
-  height: 40px;
+
+.chart_data {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-grow: 2;
 }
-.chart_data input:first-of-type,
-.chart_data input:nth-of-type(2) {
-  width: 30%;
+
+.chart_field_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0 0 0;
+  justify-content: space-around;
+  row-gap: 15px;
+}
+.chart_field_number {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin: 0;
+  justify-content: center;
+  width: 100%;
+  border-radius: 0;
+}
+
+.chart_field_number input {
+  padding: 0 10px;
+}
+
+.input_number_action {
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  background-color: #ddd;
+  color: black;
+}
+
+.chart_field input:first-of-type {
   outline: none;
-  border: none;
-  border-radius: 10px;
+  border: 1px solid #ced4da;
 }
 
 input[type="number"] {
   -webkit-appearance: textfield;
-     -moz-appearance: textfield;
-          appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
-
-.add {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: #ddd;
-  border: none;
-  outline: none;
-}
-.confirm-survey{
+.action-chart {
   width: 100%;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
+  column-gap: 50px;
+}
+.action-chart > button {
+  display: flex;
+  column-gap: 10px;
+}
+
+.field_option {
   cursor: pointer;
-  border-radius: 10px;
-  background-color: #ddd;
-  border: none;
-  outline: none;
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+}
+
+.dialog_chart_title {
+  padding-top: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.dialog_chart_title input:first-of-type {
+  flex-grow: 1;
+}
+
+.dialog_body input[type="color"] {
+  width: 50px;
+  height: 50px;
 }

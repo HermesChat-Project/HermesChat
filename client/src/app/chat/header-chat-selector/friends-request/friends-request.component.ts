@@ -22,16 +22,17 @@ export class FriendsRequestComponent {
     this.headerService.generalClosing();
   }
 
-  denyFriend(request:requestModel, index: number){
+  denyFriend(request: requestModel, index: number) {
     let id = request.idUser;
-    this.chatSelector.receivedList.splice(index,1);
+    this.chatSelector.receivedList.splice(index, 1);
     this.chatSelector.denyRequest(id);
   }
 
-  addFriend(request:requestModel, index: number){
+  addFriend(request: requestModel, index: number) {
+    let image = request.image == "" ? "." : request.image;
     this.chatSelector.receivedList.splice(index, 1);
     this.chatSelector.acceptRequest(request);
-    let friend = new FriendModel(request.idUser, request.name, request.surname, request.nickname, request.image);
+    let friend = new FriendModel(request.idUser, request.name, request.surname, request.nickname, image);
     this.chatSelector.friendList.push(friend);
   }
 }

@@ -1,27 +1,36 @@
 {
-  "login" : {
-    "sign-in" : "Login",
-    "forgot-password" : "Forgot Password?",
-    "sign-up" : "Sign Up",
-    "new-to-hermes" : "New to HermesChat?",
-    "username" : "Username",
-    "password" : "Password",
-    "wrong-credentials" : "Wrong credentials",
-    "otp-message" : "Enter the code sent to your email"
+  "login": {
+    "sign-in": "Login",
+    "forgot-password": "Forgot Password?",
+    "sign-up": "Sign Up",
+    "new-to-hermes": "New to HermesChat?",
+    "username": "Username",
+    "password": "Password",
+    "wrong-credentials": "Wrong credentials",
+    "otp-message": "Enter the code sent to your email"
   },
-  "signup":{
-    "signup" : "Sign Up",
-    "sign-in" : "Login",
-    "already-have-account" : "Already have an account?",
-    "email" : "Email",
-    "password" : "Password",
-    "confirm-password" : "Confirm Password",
-    "missing-fields" : "Missing fields",
-    "passwords-dont-match" : "Passwords don't match",
-    "email-already-exists" : "Email already exists",
+  "signup": {
+    "signup": "Sign Up",
+    "sign-in": "Login",
+    "already-have-account": "Already have an account?",
+    "email": "Email",
+    "password": "Password",
+    "confirm-password": "Confirm Password",
+    "missing-fields": "Missing fields",
+    "passwords-dont-match": "Passwords don't match",
+    "email-already-exists": "Email already exists",
     "name": "Name",
     "last-name": "Last Name",
-    "otp-message" : "Enter the code sent to your email"
+    "otp-message": "Enter the code sent to your email",
+    "next": "Next",
+    "back": "Back",
+    "img-message": "This image will be used as your profile picture. You can change it later in your profile settings.",
+    "img-default": "Default",
+    "user-photo": "profile picture",
+    "email-password": "Email and Password",
+    "user": "User",
+    "username-tooltip": "Atleast 3 characters long. \n Only letters, numbers, underscores are allowed. \n The first character must be a letter.",
+    "password-tooltip": "Atleast 8 characters long. Must contain \n one lowercase letter\n one uppercase letter \n one number \n one special character."
   },
   "all-chats": "All Chats",
   "friends": "Friends",
@@ -37,5 +46,6 @@
   "yesterday": "yesterday",
   "search": "Search",
   "sent": "Sent",
-  "received": "Received"
+  "received": "Received",
+  "chart": "Chart"
 }

@@ -258,46 +258,7 @@ app-camera{
   background-color: white;
 }
 
-.chat-options-list{
-  overflow: hidden;
-  position: absolute;
-  bottom: 70px;
-  right: 30px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-  background-color: white;
-  z-index: 100;
-  max-width: 0px;
-  max-height: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  pointer-events: none;
 
-}
-.show-chat-options-list{
-  pointer-events: auto;
-  max-height: 180px;
-  max-width: 140px;
-  transition: max-height 200ms ease;
-}
-.chat-option{
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.chat-option:hover{
-  background-color: #ddd;
-}
-
-.text-chat-option{
-  margin: 0;
-}
 
 .info_of_the_user{
   display: inline-block;

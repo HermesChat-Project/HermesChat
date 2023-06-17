@@ -50,6 +50,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { WebcamModule } from 'ngx-webcam';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -58,6 +61,17 @@ import { ShareCalendarListComponent } from './dialog/share-calendar-list/share-c
 import { LeaveGroupComponent } from './dialog/leave-group/leave-group.component';
 import { AddUserGroupComponent } from './dialog/add-user-group/add-user-group.component';
 
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { environment } from 'src/environments/environment';
+
+// dotenv.config({path: "./../.env"})
+
+
+
+// Initialize Firebase
+const app = initializeApp(environment.firebaseConfig);
+const analytics = getAnalytics(app);
 export function playerFactory() {
   return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
 }
@@ -120,6 +134,9 @@ export function playerFactory() {
     NgApexchartsModule,
     MatButtonModule,
     ReactiveFormsModule,
+    MatStepperModule,
+    MatTooltipModule,
+    MatMenuModule,
     LottieModule.forRoot({ player: playerFactory })
   ],
   providers: [

@@ -22,7 +22,7 @@
 
     <div class="list-request" *ngIf="receivedRequest && chatSelector.receivedList.length != 0">
       <div class="row request_user" *ngFor="let request of chatSelector.receivedList; let i = index">
-        <div class="col-sm-3">
+        <div class="col-sm-3 img">
           <img class="request_user_image" [src]="request.image">
         </div>
         <div class="col-sm-9">

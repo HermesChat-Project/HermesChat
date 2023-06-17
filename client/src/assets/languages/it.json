@@ -22,7 +22,16 @@
     "invalid-email" : "Email non valida",
     "name" : "Nome",
     "last-name" : "Cognome",
-    "otp-message" : "Inserisci il codice che hai ricevuto via mail"
+    "otp-message" : "Inserisci il codice che hai ricevuto via mail",
+    "next" : "Avanti",
+    "back" : "Indietro",
+    "img-message": "Questa immagine verrà utilizzata come foto profilo. Puoi cambiarla in qualsiasi momento dalle impostazioni.",
+    "img-default": "Immagine di default",
+    "user-photo": "Foto profilo",
+    "email-password": "Email e password",
+    "user": "Utente",
+    "username-tooltip" : "Almeno 3 caratteri. \n Puoi usare lettere, numeri e underscore. \n Deve iniziare con una lettera.",
+    "password-tooltip" : "Almeno 8 caratteri. Deve contenere \n una lettera minuscola \n una lettera maiuscola \n un numero \n un carattere speciale"
   },
   "all-chats": "Tutte le chat",
   "friends": "Amici",
@@ -44,5 +53,6 @@
   "yesterday": "ieri",
   "search": "Cerca",
   "sent": "Inviato",
-  "received": "Ricevuto"
+  "received": "Ricevuto",
+  "chart": "Grafico"
 }

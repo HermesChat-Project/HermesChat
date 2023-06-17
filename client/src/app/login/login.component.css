@@ -99,10 +99,10 @@ center {
   margin-top: 20px;
 }
 
-#form_email input:focus() {
+#form_email input:focus {
   outline: none;
 }
-#form_password input:focus() {
+#form_password input:focus {
   outline: none;
 }
 

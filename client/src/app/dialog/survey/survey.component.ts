@@ -52,10 +52,10 @@ export class SurveyComponent {
         if (input.value.trim() != "") {
           if (!option_list.includes(input.value)) {
             option_list.push(input.value);
-            (div.children[1] as HTMLElement).style.visibility = "hidden";
+            (div.children[2] as HTMLElement).style.visibility = "hidden";
           }
           else {
-            (div.children[1] as HTMLElement).style.visibility = "visible";
+            (div.children[2] as HTMLElement).style.visibility = "visible";
           }
         }
       }
@@ -70,6 +70,8 @@ export class SurveyComponent {
     let div = document.createElement('div');
     div.className = "survey_option";
     let option = document.createElement('input');
+    let line = document.createElement('div');
+    line.className = "line";
     let same_value = document.createElement('p');
     option.type = "text";
     option.className = "survey_option_text";
@@ -82,6 +84,7 @@ export class SurveyComponent {
     same_value.className = "no-same-option";
     same_value.innerHTML = "Opzione già inserita";
     div.appendChild(option);
+    div.appendChild(line);
     div.appendChild(same_value);
     this.options.nativeElement.appendChild(div);
 
@@ -116,7 +119,7 @@ export class SurveyComponent {
     for (const option of option_list) {
       body.survey.options.push({ text: option, user_voted: [] });
 
-      this.dialog.close(body);
     }
+    this.dialog.close(body);
   }
 }

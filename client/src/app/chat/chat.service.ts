@@ -15,6 +15,7 @@ import { SearchModel } from 'model/search.model';
 import { ShareCalendarListComponent } from '../dialog/share-calendar-list/share-calendar-list.component';
 import { LeaveGroupComponent } from '../dialog/leave-group/leave-group.component';
 import { AddUserGroupComponent } from '../dialog/add-user-group/add-user-group.component';
+import { TranslationsService } from '../shared/translations.service';
 
 
 @Injectable({
@@ -62,18 +63,21 @@ export class ChatSelectorService {
   src: string = "";
   flagCamera: number = 0; //0: off, 1: photo, 2: video, -1: camera not permitted, -2: camera not available
   stream: MediaStream | null = null;
-  constructor(private dataStorage: DataStorageService, private dialog: MatDialog, private router: Router) { }
+  constructor(private dataStorage: DataStorageService, private dialog: MatDialog, private router: Router, private translationService: TranslationsService) { }
 
 
 
   //#region friend
   selectedFriend: FriendModel | null = null;
 
+
+
   createChat(friend: FriendModel) {
     let id = friend.id;
     let imgUser = this.infoUser.image;
     let friendImage = friend.image;
     let nickname = friend.nickname;
+    console.log(imgUser, friendImage, nickname)
     this.createNewChat(id, imgUser, friendImage, nickname);
   }
   //#endregion
@@ -205,7 +209,8 @@ export class ChatSelectorService {
   openSurveyDialog() {
     this.dialog.open(SurveyComponent, {
       panelClass: 'custom-dialog-container',
-      width: '40%',
+      width: '400px',
+      minWidth: '350px',
       minHeight: '50%',
       maxHeight: '70%',
     }).afterClosed().subscribe((result: any) => {
@@ -218,9 +223,9 @@ export class ChatSelectorService {
   openChartDialog() {
     this.dialog.open(ChartComponent, {
       panelClass: 'custom-dialog-container',
-      width: '70%',
-      minHeight: '50%',
-      maxHeight: '70%',
+      width: '500px',
+      minWidth: '350px',
+
     }).afterClosed().subscribe((result: any) => {
       if (result) {
 
@@ -259,7 +264,6 @@ export class ChatSelectorService {
         panelClass: 'custom-dialog-container',
         width: '40%',
         minHeight: '50%',
-        maxHeight: '70%',
         data: chatEvent
       }).afterClosed().subscribe((result: string[] | null) => {
         if (result) {
@@ -277,8 +281,11 @@ export class ChatSelectorService {
   bottomScroll(to: number = 0) {
     let chat = document.getElementById('listMessage');
     if (chat) {
-      if (to != -1)
+      if (to != -1) {
+        //check if the scroll is at the bottom
+        console.log(chat.clientHeight, chat.scrollHeight)
         chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+      }
       else
         chat.scrollTop = chat.scrollHeight / (this.offsetChat - 1);
     }
@@ -310,9 +317,9 @@ export class ChatSelectorService {
         this.messageList[this.selectedChat._id].push(new messageModel({ content: message, dateTime: new Date().toISOString(), idUser: this.infoUser._id, type: type, options: options }));
         this.chatList[this.chatList.findIndex((chat: Chat) => { return chat._id == this.selectedChat!._id })].messages = { content: message, dateTime: new Date().toISOString() }
         this.chatList.sort((a, b) => {
-          if(a.messages.dateTime && !b.messages.dateTime)
+          if (a.messages.dateTime && !b.messages.dateTime)
             return -1;
-          if(!a.messages.dateTime && b.messages.dateTime)
+          if (!a.messages.dateTime && b.messages.dateTime)
             return 1;
 
           let aDate = new Date(a.messages!.dateTime);
@@ -348,8 +355,11 @@ export class ChatSelectorService {
   getInfo() {
     this.dataStorage.PostRequestWithHeaders(`getInfoUser`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
+        console.log(response)
+        if (response.body.image == "")
+          response.body.image = "."
         this.infoUser = response.body;
+        this.translationService.getLanguage(this.infoUser.language);
         this.progress++;
         this.waitProgress();
       },
@@ -374,9 +384,9 @@ export class ChatSelectorService {
             this.socketMessageList[chat._id] = [];
         }
         this.chatList.sort((a, b) => {
-          if(a.messages.dateTime && !b.messages.dateTime)
+          if (a.messages.dateTime && !b.messages.dateTime)
             return -1;
-          if(!a.messages.dateTime && b.messages.dateTime)
+          if (!a.messages.dateTime && b.messages.dateTime)
             return 1;
 
           let aDate = new Date(a.messages!.dateTime);
@@ -403,7 +413,7 @@ export class ChatSelectorService {
     if ((this.messageList[id].length == 0) || newMsg) {
       this.dataStorage.PostRequestWithHeaders(`getMessages`, body, this.getOptionsForRequest()).subscribe({
         next: (response: any) => {
-
+          console.log(response)
           if (response.body.messages) {
 
             response.body.messages.forEach(async (message: messageModel) => {
@@ -422,6 +432,9 @@ export class ChatSelectorService {
 
 
             this.messageFeature(newMsg, id, response.body.messages.length);
+            setTimeout(() => {
+              this.bottomScroll();
+            }, 0);//to improve
           }
 
         },
@@ -441,9 +454,14 @@ export class ChatSelectorService {
   getFriends() {
     this.dataStorage.PostRequestWithHeaders(`getFriends`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
+        console.log(response);
         if (response.body.friends) {
+
           this.friendList = response.body.friends;
+          this.friendList.forEach((friend: FriendModel) => {
+            if (friend.image == "")
+              friend.image = ".";
+          });
           if (this.friendList.length > 0)
             this.friendList = this.friendList.sort((a: FriendModel, b: FriendModel) => { return a.name.localeCompare(b.name) });
           this.friendSerachList = this.friendList;
@@ -463,8 +481,12 @@ export class ChatSelectorService {
   getReceivedRequests() {
     this.dataStorage.PostRequestWithHeaders(`getFriendRequests`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
+        console.log(response);
         this.receivedList = response.body.requests;
+        this.receivedList.forEach((request: requestModel) => {
+          if (request.image == "")
+            request.image = ".";
+        });
         this.progress++;
         this.waitProgress();
       },
@@ -479,7 +501,7 @@ export class ChatSelectorService {
   getSentRequest() {
     this.dataStorage.PostRequestWithHeaders('getRequestSent', {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
+        console.log(response);
         this.sentList = response.body.requests;
         this.progress++;
         this.waitProgress();
@@ -522,17 +544,20 @@ export class ChatSelectorService {
 
 
   createNewChat(id: string, img: string, friendImg: string, nickname: string) {
+    let imgFriend = friendImg;
+    if (friendImg == '')
+      imgFriend = ".";
     let body = {
       "idUser": id,
       "img": img,
-      "friendImg": friendImg,
+      "friendImg": imgFriend,
       "friendNickname": nickname,
       "nickname": this.infoUser.nickname,
     }
+    console.log(body);
 
     this.dataStorage.PostRequestWithHeaders('createChat', body, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -608,6 +633,7 @@ export class ChatSelectorService {
     })
   }
   sendFriendRequest(user: SearchModel) {
+    console.log(user);
     this.dataStorage.PostRequestWithHeaders('sendFriendRequest', { username: user.nickname }, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
 
@@ -874,17 +900,13 @@ export class ChatSelectorService {
     this.router.navigate(['/login']);
   }
 
-
-
-
-
   //#endregion
 
   //#region socket
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://api.hermeschat.it:8090/socket');
+    this.socket = new WebSocket('wss://82.63.39.42/socket');
     this.socket.addEventListener("open", () => {
 
       this.progress++;
@@ -892,7 +914,7 @@ export class ChatSelectorService {
     });
     this.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
-
+      console.log(data);
       if (data.type == "MSG") {
         if (data.typeMSG == "audio") {
           let opt = JSON.parse(data.options);
@@ -920,6 +942,7 @@ export class ChatSelectorService {
           }
 
         }
+        this.bottomScroll()
         this.chatList[this.chatList.findIndex((chat) => chat._id == data.idDest)].messages = { content: data.payload, dateTime: new Date().toISOString() }
         this.chatList.sort((a, b) => {
           let aDate = new Date(a.messages.dateTime);
@@ -931,11 +954,15 @@ export class ChatSelectorService {
         let request: requestModel = data.friend;
         let id = request.idUser;
         this.sentList = this.sentList.filter((user) => user.idUser != id);
+        if(request.image == "")
+          request.image = ".";
         let friend = new FriendModel(id, request.name, request.surname, request.nickname, request.image);
         this.friendList.push(friend);
       }
       else if (data.type == "FRR") {//friend request received
         let request: requestModel = data.friend;
+        if(request.image == "")
+          request.image = ".";
         let requestUser = new requestModel(request.idUser, request.image, request.nickname, request.name, request.surname);
         this.receivedList.push(requestUser);
       }

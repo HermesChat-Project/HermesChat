@@ -18,12 +18,22 @@ export class ChartComponent {
   fields: {name: string, value: number, color: string}[] = [
     {name: "", value: 0, color: "#ff0000"},
   ];
+  title: string = "";
+  chart_color: string = "#ff0000";
 
   changeChartType(type: number) {
     this.chatSelector.chartType = type;
   }
   addField(){
     this.fields.push({name: "", value: 0, color: "#ff0000"});
+  }
+
+  addNumber(index: number){
+    this.fields[index].value++;
+  }
+
+  subtractNumber(index: number){
+    this.fields[index].value--;
   }
 
   deleteField(i: number){
@@ -40,28 +50,28 @@ export class ChartComponent {
   }
 
   sendChart(){
-    let children = this.chart_data_list.nativeElement.children;
     let series : {name: string, data: number[]}[] | number[] = [];
-    let chart: {height: number, type: string} = {height: 0, type: "bar"};
+    let chart: {height: number, type: string} = {height: 450, type: "bar"};
     let labels : string[] = [];
-    let title : {text: string} = {text: "prova"};
+    let title : {text: string} = {text: this.title};
     let xaxis : {categories: string[]} = {categories: []};
     let colors : string[] = [];
-    chart.height = 450;
+
 
     let data;
+
+    console.log(this.fields)
 
     if(this.chatSelector.chartType == 2){
       chart.type = "pie";
       series = [] as number[];
-      for(let i = 0; i < children.length; i++){
-        let el = children[i].children[0] as HTMLInputElement;
-        if(el.value.trim() != ""){
-          let value = children[i].children[1] as HTMLInputElement;
-          let color = children[i].children[2] as HTMLInputElement;
-          labels.push(el.value);
-          series.push(value.valueAsNumber as number);
-          colors.push(color.value);
+      for(const field of this.fields){
+        if(field.name.trim() != ""){
+          let value = field.value;
+          let color = field.color;
+          labels.push(field.name);
+          series.push(value as number);
+          colors.push(color);
         }
       }
       data = {chart: chart, series: series, title: title, labels: labels, colors: colors};
@@ -71,23 +81,22 @@ export class ChartComponent {
     {
       series = [] as {name: string, data: number[]}[];
       chart.type = this.getType(this.chatSelector.chartType);
-      series.push({name: "serie", data: []});
-      for(let i = 0; i < children.length; i++){
-        let el = children[i].children[0] as HTMLInputElement;
-        if(el.value.trim() != ""){
-          let value = children[i].children[1] as HTMLInputElement;
-          let color = children[i].children[2] as HTMLInputElement;
-          xaxis.categories.push(el.value);
-          series[0].data.push(value.valueAsNumber);
-          colors.push(color.value);
+      series.push({name: "value", data: []});
+      colors.push(this.chart_color);
+      for(const field of this.fields){
+        if(field.name.trim() != ""){
+          let value = field.value;
+          let color = field.color;
+          xaxis.categories.push(field.name);
+          series[0].data.push(value);
         }
       }
       data = {chart: chart, series: series, title: title, xaxis: xaxis, colors: colors};
 
     }
 
-
     let result = {data}
+    console.log(result);
     this.dialog.close(result);
   }
   getType(type: number){

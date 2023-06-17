@@ -14,9 +14,9 @@ export class TranslationsService {
 
   languagesList: string[] = ['it', 'en']
 
-  getLanguage() {
-    this.languageSelected = navigator.language.split('-')[0];
-    switch (this.languageSelected) {
+  getLanguage(language?: string) {
+
+    switch (language) {
       case 'it':
         this.languageWords = _it
         break;

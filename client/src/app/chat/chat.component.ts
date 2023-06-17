@@ -12,17 +12,18 @@ export class ChatSelectorComponent {
 
   ngOnInit() {
     //theme
-    this.chatSelector.theme = localStorage.getItem('theme') || 'light';
-    console.log(this.chatSelector.theme);
+    try{
 
-    //create a option for a post request and send the cookie to the server
+      this.chatSelector.theme = localStorage.getItem('theme') || 'light';
+    }
+    catch{
+      this.chatSelector.theme = 'light';
+    }
     this.chatSelector.getInfo();
     this.chatSelector.getFriends();
     this.chatSelector.getReceivedRequests();
     this.chatSelector.getSentRequest()
-    // this.chatSelector.getChats();
     this.chatSelector.startSocket();
-
   }
 
   checkWhatShouldBeShown() {

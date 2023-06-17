@@ -43,7 +43,29 @@ i.bi {
 ::-webkit-scrollbar-thumb:hover {
   background: #0b2f5e;
 }
+.mdc-text-field{
+  overflow: unset !important;
+}
 
+.img {
+  display: inline-block;
+}
+
+.img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.img img:before {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-image: url("assets/img/user.jpg");
+  background-size: cover;
+}
 app-chat {
   width: 100%;
   display: inline-block;
@@ -59,6 +81,21 @@ app-login, app-signup {
   align-items: center;
   justify-content: center;
   align-content: center;
+}
+
+mat-icon{
+  color: #0b2f5e;
+}
+
+.mat-horizontal-stepper-content:not(.mat-horizontal-stepper-content-inactive) {
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.tooltip-line-break {
+  white-space: pre-line;
 }
 
 /*dark theme*/
@@ -575,10 +612,17 @@ app-login, app-signup {
   .sticky-top{
     background-color: inherit !important;
   }
-  .confirm-survey{
+  .action-chart > button{
     background-color: #333 !important;
     color: whitesmoke !important;
     border: none !important;
+  }
+
+  mat-icon{
+    color: whitesmoke !important;
+  }
+  .input_number_action{
+    background-color: #444 !important;
   }
   ::-ms-input-placeholder, ::placeholder, ::-webkit-input-placeholder {
     color: blue !important;

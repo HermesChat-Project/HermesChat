@@ -47,25 +47,14 @@
       </button>
     </div>
     <div id="messageSendOptions">
-      <button class="bi bi-three-dots-vertical action" title="altre opzioni" (click)="toggleChatOptions()"></button>
+      <button class="bi bi-three-dots-vertical action" title="altre opzioni" [matMenuTriggerFor]="chatOptions"></button>
       <!-- chat Options -->
-      <div class="chat-options-list" [ngClass]="{'show-chat-options-list' : chatOptions}">
-        <div class="chat-option" *ngIf="chatSelector.selectedChat!.flagGroup">
-          <p class="text-chat-option" (click)="showChatInfo()">Informazioni</p>
-        </div>
-        <!-- <div class="chat-option">
-          <p class="text-chat-option" (click)="searchMessage()">Cerca</p>
-        </div> -->
-        <div class="chat-option">
-          <p class="text-chat-option" (click)="closeChat()">Chiudi chat</p>
-        </div>
-        <!-- <div class="chat-option">
-          <p class="text-chat-option">File multimediali</p>
-        </div> -->
-        <div class="chat-option" (click)="leaveGroup()" *ngIf="chatSelector.selectedChat!.flagGroup">
-          <p class="text-chat-option" >Esci dal gruppo</p>
-        </div>
-      </div>
+      <mat-menu #chatOptions yPosition="above" xPosition="before">
+        <button mat-menu-item (click)="showChatInfo()" *ngIf="chatSelector.selectedChat!.flagGroup">Informazioni</button>
+        <!-- <button mat-menu-item (click)="searchMessage()">Cerca</button> -->
+        <button mat-menu-item (click)="closeChat()">Chiudi chat</button>
+        <button mat-menu-item (click)="leaveGroup()" *ngIf="chatSelector.selectedChat!.flagGroup">Esci dal gruppo</button>
+      </mat-menu>
     </div>
   </div>
 </div>

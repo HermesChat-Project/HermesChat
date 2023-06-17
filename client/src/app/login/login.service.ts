@@ -80,8 +80,8 @@ export class LoginService {
       }
     });
   }
-  registerUser(email: string, password: string, name: string, surname: string, username: string, lang: string) {
-    let body = { email, password, name, surname, username, lang }
+  registerUser(email: string, password: string, name: string, surname: string, username: string, lang: string, image = "") {
+    let body = { email, password, name, surname, username, lang, img: image }
     this.dataStorage.PostRequestWithHeaders(`signup`, body, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

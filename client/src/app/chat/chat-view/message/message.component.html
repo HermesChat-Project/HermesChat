@@ -34,8 +34,8 @@
             {{chatMessage.messages.content}}
           </h3>
           <div class="chart-container">
-            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [labels]="chatMessage.messages.options.labels" *ngIf="chatSelector.chartType == 2"></apx-chart>
-            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [xaxis]="chatMessage.messages.options.xaxis" *ngIf="chatSelector.chartType != 2"></apx-chart>
+            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [labels]="chatMessage.messages.options.labels" *ngIf="chatMessage.messages.options.chart.type == 'pie'"></apx-chart>
+            <apx-chart [colors]="chatMessage.messages.options.colors" [series]="chatMessage.messages.options.series" [chart]="chatMessage.messages.options.chart" [title]="chatMessage.messages.options.title" [xaxis]="chatMessage.messages.options.xaxis" *ngIf="chatMessage.messages.options.chart.type != 'pie'"></apx-chart>
           </div>
         </div>
         <span class="time">{{getTimeFormatted(chatMessage.messages.dateTime)}}</span>

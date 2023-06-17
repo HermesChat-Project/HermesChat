@@ -24,6 +24,7 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "chart.js": "^4.3.0",
+    "firebase": "^9.22.1",
     "ng-apexcharts": "^1.7.6",
     "ngx-lottie": "^10.0.0",
     "ngx-webcam": "^0.4.1",
