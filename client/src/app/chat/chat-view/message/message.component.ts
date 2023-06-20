@@ -93,7 +93,7 @@ export class MessageComponent implements AfterViewInit {
   fullDateView(date: string) {
     let dateObj = new Date(date);
     //get the string like : thursay, 09 march 2023
-    return dateObj.toLocaleDateString(this.chatSelector.userLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return dateObj.toLocaleDateString(this.chatSelector.infoUser.language, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
   differentDate(i: number) {

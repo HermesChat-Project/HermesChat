@@ -373,7 +373,7 @@ export class ChatSelectorService {
   getChats() {
     this.dataStorage.PostRequestWithHeaders(`getChats`, {}, this.getOptionsForRequest()).subscribe({
       next: (response: any) => {
-
+        console.log(response)
         this.chatList = response.body.chats;
 
         this.changeName(response.body.chats);
@@ -392,6 +392,10 @@ export class ChatSelectorService {
           let aDate = new Date(a.messages!.dateTime);
           let bDate = new Date(b.messages!.dateTime);
           return bDate.getTime() - aDate.getTime();
+        })
+        this.chatList.forEach((chat: Chat) => {
+          if(chat.messages.options && typeof chat.messages.options === 'string')
+            chat.messages.options = JSON.parse(chat.messages.options as string)
         })
         this.progress++;
         this.waitProgress();
@@ -701,9 +705,13 @@ export class ChatSelectorService {
   getSearchUsers(txtUser: string) {
     this.dataStorage.getRequest('search?username=' + txtUser, this.getGetOptions()).subscribe({
       next: (response: any) => {
-
+        console.log(response);
         if (response.body) {
-          this.OtherListSerach = response.body;
+          this.OtherListSerach =  response.body.filter((userSearched: SearchModel) => {
+            return userSearched._id != this.infoUser._id && !this.friendList.find((friend: FriendModel) => {
+              return friend.id == userSearched._id;
+            });
+          })
           if (this.OtherListSerach.length > 10)
             this.OtherListSerach = this.OtherListSerach.slice(0, 10);
           //sort putting at the top the friends
@@ -906,7 +914,7 @@ export class ChatSelectorService {
 
   socket: WebSocket | null = null;
   startSocket() {
-    this.socket = new WebSocket('wss://82.63.39.42/socket');
+    this.socket = new WebSocket('wss://[::1]/socket');
     this.socket.addEventListener("open", () => {
 
       this.progress++;
@@ -1085,7 +1093,12 @@ export class ChatSelectorService {
 
   changeTheme(theme: string) {
     this.theme = theme;
-    localStorage.setItem('theme', theme);
+    try{
+      localStorage.setItem('theme', theme);
+    }
+    catch{
+      console.log("no local storage");
+    }
   }
   //progress bar
   seeMain: boolean = false;

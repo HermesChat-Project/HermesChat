@@ -47,5 +47,7 @@
   "search": "Search",
   "sent": "Sent",
   "received": "Received",
-  "chart": "Chart"
+  "chart": "Chart",
+  "image": "image",
+  "images": "images"
 }

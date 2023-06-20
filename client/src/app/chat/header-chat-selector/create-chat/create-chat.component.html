@@ -57,7 +57,7 @@
           <input type="file" class="form-control" accept="image/*" id="inputGroupFile02" (change)="getImg($event)">
         </div>
       </div>
-      <button class="btn btn-primary btn-lg btn-block" (click)="createGroup()">Crea gruppo</button>
+      <button mat-stroked-button color="primary" class="hover--btn hover--center border--btn btnCreate" (click)="createGroup()">Crea gruppo</button>
     </div>
 
     <div class="row PossibleGroupChatUser" *ngFor="let friend of chatSelectorService.friendList">

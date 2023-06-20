@@ -120,20 +120,24 @@ export class ChatViewComponent {
   //#endregion
   hideShowChatActions(event: Event) {
     //get the focused element
-    let focusedElement = document.activeElement;
+    this.showChatActions = false;
 
     // this.showChatActions = this.textMessage.nativeElement.contains(focusedElement);
   }
-
+  checkTheme(){
+    console.log(this.chatSelector?.theme);
+    if(this.chatSelector?.theme == "dark")
+      return "menu--dark";
+    return "";
+  }
 
   getSelection() {
     this.selection = window.getSelection();
-    if (this.selection)
+    if (this.selection && this.selection.rangeCount > 0)
       this.contents = this.selection.getRangeAt(0).cloneContents();//get the html content of the selection
     else
       this.contents = undefined;
-    if (this.contents != undefined && this.contents) {//check if the selection is not empty
-
+    if (this.contents != undefined && this.contents &&this.contents.textContent != "") {//check if the selection is not empty
       if (!this.checkIfFontStylingDivShouldBeShown()) {
         this.fontStyling.nativeElement.style.display = 'none';
         return;

@@ -13,7 +13,6 @@ export class ChatSelectorComponent {
   ngOnInit() {
     //theme
     try{
-
       this.chatSelector.theme = localStorage.getItem('theme') || 'light';
     }
     catch{

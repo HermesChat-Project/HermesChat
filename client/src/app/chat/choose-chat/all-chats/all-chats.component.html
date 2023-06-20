@@ -3,7 +3,7 @@
     <!-- SEARCH BOX -->
     <div class="form-floating">
       <input type="search" placeholder="Search" class="" class="txtSearch" [(ngModel)]="txtSearchChat"
-        [ngModelOptions]="{standalone:true}" (input)="showChats()">
+        [ngModelOptions]="{standalone:true}" (input)="searchChats()">
     </div>
   </div>
 </div>
@@ -56,7 +56,7 @@
                 <h5 class="chat-name">{{personalChatSearch.name}}</h5>
               </div>
               <div class="lastMessage">
-                <span class="text-truncate last-message" [innerText]="getLastMessage(personalChatSearch.messages)"></span>
+                <span class="text-truncate last-message" [innerText]="getLastMessage(personalChatSearch)"></span>
                 <span>{{DateAdjustment(getLastMessageTime(personalChatSearch.messages))}}</span>
               </div>
             </div>
@@ -67,7 +67,7 @@
     <div class="accordion-item" *ngIf="chatSelector.OtherListSerach.length != 0">
       <span class="chatFound accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
           data-bs-target="#others" aria-expanded="true" aria-controls="collapseOne">
-          Utenti trovate
+          Utenti trovati
         </button></span>
       <div id="others" class="accordion-collapse collapse show" aria-labelledby="headingOne"
         data-bs-parent="#accordionExample">

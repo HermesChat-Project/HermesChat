@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
@@ -9,12 +10,12 @@ body {
   overflow: hidden;
 }
 
-i.bi {
+i.bi, .color--icon {
   font-size: large;
   color: #0b2f5e;
 }
 
-.dark-theme i.bi {
+.dark-theme i.bi, .dark-theme .color--icon {
   color: white;
 }
 
@@ -43,14 +44,21 @@ i.bi {
 ::-webkit-scrollbar-thumb:hover {
   background: #0b2f5e;
 }
-.mdc-text-field{
+
+.mdc-text-field {
   overflow: unset !important;
 }
+
 
 .img {
   display: inline-block;
 }
 
+.img--center {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
 .img img {
   width: 50px;
   height: 50px;
@@ -66,6 +74,7 @@ i.bi {
   background-image: url("assets/img/user.jpg");
   background-size: cover;
 }
+
 app-chat {
   width: 100%;
   display: inline-block;
@@ -73,7 +82,8 @@ app-chat {
   height: 100%;
 }
 
-app-login, app-signup {
+app-login,
+app-signup {
   height: 100%;
   width: 100%;
   display: grid;
@@ -83,7 +93,7 @@ app-login, app-signup {
   align-content: center;
 }
 
-mat-icon{
+mat-icon {
   color: #0b2f5e;
 }
 
@@ -103,12 +113,15 @@ mat-icon{
 
 .dark-theme {
   background-color: #222222 !important;
-  .add-friend-name{
+
+  .add-friend-name {
     color: white !important;
   }
-  .add-friend:hover{
+
+  .add-friend:hover {
     background-color: #444 !important;
   }
+
   app-header-chat-selector {
     background-color: #444 !important;
     color: white !important;
@@ -215,10 +228,14 @@ mat-icon{
 
     app-all-chats {
       color: white !important;
-      ::-ms-input-placeholder, ::placeholder, ::-webkit-input-placeholder {
+
+      ::-ms-input-placeholder,
+      ::placeholder,
+      ::-webkit-input-placeholder {
         color: blue !important;
         opacity: 1 !important;
       }
+
       #searchInput {
         border: none !important;
 
@@ -375,48 +392,54 @@ mat-icon{
         color: whitesmoke !important;
       }
 
-      .chat-options-list{
+      .chat-options-list {
         background-color: #333 !important;
         color: whitesmoke !important;
         border: 1px solid transparent !important;
       }
 
-      .chat-options-list > div:hover{
+      .chat-options-list>div:hover {
         background-color: #444 !important;
       }
 
-      app-info-chat{
+      app-info-chat {
         background-color: #444 !important;
         color: whitesmoke !important;
 
-        .right-click-option{
+        .right-click-option {
           background-color: #222 !important;
           color: whitesmoke !important;
           border: 1px solid transparent !important;
         }
-        .right-click-option > div:hover{
+
+        .right-click-option>div:hover {
           background-color: #333 !important;
         }
       }
 
       app-message {
         background-color: #333;
-        .message-get{
-          .time{
+
+        .message-get {
+          .time {
             color: whitesmoke !important;
           }
         }
-        apx-chart{
-          text{
+
+        apx-chart {
+          text {
             fill: whitesmoke !important;
           }
-          span{
+
+          span {
             color: white !important;
           }
-          .apexcharts-menu{
+
+          .apexcharts-menu {
             background-color: #333 !important;
           }
         }
+
         .message-info {
           background-color: #141414 !important;
           color: whitesmoke !important;
@@ -434,7 +457,7 @@ mat-icon{
           }
         }
 
-        .survey-title{
+        .survey-title {
           background-color: #333 !important;
           color: whitesmoke !important;
         }
@@ -483,12 +506,12 @@ mat-icon{
           color: whitesmoke !important;
         }
 
-        .camera-actions{
+        .camera-actions {
           color: whitesmoke !important;
           border: 1px solid transparent !important;
         }
 
-        .camera-actions button{
+        .camera-actions button {
           color: whitesmoke !important;
         }
       }
@@ -501,6 +524,7 @@ mat-icon{
         color: whitesmoke !important;
       }
     }
+
     app-full-calendar {
       thead tr th {
         background-color: #111 !important;
@@ -532,43 +556,49 @@ mat-icon{
         color: white !important;
       }
 
-      .cal_modal{
-        .cal_modal_container{
+      .cal_modal {
+        .cal_modal_container {
           background-color: #222 !important;
           color: whitesmoke !important;
           border: none !important;
-          .cal_modal_close{
+
+          .cal_modal_close {
             color: whitesmoke !important;
             background-color: #1c1c1c !important;
           }
-          input, textarea{
-            background-color: #222 !important;
-            color: whitesmoke !important;
-            border: none !important;
-          }
-          mat-select *{
-            color: whitesmoke !important;
-            background-color: #222 !important;
-            border: none !important;
-          }
-          .mat-datepicker-toggle{
-            color: whitesmoke !important;
-            background-color: #222 !important;
-            border: none !important;
-          }
-          .mat-datepicker{
+
+          input,
+          textarea {
             background-color: #222 !important;
             color: whitesmoke !important;
             border: none !important;
           }
 
-          .cal_modal_share_toggle{
+          mat-select * {
+            color: whitesmoke !important;
+            background-color: #222 !important;
+            border: none !important;
+          }
+
+          .mat-datepicker-toggle {
+            color: whitesmoke !important;
+            background-color: #222 !important;
+            border: none !important;
+          }
+
+          .mat-datepicker {
+            background-color: #222 !important;
+            color: whitesmoke !important;
+            border: none !important;
+          }
+
+          .cal_modal_share_toggle {
             background-color: #222 !important;
             color: white !important;
             border: none !important;
           }
 
-          .cal_modal_share_list{
+          .cal_modal_share_list {
             background-color: #222 !important;
             color: white !important;
             border: none !important;
@@ -583,64 +613,80 @@ mat-icon{
     border-right: 1px solid #555 !important;
   }
 
-  .dialog_header, .dialog_body, .dialog_button{
+  .dialog_header,
+  .dialog_body,
+  .dialog_button {
     background-color: #222 !important;
     color: whitesmoke !important;
     border: none !important;
   }
-  .dialog_bottom_text{
+
+  .dialog_bottom_text {
     color: whitesmoke !important;
   }
 
-  .selected{
+  .selected {
     background-color: #444 !important;
     color: whitesmoke !important;
     border: none !important;
   }
 
-  input, textarea{
+  input,
+  textarea {
     background-color: #333 !important;
     color: whitesmoke !important;
   }
 
-  .survey_options input{
+  .survey_options input {
     background-color: #333 !important;
     color: whitesmoke !important;
     border: none !important;
   }
 
-  .sticky-top{
+  .sticky-top {
     background-color: inherit !important;
   }
-  .action-chart > button{
+
+  .action-chart>button {
     background-color: #333 !important;
     color: whitesmoke !important;
     border: none !important;
   }
 
-  mat-icon{
+  mat-icon {
     color: whitesmoke !important;
   }
-  .input_number_action{
+
+  .input_number_action {
     background-color: #444 !important;
   }
-  ::-ms-input-placeholder, ::placeholder, ::-webkit-input-placeholder {
+
+  ::-ms-input-placeholder,
+  ::placeholder,
+  ::-webkit-input-placeholder {
     color: blue !important;
     opacity: 1 !important;
   }
 
 }
-.example-panel-dark.mat-mdc-select-panel{
+.menu--dark +* .mat-mdc-menu-content {
+  background-color: #222 !important;
+}
+
+.menu--dark +* .mat-mdc-menu-panel button span{
+  color: whitesmoke !important;
+}
+
+.example-panel-dark.mat-mdc-select-panel {
   background-color: #222 !important;
 
   border: none !important;
 }
-.example-panel-dark.mat-mdc-select-panel span{
+
+.example-panel-dark.mat-mdc-select-panel span {
   color: whitesmoke !important;
 }
 
-.no-chk .mat-pseudo-checkbox{
+.no-chk .mat-pseudo-checkbox {
   display: none !important;
 }
-
-

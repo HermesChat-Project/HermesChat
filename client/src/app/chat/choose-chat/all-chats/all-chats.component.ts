@@ -18,7 +18,7 @@ export class AllChatsComponent {
   @Input() chatListUser!: userModel;
   txtSearchChat: string = '';
 
-  constructor(public chatSelector: ChatSelectorService, public translationService: TranslationsService){}
+  constructor(public chatSelector: ChatSelectorService, public translationService: TranslationsService) { }
 
 
   ngOnInit() {
@@ -36,8 +36,7 @@ export class AllChatsComponent {
       let diff = Math.abs(today.getTime() - date.getTime());
       // console.log(diff)
       let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-      if(!isNaN(diffDays))
-      {
+      if (!isNaN(diffDays)) {
         if (diffDays > 7) {
           return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
         }
@@ -60,22 +59,23 @@ export class AllChatsComponent {
     }
   }
 
-  showChats() {
+  searchChats() {
     if (this.txtSearchChat.length < 3) {
       this.chatSelector.PersonalListSearch = this.chatSelector.chatList;
       this.chatSelector.OtherListSerach = [];
     }
     else {
+      this.chatSelector.PersonalListSearch = this.chatSelector.chatList.filter(x => x.name.toLowerCase().startsWith(this.txtSearchChat.toLowerCase()));
       this.chatSelector.getSearchUsers(this.txtSearchChat)
     }
   }
 
   checkUser(user: SearchModel) {
-    if(this.chatSelector.friendList.find(x => x.id == user._id))
+    if (this.chatSelector.friendList.find(x => x.id == user._id))
       return 1
-    if(this.chatSelector.receivedList.find(x => x.idUser == user._id))
+    if (this.chatSelector.receivedList.find(x => x.idUser == user._id))
       return 2;
-    if(this.chatSelector.sentList.find(x => x.idUser == user._id))
+    if (this.chatSelector.sentList.find(x => x.idUser == user._id))
       return 3;
     return 0;
   }
@@ -83,17 +83,38 @@ export class AllChatsComponent {
   GetDateWithoutTime(date: Date) {
     return date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
   }
-  getLastMessage(chat: Chat){
-    let lastMessage: string = chat.messages?.content;
-    if(this.chatSelector.socketMessageList[chat._id]?.length > 0)
-      lastMessage = this.chatSelector.socketMessageList[chat._id][this.chatSelector.socketMessageList[chat._id].length - 1].messages.content;
-    else if(this.chatSelector.messageList[chat._id]?.length > 0)
-      lastMessage = this.chatSelector.messageList[chat._id][this.chatSelector.messageList[chat._id].length - 1].messages.content;
-    if(chat.messages?.type == "chart")
-      return "&#128200; " + (this.translationService.languageWords["chart"] || "chart");
-    else if(chat.messages?.type == "survey")
+  getLastMessage(chat: Chat) {
+    let lastMessage: { content: string; dateTime: string; idUser: string; type: string; options: any; } = chat.messages;
+    if (this.chatSelector.socketMessageList[chat._id]?.length > 0)
+      lastMessage = this.chatSelector.socketMessageList[chat._id][this.chatSelector.socketMessageList[chat._id].length - 1].messages;
+    else if (this.chatSelector.messageList[chat._id]?.length > 0)
+      lastMessage = this.chatSelector.messageList[chat._id][this.chatSelector.messageList[chat._id].length - 1].messages;
+    if (lastMessage?.type == "chart") {
+      return "&#128200; " + (lastMessage.options.title?.text || this.translationService.languageWords["chart"] || "chart");
+    }
+    else if (lastMessage?.type == "survey")
       return "&#128200; " + (this.translationService.languageWords["survey"] || "survey");
-    return lastMessage;
+    if (lastMessage?.type == "text") {
+      let ausEl = document.createElement('div');
+      ausEl.innerHTML = lastMessage.content;
+      let imageLength = ausEl.getElementsByTagName("img").length;
+      if (imageLength > 0 && ausEl.innerText.length == 0) {
+        let msg = "&#128247;";
+        let n_image_msg: string = imageLength > 9 ? "9+" : imageLength.toString();
+        msg += imageLength == 1 ? (this.translationService.languageWords["image"] || "image") : n_image_msg + " " + (this.translationService.languageWords["images"] || "images");
+        return msg;
+      }
+      else {
+        if (imageLength > 0) {
+          let msg = "&#128247;";
+          let n_image_msg: string = imageLength > 9 ? "9+" : imageLength.toString();
+          msg += imageLength == 1 ? ausEl.innerText : n_image_msg + " " + ausEl.innerText;
+          return msg;
+
+        }
+      }
+    }
+    return lastMessage.content;
   }
 
 
@@ -101,7 +122,7 @@ export class AllChatsComponent {
     return new Date(message.dateTime);
   }
 
-  showEntireChat(selected : Chat){
+  showEntireChat(selected: Chat) {
     this.chatSelector.selectedChat = selected;
     let body = {
       idChat: selected._id,

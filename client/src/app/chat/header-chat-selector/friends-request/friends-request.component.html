@@ -40,8 +40,15 @@
       </div>
     </div>
     <div class="list-sent" *ngIf="!receivedRequest && chatSelector.sentList.length != 0">
-      <div class="sent_request_user" *ngFor="let sent of chatSelector.sentList">
-        <p>Richiesta di amicizia mandata a <b>{{sent.nickname}}</b></p>
+      <div class="row sent_request_user" *ngFor="let sent of chatSelector.sentList">
+        <div class="col-sm-3">
+          <div class="img img--center">
+            <img src="{{sent.image}}" >
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <span><b>{{sent.nickname}}</b></span>
+        </div>
       </div>
     </div>
     <div class="no_request" *ngIf="chatSelector.receivedList.length == 0 && receivedRequest">

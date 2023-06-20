@@ -1,3 +1,20 @@
+/*class funcion*/
+.hover--btn:hover{
+  background-color: #084595;
+  color: #fff;
+}
+
+.hover--center:hover{
+  transition: all 300ms ease;
+}
+
+.border--btn{
+  border-color:#084595FF !important;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+
 .header{
   display: flex;
   flex-direction: row;
@@ -84,26 +101,7 @@
 }
 
 /*friends list*/
-.img {
-  display: inline-block;
-  margin-right: 10px;
-}
 
-.img img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-size: cover;
-}
-
-.img img:before {
-  content: "";
-  display: block;
-  height: 50px;
-  width: 50px;
-  background-image: url("../../../../assets/img/user.jpg");
-  background-size: cover;
-}
 
 .PossibleGroupChatUser {
   border-bottom: 1px solid #ccc;
@@ -116,6 +114,7 @@
 .single-chat-creation, .group-creation {
   overflow: auto;
   flex-grow: 1;
+  height: 80%;
 }
 
 .group-info{
@@ -123,6 +122,17 @@
   display: flex;
   flex-direction: column;
   row-gap: 10px;
+  align-items: center;
+}
+
+.group-info > div{
+  width: 100%;
+}
+
+.btnCreate{
+  width: fit-content;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 

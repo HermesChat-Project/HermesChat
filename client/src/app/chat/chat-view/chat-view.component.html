@@ -11,35 +11,35 @@
       <button class="bi msg-action" [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}"
         (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
       <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
-        <i class="bi bi-paperclip" id="clip"></i>
+        <i class="bi bi-paperclip color--icon" id="clip"></i>
+        <div class="row-action"
+          [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-geo-alt-fill color--icon"></i>
+          <i class="bi bi-person-fill-up color--icon"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-calendar-event-fill color--icon" (click)="shareCalendar()"></i>
+          <i class="bi bi-graph-up-arrow color--icon" (click)="createChart()"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-bar-chart-fill color--icon" (click)="createSurvey()"></i>
+          <label for="txtFile" class="bi bi-file-earmark-fill color--icon"></label>
+          <input type="file" id="txtFile" multiple="multiple" (change)="getFiles($event)">
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-video-fill color--icon" (click)="showCamera(2)"></i>
+          <label for="txtImage" class="bi bi-image color--icon"></label>
+          <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-fill color--icon" (click)="showCamera(1)"></i>
+          <i class="bi bi-mic-fill color--icon" (click)="recordAudio()"></i>
+        </div>
       </button>
-      <div class="row-action"
-        [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-geo-alt-fill"></i>
-        <i class="bi bi-person-fill-up"></i>
-      </div>
-      <div class="row-action"
-        [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-calendar-event-fill" (click)="shareCalendar()"></i>
-        <i class="bi bi-graph-up-arrow" (click)="createChart()"></i>
-      </div>
-      <div class="row-action"
-        [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-bar-chart-fill" (click)="createSurvey()"></i>
-        <label for="txtFile" class="bi bi-file-earmark-fill"></label>
-        <input type="file" id="txtFile" multiple="multiple" (change)="getFiles($event)">
-      </div>
-      <div class="row-action"
-        [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-camera-video-fill" (click)="showCamera(2)"></i>
-        <label for="txtImage" class="bi bi-image"></label>
-        <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
-      </div>
-      <div class="row-action"
-        [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
-        <i class="bi bi-camera-fill" (click)="showCamera(1)"></i>
-        <i class="bi bi-mic-fill" (click)="recordAudio()"></i>
-      </div>
     </div>
     <div id="messageSendButton">
       <button class="chat-action" (click)="sendMsg()">
@@ -49,7 +49,7 @@
     <div id="messageSendOptions">
       <button class="bi bi-three-dots-vertical action" title="altre opzioni" [matMenuTriggerFor]="chatOptions"></button>
       <!-- chat Options -->
-      <mat-menu #chatOptions yPosition="above" xPosition="before">
+      <mat-menu #chatOptions yPosition="above" xPosition="before" [backdropClass]="checkTheme()">
         <button mat-menu-item (click)="showChatInfo()" *ngIf="chatSelector.selectedChat!.flagGroup">Informazioni</button>
         <!-- <button mat-menu-item (click)="searchMessage()">Cerca</button> -->
         <button mat-menu-item (click)="closeChat()">Chiudi chat</button>
