@@ -1,0 +1,27 @@
+.header{
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  align-items: center;
+}
+.close-dialog mat-icon{
+  cursor: pointer;
+}
+
+.close-dialog button{
+  color: #084595;
+  background-color: inherit !important;
+  padding: 0;
+  box-shadow: none !important;
+  display: grid;
+  place-items: center;
+
+  border: none;
+}
+.warning{
+  text-align: start;
+}
+
+.done{
+  text-align: end;
+}

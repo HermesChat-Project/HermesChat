@@ -1,0 +1,7 @@
+<div *ngFor="let event of group" class="event" [ngStyle]="{'height': expand == true ? 'fit-content' : '20%'}" >
+  <app-group-event [type_of_event]="event" (expandEvent)="OnExpandEvent($event)"></app-group-event>
+</div>
+<div id="no_events" *ngIf="group.length == 0">
+  Nessun evento per questo giorno. Creane uno!
+</div>
+

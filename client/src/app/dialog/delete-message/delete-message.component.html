@@ -1,0 +1,13 @@
+<div class="dialog_container" [ngClass]="{'dark-theme' : chatSelector.theme == 'dark' }">
+  <div class="dialog_header">
+    <h3 class="dialog_title">Elimina messaggio</h3>
+  </div>
+  <div class="dialog_body">
+    <p class="dialog_text">Vuoi eliminare questo messaggio?</p>
+    <span class="dialog_bottom_text">Verrà eliminato anche per gli altri utenti</span>
+  </div>
+  <div class="dialog_footer">
+    <button class="dialog_button" mat-dialog-close>Annulla</button>
+    <button class="dialog_button" (click)="deleteMessage()">Elimina</button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="loaded" *ngIf="chatSelector.seeMain" [ngClass]="{'dark-theme' : chatSelector.theme != 'light'}" (mouseup)="mouseEvent($event)">
+  <app-header-chat-selector ></app-header-chat-selector>
+  <div class="chat">
+    <app-choose-chat></app-choose-chat>
+    <app-right-view *ngIf="checkWhatShouldBeShown()"></app-right-view>
+  </div>
+</div>
+<div class="load" *ngIf="!chatSelector.seeMain" [ngClass]="{'dark-theme' : chatSelector.theme != 'light'}">
+  <app-progress-bar></app-progress-bar>
+</div>
+

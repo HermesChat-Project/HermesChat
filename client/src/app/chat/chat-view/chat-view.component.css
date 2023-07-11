@@ -1,0 +1,285 @@
+#messageSend {
+  max-height: 150px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+/*bottom part or fhe chat*/
+#selectedChat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+#messageSendText {
+  position: relative;
+  width: 20px;
+  flex-grow: 1;
+  max-height: 150px;
+  font-family: "Roboto", sans-serif;
+}
+#txtMessage {
+  border-radius: 10px;
+  width: 100%;
+  max-height: 122px;
+  border: 1px solid #555;
+  outline: none;
+  resize: none;
+  font-family: "Roboto", sans-serif;
+  overflow-y: auto;
+  min-height: 20px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 10px 35px 10px 10px;
+}
+#txtMessage > img {
+  max-width: 80%;
+}
+
+#txtMessage > div,
+#txtMessage > span {
+  font-size: inherit !important;
+  font-family: inherit !important;
+  background-color: transparent !important;
+  font-size: medium !important;
+}
+
+#messageSendButton {
+  width: fit-content;
+  height: fit-content;
+}
+
+#btnSend {
+  border-radius: 40px;
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  background-color: #3f51b5;
+  color: #fff;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  cursor: pointer;
+}
+
+.action {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.chat-action {
+  border: none;
+  background-color: transparent;
+  height: 100%;
+  width: fit-content;
+}
+/*attachments*/
+.attachments {
+  border: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: transparent;
+  height: 100%;
+  width: fit-content;
+}
+
+#clip {
+  display: inline-block;
+  width: 20px;
+  padding-right: 5px;
+}
+
+.row-action {
+  right: -30px;
+  top: 0;
+  position: absolute;
+  z-index: -1;
+  top: -10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100px;
+  height: 40px;
+  user-select: none;
+}
+.row-action i,
+.row-action label {
+  user-select: none;
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 5px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.row-action i:hover,
+i.action:hover,
+.row-action label:hover {
+  color: #fff;
+  background-color: #084595;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+.showFirstActionsAnimation {
+  z-index: 1;
+  top: -60px;
+  transition: all 200ms ease;
+}
+.showSecondActionsAnimation {
+  top: -110px;
+  z-index: 1;
+  transition: all 200ms ease;
+}
+.showThirdActionsAnimation {
+  z-index: 1;
+  top: -160px;
+  transition: all 200ms ease;
+}
+.showFourthActionsAnimation {
+  z-index: 1;
+  top: -210px;
+  transition: top 200ms ease;
+}
+.showFifthActionsAnimation {
+  z-index: 1;
+  top: -260px;
+  transition: top 200ms ease;
+}
+
+.hideActionAnimation {
+  z-index: -1;
+  top: -10px;
+  transition: top 200ms ease;
+}
+
+#listMessage {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 5%;
+}
+#font-styling {
+  font-family: "Roboto", sans-serif;
+  position: absolute;
+  z-index: 10;
+  display: none;
+  background-color: white;
+  border: 1px solid #ddd;
+  user-select: none;
+}
+#font-styling i {
+  padding: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+#font-styling i:hover {
+  background-color: #ddd;
+}
+.fontIsSelected {
+  background-color: #ddd;
+}
+
+u sup,
+u sub {
+  text-decoration: underline;
+}
+i sup,
+i sub {
+  font-style: italic;
+}
+
+.media_modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+}
+
+.content_modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+
+}
+
+.show_modal{
+  opacity: 1;
+  transition: all 200ms ease;
+}
+
+/*camera component*/
+app-camera{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+
+  overflow: auto;
+  background-color: white;
+}
+
+
+
+.info_of_the_user{
+  display: inline-block;
+  transform: translateX(-100%);
+  width: 350px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 7;
+}
+
+.show_user_action{
+  transform: translateX(0%);
+  transition: transform 0.2s ease-in-out;
+}
+
+.hide_user_action{
+  transform: translateX(-100%);
+  transition: transform 0.2s ease-in-out;
+}

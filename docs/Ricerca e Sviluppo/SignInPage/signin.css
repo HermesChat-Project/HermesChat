@@ -1,0 +1,116 @@
+body, html {
+    width: 100%;
+    height: 100%;
+}
+body{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  background-clip: padding-box !important;
+  border-width: 3px;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.sign-in{
+    width: 100%;
+  }
+
+center {
+  text-align: center;
+}
+.title {
+  font-family: "Roboto", sans-serif;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 48px;
+  color: #084595;
+  text-shadow: 0px 2px 4px #084595;
+  text-align: center;
+}
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  
+    border-radius: 10px;
+    background-color: #FFFFFF;
+  }
+  
+  .form-floating input{
+    user-select: none;
+  }
+  #form_email{
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  #form_password{
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  #form_email input:focus(){
+    outline: none;
+  }
+  #form_password input:focus(){
+    outline: none;
+  }
+    
+  #form_name{
+    margin-top: 20px;
+  }
+  #form_surname{
+    margin-top: 20px;
+  }
+  #form_confirmPassword{
+    margin-top: 20px;
+  }
+  #form_nickname{
+    margin-top: 20px;
+  }
+
+  #login_btn{
+    margin-top: 20px;
+    float: right;
+    margin-bottom: 20px;
+  }
+
+  .progress-bar {
+    background-color: rgb(11, 94, 215,0.5) !important;
+    height: 10px;
+    width: 95%;
+    margin: 20px auto;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.progress-bar span {
+  display: inline-block;
+  height: 10px;
+  width: 0;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+  background: rgb(13, 110, 253) !important;
+  transition: width .3s ease-in-out;
+}
+
+#errorConfirmPassword{
+  color: red;
+  font-size: 10pt;
+  margin-bottom: 5px;
+  margin-left: 2px;
+}

@@ -1,0 +1,158 @@
+.bi-search {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.form-floating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+
+/*SEARCH BAR*/
+#searchInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  margin-left: 0 !important;
+  height: 7%;
+}
+#searchInput div {
+  height: 100%;
+  display: flex;
+    align-items: center
+}
+
+.txtSearch {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 7px !important;
+  width: 80%;
+  height: 25px;
+}
+.txtSearch:focus {
+  outline: none;
+}
+
+.chatName{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options{
+  background-color: transparent;
+  border: none;
+}
+
+#div_chatlist,
+#div_resultSearch {
+  height: 93%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/*Chat image*/
+
+
+
+.div_chat {
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0px;
+  min-height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+.div_chat_search{
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0px;
+  min-height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+}
+
+
+
+.div_chat *{
+  user-select: none;
+}
+
+.last-message{
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.last-message i{
+  font-size: small !important;
+}
+
+/*Graphic Last message in the chat selector*/
+.lastMessage > span:last-of-type {
+  font-size: 12px;
+  color: #ccc;
+  padding-right: 5px;
+  width: 100px;
+  text-align: end;
+}
+
+
+.lastMessage {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: small;
+}
+
+/*Graphic for the span when I search a chat*/
+.chatFound {
+  display: inline-block;
+  height: fit-content;
+  width: 100%;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  background-color: #ccc;
+}
+
+.chatFound button {
+  color: #084595;
+  background-color: inherit !important;
+  padding: 0;
+  box-shadow: none !important;
+  font-size: 9pt;
+  font-weight: bold;
+}
+
+/*chat_result*/
+.list_result {
+  width: 100%;
+  height: 100%;
+}
+
+.no_chat_user {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  align-content: center;
+
+}
+
+.no_chat_user h5 {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #084595;
+}
+
+.accordion-body {
+  padding: 0px;
+}
+
+

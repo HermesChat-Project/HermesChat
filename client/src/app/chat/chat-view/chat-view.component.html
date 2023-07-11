@@ -1,0 +1,86 @@
+<div id="selectedChat" (mouseup)="getSelection()">
+  <div id="listMessage" #messages (scroll)="scrollMsg($event)">
+    <app-message *ngFor="let messages of chatSelector.messageList[this.chatSelector.selectedChat!._id]; let i = index"
+      [chatMessage]="messages" [index]="i"></app-message>
+  </div>
+  <div id="messageSend">
+    <div id="messageSendText">
+      <div id="txtMessage" #textMessage (keydown)="keyAction($event)" [contentEditable]="contentEditable"
+        (paste)="pastedMessage($event)">
+      </div>
+      <button class="bi msg-action" [ngClass]="{'bi-pause-fill' : audioplay, 'bi-play-fill': !audioplay}"
+        (click)="toggleAudioPlay()" *ngIf="this.audioRecord"></button>
+      <button class="attachments" (click)="toggleShowChatActions()" (blur)="hideShowChatActions($event)">
+        <i class="bi bi-paperclip color--icon" id="clip"></i>
+        <div class="row-action"
+          [ngClass]="{'showFifthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-geo-alt-fill color--icon"></i>
+          <i class="bi bi-person-fill-up color--icon"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFourthActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-calendar-event-fill color--icon" (click)="shareCalendar()"></i>
+          <i class="bi bi-graph-up-arrow color--icon" (click)="createChart()"></i>
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showThirdActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-bar-chart-fill color--icon" (click)="createSurvey()"></i>
+          <label for="txtFile" class="bi bi-file-earmark-fill color--icon"></label>
+          <input type="file" id="txtFile" multiple="multiple" (change)="getFiles($event)">
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showSecondActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-video-fill color--icon" (click)="showCamera(2)"></i>
+          <label for="txtImage" class="bi bi-image color--icon"></label>
+          <input type="file" id="txtImage" accept="image/*" multiple="multiple" (change)="getImages($event)">
+        </div>
+        <div class="row-action"
+          [ngClass]="{'showFirstActionsAnimation' : showChatActions, 'hideActionAnimation' : !showChatActions}">
+          <i class="bi bi-camera-fill color--icon" (click)="showCamera(1)"></i>
+          <i class="bi bi-mic-fill color--icon" (click)="recordAudio()"></i>
+        </div>
+      </button>
+    </div>
+    <div id="messageSendButton">
+      <button class="chat-action" (click)="sendMsg()">
+        <i class="bi bi-send action" title="Invia"></i>
+      </button>
+    </div>
+    <div id="messageSendOptions">
+      <button class="bi bi-three-dots-vertical action" title="altre opzioni" [matMenuTriggerFor]="chatOptions"></button>
+      <!-- chat Options -->
+      <mat-menu #chatOptions yPosition="above" xPosition="before" [backdropClass]="checkTheme()">
+        <button mat-menu-item (click)="showChatInfo()" *ngIf="chatSelector.selectedChat!.flagGroup">Informazioni</button>
+        <!-- <button mat-menu-item (click)="searchMessage()">Cerca</button> -->
+        <button mat-menu-item (click)="closeChat()">Chiudi chat</button>
+        <button mat-menu-item (click)="leaveGroup()" *ngIf="chatSelector.selectedChat!.flagGroup">Esci dal gruppo</button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
+<div id="font-styling" #fontStyling>
+  <i class="bi bi-type-bold" (click)="toggleFont('b')" [ngClass]="{'fontIsSelected' : isBold}"></i>
+  <i class="bi bi-type-italic" (click)="toggleFont('i')" [ngClass]="{'fontIsSelected' : isItalic}"></i>
+  <i class="bi bi-type-underline" (click)="toggleFont('u')" [ngClass]="{'fontIsSelected' : isUnderline}"></i>
+  <i class="bi bi-subscript" (click)="toggleFont('sub')" [ngClass]="{'fontIsSelected' : isSubscript}"></i>
+  <i class="bi bi-superscript" (click)="toggleFont('sup')" [ngClass]="{'fontIsSelected' : isSuperscript}"></i>
+  <i class="bi bi-type-strikethrough" (click)="toggleFont('s')" [ngClass]="{'fontIsSelected' : isStrikethrough}"></i>
+</div>
+
+<!-- modal -->
+<div class="media_modal" *ngIf="chatSelector.src != ''" [ngClass]="{'show_modal': chatSelector.src != ''}"
+  (click)="closeModal($event)">
+  <div (click)="$event.stopPropagation()">
+    <div class="content_modal">
+      <div class="body_modal">
+        <img [src]="chatSelector.src" alt="">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- camera component -->
+<app-camera *ngIf="chatSelector.flagCamera > 0" (onMediaEvent)="getMedia($event)"></app-camera>
+
+<!-- info chat component -->
+<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 7, 'hide_user_action' : chatSelector.user_action != 7}"></app-info-chat>

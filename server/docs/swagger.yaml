@@ -1,0 +1,1075 @@
+basePath: /
+host: api.hermeschat.it:8090
+info:
+  contact: {}
+  description: Server API e Websocket per il progetto HermesChat. Il server è stato
+    sviluppato in Go con il framework Gin e utilizza MongoDB come database.
+  title: HermesChat API
+  version: "1.0"
+paths:
+  /acceptFriend:
+    post:
+      description: Accetta la richiesta di amicizia dell'utente loggato con l'utente
+        passato come parametro
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Indice dell'utente da accettare
+        in: header
+        name: idUser
+        required: true
+        type: string
+      - description: Nickname dell'utente da accettare
+        in: header
+        name: nickname
+        required: true
+        type: string
+      - description: Nome dell'utente da accettare
+        in: header
+        name: name
+        required: true
+        type: string
+      - description: Cognome dell'utente da accettare
+        in: header
+        name: surname
+        required: true
+        type: string
+      - description: Immagine dell'utente da accettare
+        in: header
+        name: image
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Accetta richiesta di amicizia
+  /addCalendarEvent:
+    post:
+      description: Aggiunge un evento al calendario dell'utente loggato (nel caso
+        di evento condiviso, aggiunge anche l'evento al calendario degli utenti con
+        cui è condiviso)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Titolo dell'evento
+        in: header
+        name: title
+        required: true
+        type: string
+      - description: Descrizione dell'evento
+        in: header
+        name: description
+        required: true
+        type: string
+      - description: Data dell'evento
+        in: header
+        name: date
+        required: true
+        type: string
+      - description: Id dell'utente che ha creato l'evento
+        in: header
+        name: idUser
+        required: true
+        type: string
+      - description: Notifica dell'evento
+        in: header
+        name: notify
+        required: true
+        type: string
+      - description: Shared or Personal
+        in: header
+        name: type
+        required: true
+        type: string
+      - description: Tempo di notifica
+        in: header
+        name: notifyTime
+        required: true
+        type: string
+      - description: Colore dell'evento
+        in: header
+        name: color
+        required: true
+        type: string
+      - collectionFormat: csv
+        description: Id delle chat con cui è condiviso l'evento (se type è Shared)
+        in: header
+        items:
+          type: string
+        name: idChats
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Aggiunge un evento al calendario
+  /blockUser:
+    post:
+      description: Blocca l'utente passato come parametro dall'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente da bloccare
+        in: header
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Blocca utente
+  /changeGroupInfo:
+    post:
+      description: Cambia info di un gruppo passando l'id del gruppo e i nuovi dati
+        (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      - description: Nuovo nome del gruppo
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Nuova descrizione del gruppo
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Nuova immagine del gruppo
+        in: formData
+        name: img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Cambia info gruppo
+  /checkOtp:
+    post:
+      description: Verifica che l'OTP inserito dall'utente sia lo stesso generato
+        dal server e inviato via email
+      parameters:
+      - description: Email dell'utente da verificare
+        in: header
+        name: email
+        required: true
+        type: string
+      - description: OTP inserito dall'utente
+        in: header
+        name: otp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Verifica OTP
+  /checkToken:
+    get:
+      description: Controlla se il token è valido oppure no, così il client sa se
+        l'utente è loggato o no
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Controlla token
+  /createChat:
+    post:
+      description: Crea una chat tra due utenti
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id dell'utente con cui creare la chat
+        in: formData
+        name: idUser
+        required: true
+        type: string
+      - description: Immagine dell'utente loggato
+        in: formData
+        name: img
+        required: true
+        type: file
+      - description: Immagine dell'utente con cui creare la chat
+        in: formData
+        name: friendImg
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Crea una chat
+  /declineFriend:
+    post:
+      description: Rifiuta la richiesta di amicizia dell'utente loggato con l'utente
+        passato come parametro
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Indice dell'utente da rifiutare
+        in: header
+        name: idUser
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rifiuta richiesta di amicizia
+  /deleteCalendarEvent:
+    delete:
+      description: Elimina un evento dal calendario dell'utente loggato (nel caso
+        di evento condiviso, elimina anche l'evento al calendario degli utenti con
+        cui è condiviso)ù
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Id dell'evento da eliminare
+        in: header
+        name: idEvent
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Elimina un evento dal calendario
+  /deleteGroup:
+    delete:
+      description: Elimina un gruppo passando l'id del gruppo (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Elimina gruppo
+  /getBlocked:
+    post:
+      description: Restituisce tutti gli utenti bloccati dall'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca utenti bloccati
+  /getCalendarEvents:
+    post:
+      description: Restituisce tutti gli eventi del calendario dell'utente loggato
+        (sia personali che condivisi)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottiene eventi del calendario
+  /getChats:
+    post:
+      description: Restituisce tutte le chat dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottieni chat
+  /getFiles:
+    post:
+      description: Scarica i file dagli url specificati e li invia al client
+      parameters:
+      - collectionFormat: csv
+        description: Url dei file da scaricare
+        in: formData
+        items:
+          type: string
+        name: urls
+        required: true
+        type: array
+      - collectionFormat: csv
+        description: ChatId delle chat in cui si trovano i file
+        in: formData
+        items:
+          type: string
+        name: chatId
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Scarica i file
+  /getFriendRequests:
+    post:
+      description: Restituisce tutti le richieste di amicizia dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca richieste di amicizia utente
+  /getFriends:
+    post:
+      description: Restituisce tutti gli amici dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca amici utente
+  /getInfoUser:
+    post:
+      description: Restituisce le informazioni dell'utente loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Informazioni utente
+  /getMessages:
+    post:
+      description: Restituisce offset * 50 messaggi della chat selezionata
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id della chat selezionata
+        in: formData
+        name: idChat
+        required: true
+        type: string
+      - description: Offset dei messaggi da restituire
+        in: formData
+        name: offset
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ottieni messaggi
+  /getRequestSent:
+    post:
+      description: Restituisce tutti le richieste di amicizia inviate dell'utente
+        loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca richieste di amicizia inviate
+  /getVersion:
+    get:
+      description: Restituisce la versione del server in modo da poterla confrontare
+        con quella del client
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Ottieni versione
+  /leaveGroup:
+    post:
+      description: Abbandona un gruppo passando l'id del gruppo
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Abbandona gruppo
+  /login:
+    post:
+      description: Effettua il login di un utente e crea un token JWT salvato in un
+        cookie http-only
+      parameters:
+      - description: Username dell'utente
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: Password dell'utente
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Login utente
+  /logout:
+    post:
+      description: Effettua il logout di un utente e cancella il cookie http-only
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Logout utente
+  /removeFriend:
+    post:
+      description: Rimuove un amico passando l'id dell'utente da rimuovere, tuttavia
+        le chat non vengono eliminate
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id dell'amico da rimuovere
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rimuovi amico
+  /removeUserFromGroup:
+    post:
+      description: Rimuove un utente da un gruppo passando l'id del gruppo e l'id
+        dell'utente da rimuovere (se si è admin)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Id del gruppo
+        in: formData
+        name: chatId
+        required: true
+        type: string
+      - description: Id dell'utente da rimuovere
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Rimuovi utente da un gruppo
+  /search:
+    get:
+      description: Cerca fino a 100 utenti con username che inizia con la stringa
+        passata come parametro
+      parameters:
+      - description: Caratteri con cui inizia l'username
+        in: header
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Ricerca utenti
+  /sendFile:
+    post:
+      description: Salva il file nella cartella del server dell'utente loggato e invia
+        il file all'utente specificato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente a cui inviare il file
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: File da inviare
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Invia un file
+  /sendFriendRequest:
+    post:
+      description: Invia una richiesta di amicizia all'utente specificato dall'utente
+        loggato
+      parameters:
+      - description: Indice dell'utente loggato
+        in: formData
+        name: index
+        required: true
+        type: string
+      - description: Username dell'utente a cui inviare la richiesta di amicizia
+        in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Invia richiesta di amicizia
+  /signup:
+    post:
+      description: Effettua la registrazione di un utente e crea un codice OTP che
+        verrà inviato via email
+      parameters:
+      - description: Username dell'utente
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: Password dell'utente
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Email dell'utente
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Nome dell'utente
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Cognome dell'utente
+        in: formData
+        name: surname
+        required: true
+        type: string
+      - description: Lingua dell'utente
+        in: formData
+        name: lang
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Registrazione di un utente
+  /socket:
+    get:
+      description: Permette di connettersi al socket realizzato con libreria Gorilla
+        Websocket
+      parameters:
+      - description: Indice dell'utente
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Connessione al socket
+  /updateCalendarEvent:
+    patch:
+      description: Modifica un evento del calendario dell'utente loggato (nel caso
+        di evento condiviso, modifica anche l'evento al calendario degli utenti con
+        cui è condiviso)
+      parameters:
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      - description: Id dell'evento da modificare
+        in: header
+        name: idEvent
+        required: true
+        type: string
+      - description: Titolo dell'evento
+        in: header
+        name: title
+        type: string
+      - description: Descrizione dell'evento
+        in: header
+        name: description
+        type: string
+      - description: Data dell'evento
+        in: header
+        name: date
+        type: string
+      - description: Notifica dell'evento
+        in: header
+        name: notify
+        type: string
+      - description: Shared or Personal
+        in: header
+        name: type
+        type: string
+      - description: Tempo di notifica
+        in: header
+        name: notifyTime
+        type: string
+      - description: Colore dell'evento
+        in: header
+        name: color
+        type: string
+      - collectionFormat: csv
+        description: Id delle chat con cui è condiviso l'evento (se type è Shared)
+        in: header
+        items:
+          type: string
+        name: idChats
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Modifica un evento del calendario
+  /updateInfo:
+    patch:
+      description: Aggiorna lo "stato" dell'utente loggato
+      parameters:
+      - description: Nuove informazioni da aggiornare
+        in: header
+        name: newInfo
+        required: true
+        type: string
+      - description: Indice dell'utente loggato
+        in: header
+        name: index
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Aggiorna informazioni utente
+swagger: "2.0"

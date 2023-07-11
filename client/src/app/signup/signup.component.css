@@ -1,0 +1,247 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  background-clip: padding-box !important;
+  border-width: 3px;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.sign-in {
+  width: 100%;
+}
+
+center {
+  text-align: center;
+}
+.title {
+  font-family: "Roboto", sans-serif;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 48px;
+  color: #084595;
+  text-shadow: 0px 2px 4px #084595;
+  text-align: center;
+}
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+button {
+  width: 100px;
+  height: 100px;
+}
+
+.form-floating input {
+  user-select: none;
+}
+#form_email {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+#form_password {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+#form_email input:focus {
+  outline: none;
+}
+#form_password input:focus {
+  outline: none;
+}
+
+#form_name {
+  margin-top: 20px;
+}
+#form_surname {
+  margin-top: 20px;
+}
+#form_confirmPassword {
+  margin-top: 20px;
+}
+#form_nickname {
+  margin-top: 20px;
+}
+
+#btnSubmit {
+  /*button styling black and white*/
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #084595;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  color: #084595;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  margin-top: 20px;
+}
+#btnSubmit:hover,
+#btnSubmit:focus {
+  background-color: #084595;
+  color: #ffffff;
+}
+.text {
+  text-align: center;
+}
+
+.sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+.mat-stepper-horizontal {
+  margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+
+
+
+.eyePwd {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  margin-right: 10px;
+}
+
+.helper {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  margin-right: -50px;
+}
+
+.txtPwd {
+  padding-right: 50px;
+}
+
+.img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+  margin-bottom: 40px;
+}
+
+.img img,
+.img img::before {
+  width: 150px;
+  height: 150px;
+}
+
+.img p {
+  margin: 0;
+  font-size: small;
+  font-weight: 400;
+  width: 100%;
+}
+
+.mdc-text-field {
+  overflow-x: auto;
+}
+
+.action-btn {
+  display: flex;
+}
+
+.next-btn {
+  margin-left: auto;
+}
+
+
+#login {
+  margin-top: 20px;
+  text-align: center;
+  color: #084595;
+  font-size: 9pt;
+  text-decoration: none;
+  float: left;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  background-clip: padding-box !important;
+  border-width: 3px;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+
+
+.center {
+  text-align: center;
+}
+.title {
+  font-family: "Roboto", sans-serif;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 48px;
+  color: #084595;
+  text-shadow: 0px 2px 4px #084595;
+  text-align: center;
+}
+
+.form-floating input {
+  user-select: none;
+}
+#form_email {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+#btnSubmit {
+  width: 80%;
+  margin: 20px auto;
+}
+
+.opt-item {
+  height: 40px !important;
+  width: 40px !important;
+  text-align: center !important;
+  line-height: 25px !important;
+  margin: 1px !important;
+  display: inline !important;
+  padding: 2px !important;
+  font-size: 17px !important;
+}
+
+.opt-container {
+  width: 350px !important;
+}

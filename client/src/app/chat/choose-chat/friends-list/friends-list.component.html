@@ -1,0 +1,34 @@
+<div class="row" id="searchInput">
+  <div class="col-sm-12" id="div_search">
+    <!-- SEARCH BOX -->
+    <div class="form-floating">
+      <input type="search" placeholder="Search" class="" id="txtSearch" [(ngModel)]="txtSearchFriends"
+        [ngModelOptions]="{standalone: true}" (input)="showFriends()">
+    </div>
+    <i class="bi bi-arrow-down-up reverse-list" (click)="reverseList()" title="cambia l'ordine"
+      [ngClass]="{'not_visible' : chatSelector.friendSerachList.length == 0}" *ngIf="txtSearchFriends == ''"></i>
+  </div>
+</div>
+<div id="div_friendList">
+  <div class="listFound" *ngIf="chatSelector.friendSerachList.length > 0">
+    <div class="row friends" *ngFor="let friend of chatSelector.friendSerachList" (click)="seeDetails(friend)">
+      <div class="col-sm-3">
+        <div class="img">
+          <img [src]="friend.image">
+        </div>
+      </div>
+      <div class="col-sm-9">
+        <div class="friend_info">
+          <h5 class="friend_nickname">{{friend.nickname}}</h5>
+          <span class="text-truncate friend_name" [title]="friend.name + '' + friend.surname">{{friend.name + " " + friend.surname}}</span>
+        </div>
+        <div class="chatNow">
+          <i class="bi bi-chat-left-text-fill" [title]="'scrivi a ' +friend.nickname" (click)="createChat(friend)"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="listNotFound" *ngIf="chatSelector.friendSerachList.length == 0">
+    <p>Nessun risultato</p>
+  </div>
+</div>

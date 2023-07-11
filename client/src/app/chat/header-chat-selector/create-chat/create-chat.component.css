@@ -1,0 +1,138 @@
+/*class funcion*/
+.hover--btn:hover{
+  background-color: #084595;
+  color: #fff;
+}
+
+.hover--center:hover{
+  transition: all 300ms ease;
+}
+
+.border--btn{
+  border-color:#084595FF !important;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid #0b2f5e;
+}
+
+.title{
+  font-size: 13pt;
+  font-weight: bold;
+  margin: 0px;
+  padding: 0px;
+  margin-left: 10px;
+  flex-grow: 1;
+}
+
+.close{
+  cursor: pointer;
+}
+.close i{
+  font-size: 1.5em;
+    margin: 0 0.2em;
+    cursor: pointer;
+    text-align: end;
+}
+
+.createChat{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.row{
+  margin: 0px;
+}
+.chatCreation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  position: relative;
+  height: 40px;
+}
+.chatCreation div {
+  display: grid;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+}
+
+#movingDivChatCreation {
+  opacity: 1;
+  border: none;
+  width: 50%;
+  display: block;
+  margin: 0px;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-bottom: 2px solid #0b2f5e;
+  z-index: 2;
+}
+
+.selected {
+  font-weight: bold;
+}
+
+.singleChatSelected{
+  left: 0%;
+  transition: left 200ms ease-in-out;
+}
+
+.groupChatSelected{
+  left: 50%;
+  transition: left 200ms ease-in-out;
+}
+
+/*friends list*/
+
+
+.PossibleGroupChatUser {
+  border-bottom: 1px solid #ccc;
+  padding: 3% 0;
+  height: 14.29%;
+  padding-left: 10px;
+  align-items: center;
+}
+
+.single-chat-creation, .group-creation {
+  overflow: auto;
+  flex-grow: 1;
+  height: 80%;
+}
+
+.group-info{
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  align-items: center;
+}
+
+.group-info > div{
+  width: 100%;
+}
+
+.btnCreate{
+  width: fit-content;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+

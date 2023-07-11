@@ -1,0 +1,99 @@
+/*Start class tools*/
+.margin--btm-10 {
+  margin-bottom: 10px;
+}
+/*End*/
+.survey-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.survey-header {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+mat-dialog-content {
+  width: 100%;
+}
+
+.survey-header p {
+  margin: 0;
+  padding: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.survey_title {
+  width: 100%;
+  height: 45px;
+  padding: 0px 5px;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  background-color: #dedede;
+  border: none;
+}
+
+.line {
+  width: 0;
+  height: 2px;
+  background-color: #2196f3;
+  transition: width 0.3s linear;
+}
+
+input:focus + .line {
+  width: 100%;
+}
+
+.survey_options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: auto;
+  padding: 0 10%;
+}
+.survey_option {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  justify-content: space-between;
+}
+
+.survey_option_text {
+  width: 100%;
+  height: 33px;
+  font-size: 1.1em;
+  border: 1px solid #bbb;
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+  padding: 0 5px;
+  outline: none;
+}
+
+.sticky-top {
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  z-index: 1;
+  row-gap: 10px;
+  background-color: white;
+}
+
+.no-same-option {
+  color: #ff0000;
+  font-size: 0.6em;
+  margin: 0 5px;
+  width: 100%;
+  text-align: start;
+  visibility: hidden;
+}

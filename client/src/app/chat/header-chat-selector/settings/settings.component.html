@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="header">
+    <p>impostazioni</p>
+    <i class="bi bi-x" (click)="closeSettings()"></i>
+  </div>
+  <div class="user_action">
+    <div class="row" (click)="showInfo()">
+      <div class="col-sm-12">
+        <i class="bi bi-person-fill"></i>
+        <div class="info">
+          <div class="mainText">Profilo</div>
+          <div class="subText text-truncate">Informazioni sull'utente</div>
+        </div>
+      </div>
+    </div>
+    <div class="row" >
+      <div class="col-sm-12">
+        <i class="bi bi-shield-lock-fill"></i>
+        <div class="info">
+          <div class="mainText">Sicurezza</div>
+          <div class="subText text-truncate">Cambio password, utenti bloccati, visualizzazione Informazioni</div>
+        </div>
+      </div>
+    </div>
+    <div class="row" (click)="showInfo(2)">
+      <div class="col-sm-12">
+        <i class="bi bi-chat-left-text-fill"></i>
+        <div class="info">
+          <div class="mainText">Chat e notifiche</div>
+          <div class="subText text-truncate">Sfondo delle chat, tema, notifiche, chiamate</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <i class="bi bi-translate"></i>
+        <div class="info">
+          <div class="mainText">Lingua</div>
+          <div class="subText text-truncate">Modifica lingua</div>
+        </div>
+      </div>
+    </div>
+    <div class="row logout" (click)="logout()">
+      <div class="col-sm-12">
+        <i class="bi bi-door-open"></i>
+        <div class="info">
+          <div class="mainText">Esci</div>
+          <div class="subText text-truncate">Esci da HermesChat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-info-user class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 0, 'hide_user_action' : chatSelector.user_action != 0}" *ngIf="chatSelector.infoUser"></app-info-user>
+<app-info-type-options class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 2, 'hide_user_action' : chatSelector.user_action != 2}"></app-info-type-options>
+<app-info-chat class="info_of_the_user" [ngClass]="{'show_user_action' : chatSelector.user_action == 7, 'hide_user_action' : chatSelector.user_action != 7}"></app-info-chat>

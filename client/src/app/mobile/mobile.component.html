@@ -1,0 +1,25 @@
+<!-- Say that the page isn't available in mobile devices (with some styles) -->
+<div class="background">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">This page is not available in mobile devices</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="text">
+          <p>
+            This site is not available in mobile devices :(
+            <br>
+            We're working on it, please try again later.
+          </p>
+          <div class=""></div>
+        </div>
+      </div>
+      <div class="col-md-6 wrapper" [ngClass]="{'on' : light}">
+        <ng-lottie [options]="lottieOptions" height="100%"></ng-lottie>
+      </div>
+    </div>
+  </div>
+</div>

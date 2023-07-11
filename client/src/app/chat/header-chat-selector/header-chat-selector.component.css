@@ -1,0 +1,187 @@
+.options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.row {
+  padding: 0px;
+  border-bottom: 1px solid #ccc;
+  margin: 0px !important;
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+}
+i {
+  cursor: pointer;
+}
+#newChat {
+  position: relative;
+}
+.chatOptions {
+  width: 350px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0px 10px;
+}
+
+#secret-chat-options {
+  display: grid;
+  justify-content: end;
+  align-items: center;
+}
+#selectNewChat {
+  overflow: hidden;
+  margin: 0px !important;
+  padding: 0px !important;
+  max-height: 0px;
+  width: max-content;
+  background-color: whitesmoke;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 6; /*It has to be always visible when clicked, so it has to have the highest z-index*/
+  right: -100%;
+}
+
+#selectNewChat.animateChatCreationOption {
+  box-shadow: 0px 0px 10px 0px #ccc;
+  max-height: 100px !important;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  transition: all 500ms ease-out;
+}
+
+#selectNewChat > div {
+  height: fit-content;
+  text-align: center;
+  font-size: 9pt;
+  margin: 0px !important;
+  width: 100%;
+  padding: 5px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+#selectNewChat > div:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#newChatOptions {
+  border: none;
+  background-color: transparent;
+}
+
+.header-section {
+  width: 350px;
+  display: inline-block;
+  height: 93%;
+  position: absolute;
+  bottom: 0;
+  right: 100%;
+  z-index: 4;
+  background-color: #f5f5f5;
+}
+
+.showHeaderSection {
+  z-index: 5;
+  left: 0px;
+  transition: left 200ms ease-out;
+}
+
+.hideHeaderSection {
+  left: -350px;
+  transition: left 200ms ease-out;
+}
+
+.showSetting {
+  transform: rotate(45deg);
+  transition: transform 200ms ease-out;
+}
+
+.hideSetting {
+  transform: rotate(0deg);
+  transition: transform 200ms ease-out;
+}
+
+/*notify message*/
+.requests {
+  display: flex;
+  flex-direction: column;
+}
+.notify-request {
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+}
+.notif {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  background: #e95950;
+  color: #fff;
+  -webkit-filter: drop-shadow(0px 0px 5px rgba(233, 89, 80, 0.6));
+  filter: drop-shadow(0px 0px 5px rgba(233, 89, 80, 0.6));
+  position: absolute;
+  top: 10px;
+  left: -10px;
+  border-radius: 7px;
+  animation: notification 3.5s ease-in-out forwards;
+  z-index: 6;
+}
+
+@keyframes notification {
+  0% {
+    opacity: 0;
+    transform: rotate(10deg) scaleY(0);
+  }
+  5% {
+    opacity: 0.3;
+  }
+  7% {
+    opacity: 1;
+    transform: rotate(-5deg) scaleY(1.1);
+  }
+  10% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  85% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  97% {
+    transform: rotate(-5deg);
+    opacity: 1;
+  }
+  98%{
+    transform: scaleY(0.5)
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0) rotate(0deg);
+  }
+}
+
+.notif:after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: #e95950;
+  position: absolute;
+  top: -7px;
+  left: 10px;
+  border-radius: 3px;
+  transform: skew(-30deg, 45deg);
+  z-index: -1;
+}
+
+.notifItem {
+  display: inline-block;
+  color: #fff;
+  font-family: sans-serif;
+  font-weight: 600;
+  padding: 8px 5px;
+  margin: 0px;
+}

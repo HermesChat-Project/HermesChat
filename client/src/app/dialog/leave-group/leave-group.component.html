@@ -1,0 +1,13 @@
+<div class="dialog_container" [ngClass]="{'dark-theme' : chatSelector.theme == 'dark' }">
+  <div class="dialog_header">
+    <h3 class="dialog_title">Abbandona il gruppo</h3>
+  </div>
+  <div class="dialog_body">
+    <p class="dialog_text">Vuoi davvero abbandonare il gruppo?</p>
+    <span class="dialog_bottom_text">Non potrai più visualizzare i messaggi del gruppo</span>
+  </div>
+  <div class="dialog_footer">
+    <button class="dialog_button" [mat-dialog-close]="null">Annulla</button>
+    <button class="dialog_button" [mat-dialog-close]="true">Abbadona</button>
+  </div>
+</div>

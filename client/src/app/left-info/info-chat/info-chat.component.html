@@ -1,0 +1,59 @@
+<!-- Show the name of the group/chat, show the image, show if is a group the members, plus at the bottom show two buttons (one to leave, one to report) both red. All the info are in chatSelector.selectedChat  -->
+<div class="container">
+  <div class="header">
+    <div class="title">
+      <p>{{chatSelector.selectedChat?.name}}</p>
+    </div>
+    <div class="close">
+      <mat-icon (click)="closeInfo()">close</mat-icon>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="image">
+      <img src="{{chatSelector.selectedChat?.image}}" alt="image not available">
+    </div>
+    <div class="description" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <p>{{chatSelector.selectedChat?.description}}</p>
+    </div>
+    <div class="add-user" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <button (click)="addUser()">
+        <mat-icon>person_add</mat-icon>
+        Add user
+      </button>
+    </div>
+    <div class="members-container" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <div class="members" (contextmenu)="rightClick($event, member)"
+        *ngFor="let member of chatSelector.selectedChat?.users">
+        <div class="members-image">
+          <img src="{{member.image}}" alt="image not available">
+        </div>
+        <div class="members-name">
+          <p>{{member.nickname}}</p>
+        </div>
+        <div class="members-badge">
+          <mat-icon *ngIf="member.role == 'admin'" title="admin">verified</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <div class="leave" *ngIf="chatSelector.selectedChat?.flagGroup">
+      <button mat-button color="warn" (click)="leaveGroup()">Leave</button>
+    </div>
+    <!-- <div class="report">
+      <button mat-button color="warn" (click)="report()">Report</button>
+    </div> -->
+  </div>
+</div>
+
+<div class="right-click-option" #rcOption>
+  <div class="member-remove" *ngIf="selected_member?.idUser != chatSelector.infoUser._id && checkAdmin()" (click)="removeUser(selected_member!)">
+    <p>Elimina utente</p>
+    <mat-icon >remove_circle</mat-icon>
+  </div>
+  <div class="member-admin" *ngIf="selected_member?.idUser != chatSelector.infoUser._id && checkAdmin()" (click)="changeRole(selected_member!)">
+    <p>Cambia ruolo</p>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-block;
+}
+app-header-chat-selector {
+  width: 100%;
+  height: 7%;
+  float: left;
+}
+app-choose-chat {
+  width: 350px;
+  height: 100%;
+}
+app-right-view {
+  height: 100%;
+  flex-grow: 1;
+  width: 20px;
+}
+
+app-progress-bar {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
+
+.chat{
+  height: 93%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.load, .loaded{
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+

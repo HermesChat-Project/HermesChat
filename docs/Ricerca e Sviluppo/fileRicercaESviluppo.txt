@@ -1,0 +1,8 @@
+-Da ID utenti ottenere messaggi e aggiungere un messaggio
+Per ottenere i messaggi si fa una ricerca di ogni chat (contenuta nel vettore chats a sua volta contenuto nel vettore ids)
+Una volta ottenuti gli id delle chat si legge il campo messages dove sono contenute tutte le informazioni inerenti a ogni messaggio
+
+
+-Web rtc per chiamate vocali angular
+https://www.youtube.com/watch?v=SWhG0VRdiW8&ab_channel=OpenValue
+https://www.youtube.com/watch?v=MRwcnuEY4-0&ab_channel=LazyPandaTechBlog

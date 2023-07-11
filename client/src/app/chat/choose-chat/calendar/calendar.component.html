@@ -1,0 +1,14 @@
+<div id="div_date">
+  <input type="date" id="date" #date (change)="changeDate()" [value]="chatSelector.selectedDate">
+</div>
+<div id="navbar">
+  <div class="selector" #selector [ngClass]="{'Ppos' : chatSelector.isPersonalEvent, 'Spos' : !chatSelector.isPersonalEvent}"></div>
+  <div class="event_selector" (click)="changeEvent(0, $event)" [ngClass]="{'selected' : chatSelector.isPersonalEvent}">Personale</div>
+  <div class="event_selector" (click)="changeEvent(1, $event)" [ngClass]="{'selected' : !chatSelector.isPersonalEvent}">Condiviso</div>
+</div>
+<div id="calendar_event">
+  <div class="events" #events [ngClass]="{'personal' : chatSelector.isPersonalEvent, 'shared': !chatSelector.isPersonalEvent}">
+    <app-personal [ngStyle]="{'left' : 0*100 + '%'}" [personal]="PersonalEvents()"></app-personal>
+    <app-group [ngStyle]="{'left' : 1 * 100 + '%'}" [group]="GroupEvents()"></app-group>
+  </div>
+</div>

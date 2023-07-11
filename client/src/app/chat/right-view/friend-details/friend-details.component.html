@@ -1,0 +1,41 @@
+<div class="friend_container">
+  <div class="friend_info">
+    <div class="row">
+      <div class="col-md-3">
+        <img [src]="chatSelector.selectedFriend?.image" alt="">
+      </div>
+      <div class="col-md-9">
+        <h3>{{chatSelector.selectedFriend?.nickname}}</h3>
+        <hr>
+        <p>{{chatSelector.selectedFriend?.name + ' '+ chatSelector.selectedFriend?.surname}}</p>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="friend_action">
+    <div class="friend_action_button" (click)="createChat(chatSelector.selectedFriend!)">
+      <i class="bi bi-chat-left-text"></i>
+      <p>Scrivi a {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+    <div class="friend_action_button">
+      <i class="bi bi-telephone"></i>
+      <p>Chiama {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+    <div class="friend_action_button">
+      <i class="bi bi-camera-video"></i>
+      <p>Videochiama {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+    <div class="friend_action_button">
+      <i class="bi bi-stopwatch-fill"></i>
+      <p>Crea chat temporanea con {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+    <div class="friend_action_button">
+      <i class="bi bi-people-fill"></i>
+      <p>Aggiungi al gruppo {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+    <div class="friend_action_button">
+      <i class="bi bi-person-dash-fill"></i>
+      <p>Rimuovi dagli amici {{chatSelector.selectedFriend?.nickname}}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,431 @@
+#table_calendar {
+  width: 100%;
+  height: 100%;
+}
+
+.container_calendar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/******************HEADER******************/
+
+.btn_change {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  cursor: pointer;
+}
+
+.header_date {
+  padding: 0px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.container_header {
+  display: flex;
+  justify-content: center;
+}
+
+.container_header_date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px 0;
+}
+
+/***********************************/
+
+/******************THEAD******************/
+thead tr th {
+  background-color: #f5f5f5;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px 0;
+}
+
+thead {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/***********************************/
+
+/******************TBODY******************/
+.day_calendar {
+  width: 14.285714285714285714285714285714%;
+  border-left: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+tbody {
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+}
+
+.date_month {
+  width: 100%;
+  text-align: center;
+  height: fit-content;
+  margin: 0;
+  opacity: 0.6;
+  user-select: none;
+  font-size: small;
+}
+
+.calendar_container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  flex-direction: column;
+}
+
+.calendar_day_list {
+  flex-grow: 6;
+  width: 100%;
+  overflow: hidden;
+  height: 20px;
+}
+
+.calendar_day_more_events {
+  width: 100%;
+  flex-grow: 1;
+  height: 2px;
+  font-size: small;
+  text-align: end;
+  cursor: pointer;
+  display: grid;
+  align-items: stretch;
+  justify-items: end;
+  align-content: center;
+  padding-right: 5px;
+  justify-content: end;
+}
+
+.calendar_day_events {
+  width: 100%;
+  height: fit-content;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 3px 0 3px 0;
+}
+.calendar_day_events:hover {
+  cursor: pointer;
+}
+.calendar_day_events * {
+  user-select: none;
+  padding: 0 2px 0 2px;
+}
+.calendar_day_title {
+  margin: 0;
+  flex-grow: 1;
+  width: 2px;
+  font-size: small;
+}
+
+.calendar_day_events span {
+  width: fit-content;
+}
+
+.calendar_day_type {
+  font-size: small;
+  padding-left: 5px !important;
+}
+.calendar_day_time {
+  font-size: x-small;
+  padding-right: 5px !important;
+}
+
+/***********************************/
+
+/******************CAL_MODAL******************/
+.cal_modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+.cal_modal_container {
+  position: relative;
+  width: 50%;
+  height: 75%;
+  background-color: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  align-items: center;
+  padding: 10px;
+}
+.cal_modal_container * {
+  user-select: none;
+  row-gap: 10px;
+}
+.cal_modal_header {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 15px;
+}
+
+.cal_modal_title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #000;
+  margin: 0;
+  outline: none;
+  flex-grow: 1;
+  border: none;
+  background-color: #ddd;
+  border-bottom: 2px solid #8181fb;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.cal_modal_close {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cal_modal_body {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.cal_modal_body_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+.cal_modal_description {
+  width: 100%;
+}
+
+#cal_modal_desc {
+  height: 150px;
+  resize: none;
+}
+
+.cal_modal_desc_header label {
+  margin-left: 10px;
+  font-size: small;
+}
+.cal_modal_footer {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.cal_modal_footer button:last-of-type,
+.cal_modal_footer button:nth-of-type(2) {
+  margin-left: 10px;
+}
+
+.cal_modal_datetime input {
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  padding: 0 10px 0 10px;
+  font-weight: 500;
+  color: #000;
+}
+.cal_modal_datetime {
+  display: flex;
+  align-items: center;
+}
+
+.cal_modal_date {
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  border: 1px solid #e5e5e5;
+  padding: 0 10px 0 10px;
+  margin: 0 10px 0 10px;
+  align-items: center;
+}
+.cal_modal_date input {
+  border: none;
+  width: 100px;
+  outline: none;
+}
+
+.cal_modal_time {
+  outline: none;
+  margin-left: 15px;
+}
+
+.cal_modal_notify {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.cal_modal_notify i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.cal_modal_color {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.cal_modal_color p {
+  margin: 0;
+  margin: 0 10px 0 10px;
+}
+
+.cal_modal_color input {
+  flex-grow: 1;
+}
+
+/*SHARE*/
+
+.cal_modal_share {
+  width: 100%;
+}
+.cal_modal_share_toggle {
+  display: flex;
+  justify-items: center;
+  height: fit-content;
+  user-select: none;
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+}
+
+.cal_modal_share_list {
+  user-select: none;
+  width: fit-content;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  position: absolute;
+  right: 0px;
+  border-radius: 10px;
+  padding: 10px;
+  opacity: 0;
+  overflow: auto;
+  background-color: #fff;
+  top: 0;
+  height: 100%;
+  width: fit-content;
+
+}
+
+.animation {
+  z-index: 1;
+  right: -30px;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.hideanimation {
+  z-index: -1;
+  right: 50px;
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.sel mat-icon {
+  transform: rotate(180deg);
+  transition: all 0.2s ease-in-out;
+}
+
+.not_sel mat-icon {
+  transform: rotate(0deg);
+  transition: all 0.2s ease-in-out;
+}
+
+.not_sel {
+  background-color: #fff;
+}
+
+.chat_share_list{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 15px !important;
+}
+
+.chat_share_container {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.chat_share_container img{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.option p{
+  margin: 0;
+  font-size: small;
+  font-weight: 500;
+}
+
+.option{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 15px;
+  height: 30px;
+}
+
+.chat_share_type{
+  margin-left: auto;
+}
+
+.chat_share_checkbox{
+  width: 20px;
+  height: 100%;
+}
+
+/*********************************************/

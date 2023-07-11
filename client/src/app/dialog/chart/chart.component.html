@@ -1,0 +1,61 @@
+<div class="dialog_container" [ngClass]="{'dark-theme': chatSelector.theme == 'dark'}">
+  <div class="dialog_header">
+    <div class="dialog_title">
+      <p>Grafico</p>
+      <i class="bi bi-x" [mat-dialog-close]></i>
+    </div>
+    <div class="dialog_chart_type">
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 1}" (click)="changeChartType(1)">
+        <i class="bi bi-bar-chart-fill"></i>
+      </div>
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 2}" (click)="changeChartType(2)">
+        <i class="bi bi-pie-chart-fill"></i>
+      </div>
+      <div class="chart_type" [ngClass]="{'selected': chatSelector.chartType == 3}" (click)="changeChartType(3)">
+        <i class="bi bi-graph-up"></i>
+      </div>
+    </div>
+  </div>
+  <div class="dialog_chart_title">
+    <input type="text" placeholder="Enter chart title" class="form-control" [(ngModel)]="title"
+      [ngModelOptions]="{standalone: true}">
+    <input type="color" class="form-control form-control-color" *ngIf="chatSelector.chartType != 2" [(ngModel)]="chart_color" [ngModelOptions]="{standalone: true}">
+  </div>
+  <mat-dialog-content class="dialog_body">
+    <div class="chart_data_list" #chart_data_list>
+      <div class="chart_field" *ngFor="let field of fields; let i = index">
+        <div class="chart_data">
+          <div class="chart_field_info">
+            <input type="text" placeholder="Enter field name" class="form-control" [(ngModel)]="field.name"
+              [ngModelOptions]="{standalone: true}">
+            <div class="chart_field_number">
+              <div class="input_number_action" (click)="subtractNumber(i)">
+                <mat-icon>remove</mat-icon>
+              </div>
+              <input type="number" matInput [(ngModel)]="field.value" [ngModelOptions]="{standalone: true}">
+              <div class="input_number_action" (click)="addNumber(i)">
+                <mat-icon>add</mat-icon>
+              </div>
+            </div>
+          </div>
+          <input type="color" class="form-control form-control-color" [(ngModel)]="field.color"
+            [ngModelOptions]="{standalone: true}" *ngIf="chatSelector.chartType == 2">
+        </div>
+        <mat-icon class="field_option" (click)="addField()" *ngIf="fields.length -1 == i">add_circle</mat-icon>
+        <mat-icon class="field_option" (click)="deleteField(i)" *ngIf="fields.length -1 != i ">delete</mat-icon>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="action-chart">
+    <button mat-stroked-button [mat-dialog-close]="null">
+      <span>Annulla</span>
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <button mat-stroked-button (click)="sendChart()">
+      <span>Conferma</span>
+      <i class="bi bi-check-lg"></i>
+    </button>
+
+  </mat-dialog-actions>
+</div>

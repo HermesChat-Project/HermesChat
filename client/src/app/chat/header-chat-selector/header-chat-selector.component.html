@@ -1,0 +1,42 @@
+<div class="row">
+  <div id="user-options" class="chatOptions">
+    <div class="col-sm-9 options">
+      <i class="bi bi-gear-fill" (click)="showProfile()"
+        [ngClass]="{'showSetting' : headerService.typeOfAction == 1, 'hideSetting' : headerService.typeOfAction != 1}"></i>
+    </div>
+    <div class="col-sm-3 options">
+      <div id="newChat">
+        <button id="newChatOptions" #newChatOptions (click)="ToggleNewChatOptions()" (blur)="HideNewChatOptions()">
+          <i class="bi bi-plus-circle"></i>
+          <div id="selectNewChat" [ngClass]="{'animateChatCreationOption' : showOptions}">
+            <div (click)="createChat(1)">Nuova Chat singola</div>
+            <div (click)="createChat(2)">Nuova Chat di gruppo</div>
+          </div>
+        </button>
+
+      </div>
+      <div id="requests">
+        <i class="bi bi-person-heart" (click)="ToggleFriendRequest()"></i>
+        <div class="notify-request" *ngIf="chatSelector.receivedList.length != 0">
+          <div class="notif">
+            <p class="notifItem bi bi-person-heart"></p>
+            <p class="notifItem">{{requestNumber()}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="secret-chat-options" class="chatOptions">
+    <i class="bi bi-incognito" (click)="ToggleTempChat()"></i>
+  </div>
+
+</div>
+
+<app-settings class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 1, 'hideHeaderSection' : headerService.typeOfAction != 1}"></app-settings>
+<app-create-chat class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 2, 'hideHeaderSection' : headerService.typeOfAction != 2}"></app-create-chat>
+<app-friends-request class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 3, 'hideHeaderSection' : headerService.typeOfAction != 3}"></app-friends-request>
+<app-temp-chat class="header-section"
+  [ngClass]="{'showHeaderSection' : headerService.typeOfAction == 4, 'hideHeaderSection' : headerService.typeOfAction != 4}"></app-temp-chat>

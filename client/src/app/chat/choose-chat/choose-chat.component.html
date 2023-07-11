@@ -1,0 +1,28 @@
+<div class="container">
+  <div id="sections">
+    <div id="type_section" #sections>
+      <app-all-chats class="section" [ngStyle]="{'left' : 0 * width_section +'px' }" #chat></app-all-chats>
+      <app-friends-list class="section" [ngStyle]="{'left' : 1 * width_section  +'px' }" #friends></app-friends-list>
+      <app-calls-list [callsList]="chatSelector.callList" class="section" [ngStyle]="{'left' : 2 * width_section  +'px'}" #calls></app-calls-list>
+      <app-calendar class="section" [ngStyle]="{ 'left' : 3 * width_section  +'px'}" #calendar></app-calendar>
+    </div>
+  </div>
+
+</div>
+<div class="selection">
+  <div id="selected" #selected></div>
+  <div class="all selected" (click)="changeSelection(0, $event)" title="Tutte le chat">
+    <i class="bi bi-people-fill"></i>
+  </div>
+  <div class="friends" (click)="changeSelection(1, $event)" title="Amici">
+    <i class="bi bi-person-heart"></i>
+  </div>
+  <div class="phone" (click)="changeSelection(2, $event)" title="chiamate">
+    <i class="bi bi-telephone-fill"></i>
+  </div>
+  <div class="calendar" (click)="changeSelection(3, $event)" title="calendario">
+    <i class="bi bi-calendar-fill">
+    </i>
+    <span class="day">{{day}}</span>
+  </div>
+</div>

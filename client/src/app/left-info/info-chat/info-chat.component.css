@@ -1,0 +1,145 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.footer-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border-top: 1px solid #0b2f5e;
+  padding: 0 10px;
+  row-gap: 10px;
+}
+
+.members-container {
+  row-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.members {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border-top: 1px solid #0b2f5e;
+  column-gap: 10px;
+  padding: 0 10px;
+}
+
+p {
+  margin: 0;
+}
+
+.members-image img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.members-badge {
+  margin-left: auto;
+}
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid #0b2f5e;
+  column-gap: 10px;
+  padding: 10px;
+}
+
+.header p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.body {
+  padding: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  row-gap: 20px;
+}
+
+.image img {
+  width: 40vh;
+  height: 40vh;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.image {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.right-click-option {
+  display: flex;
+  width: max-content;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: white;
+  position: absolute;
+  row-gap: 10px;
+
+  z-index: 10;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.right-click-option > * {
+  padding: 10px;
+  cursor: pointer;
+  column-gap: 10px;
+  display: flex;
+  width: max-content;
+  width: 100%;
+}
+
+.right-click-option > *:hover {
+  background-color: #ddd;
+}
+
+.add-user {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 10px;
+  width: 100%;
+}
+
+.add-user button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #0b2f5e;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: 10px;
+  padding: 10px;
+}
